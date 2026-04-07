@@ -110,7 +110,7 @@ export default function Quiz() {
                       className={`w-full text-left px-5 py-3.5 rounded-xl border transition-all duration-150 text-sm
                         ${isSelected
                           ? 'bg-purple-600/25 border-purple-500/60 text-white'
-                          : 'bg-dark-700/40 border-white/8 text-white/60 hover:bg-dark-700/60 hover:border-white/20 hover:text-white/80'
+                          : 'bg-dark-700/40 border-white/10 text-white/60 hover:bg-dark-700/60 hover:border-white/20 hover:text-white/80'
                         }`}
                     >
                       <span className="text-white/20 mr-3 font-mono">{val}</span>

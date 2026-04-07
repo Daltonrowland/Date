@@ -104,7 +104,7 @@ export default function Sanctuary() {
                 <button
                   key={lang}
                   onClick={() => setForm((f) => ({ ...f, love_language: lang }))}
-                  className={`px-3 py-2 rounded-xl text-sm border transition-all ${form.love_language === lang ? 'bg-purple-600/30 border-purple-500/60 text-white' : 'bg-dark-700/40 border-white/8 text-white/40 hover:border-white/20'}`}
+                  className={`px-3 py-2 rounded-xl text-sm border transition-all ${form.love_language === lang ? 'bg-purple-600/30 border-purple-500/60 text-white' : 'bg-dark-700/40 border-white/10 text-white/40 hover:border-white/20'}`}
                 >
                   {lang}
                 </button>

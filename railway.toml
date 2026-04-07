@@ -1,22 +1,3 @@
-[build]
-builder = "DOCKERFILE"
-
-[[services]]
-name = "backend"
-source = "backend"
-dockerfilePath = "backend/Dockerfile"
-
-[services.deploy]
-healthcheckPath = "/health"
-healthcheckTimeout = 60
-restartPolicyType = "ON_FAILURE"
-
-[[services]]
-name = "frontend"
-source = "frontend"
-dockerfilePath = "frontend/Dockerfile"
-
-[services.deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 60
-restartPolicyType = "ON_FAILURE"
+# Root railway config — individual services have their own railway.toml
+# Backend: backend/railway.toml
+# Frontend: frontend/railway.toml
