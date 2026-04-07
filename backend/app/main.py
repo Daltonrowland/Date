@@ -1,11 +1,17 @@
 import os
+import asyncio
+import json
+import time
 from pathlib import Path
-from fastapi import FastAPI, Request
+from collections import defaultdict
+from fastapi import FastAPI, Request, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from .config import get_settings
 from .routers import auth, quiz, matches, profiles, sanctuary
+from .auth import get_current_user, decode_token
+from .models import User
 
 settings = get_settings()
 
@@ -40,6 +46,43 @@ app.include_router(sanctuary.router)
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "relationship-scores-api"}
+
+
+# ── Real-time match notifications via SSE ─────────────────────────────────────
+# In-memory notification store: {user_id: [{"match_name": ..., "score": ..., "time": ...}]}
+_match_notifications: dict[int, list[dict]] = defaultdict(list)
+
+
+def notify_new_match(user_id: int, match_name: str, score: float, tier: str):
+    """Called from quiz router when new matches are computed."""
+    _match_notifications[user_id].append({
+        "match_name": match_name,
+        "score": score,
+        "tier": tier,
+        "time": time.time(),
+    })
+
+
+@app.get("/events/matches")
+async def match_events(token: str = Query(...)):
+    """SSE endpoint — frontend connects with ?token=JWT to get live match updates."""
+    user_id = decode_token(token)
+    if user_id is None:
+        return StreamingResponse(iter([]), status_code=401)
+
+    async def event_stream():
+        last_check = time.time()
+        yield f"data: {json.dumps({'type': 'connected', 'user_id': user_id})}\n\n"
+        while True:
+            await asyncio.sleep(3)
+            notifications = _match_notifications.get(user_id, [])
+            new = [n for n in notifications if n["time"] > last_check]
+            if new:
+                for n in new:
+                    yield f"data: {json.dumps({'type': 'new_match', **n})}\n\n"
+                last_check = time.time()
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
 # Serve frontend SPA — static assets + fallback to index.html

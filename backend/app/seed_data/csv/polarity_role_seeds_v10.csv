@@ -1,0 +1,6 @@
+role,role_label,legacy_masc_score,legacy_feminine_score,legacy_drift_score,agency_w,expressivity_w,structure_flow_w,sexual_role_w,desire_intensity_w,capacity_strain_w,ambiguity_tolerance_w,repair_endurance_w,initiation_axis,pursuit_axis,leadership_axis,surrender_safety_axis,tension_attraction_axis,calm_receptivity_axis,structure_preference_axis,flexibility_axis,validation_dependency_axis,erotic_safety_alignment_axis,anchor_labels
+MS,Secure Masculine,10,2,1,0.9,0.3,0.85,0.85,0.4,-0.8,0.6,0.7,0.85,0.25,0.85,0.45,0.35,0.72,0.85,0.58,0.22,0.72,steady initiator; grounded lead; task-clear; low-drift
+Mm,Mutable Masculine,7,4,2,0.55,0.1,0.6,0.55,0.3,-0.3,0.4,0.5,0.66,0.4,0.66,0.5,0.45,0.56,0.66,0.78,0.35,0.6,adaptive lead; observational; flexible; moderate drift
+Fa,Attuned Feminine,3,9,3,-0.2,-0.8,-0.3,-0.4,0.7,-0.5,-0.2,-0.3,0.4,0.6,0.46,0.66,0.52,0.6,0.42,0.7,0.46,0.68,relationally sensing; emotionally led; tuned to bond
+Fr,Receptive Feminine,1,10,4,-0.7,-0.55,-0.7,-0.8,0.2,-0.2,0.8,0.9,0.2,0.8,0.25,0.86,0.3,0.84,0.28,0.56,0.5,0.8,settled receiver; high surrender; calm attraction
+Dr,Polarity Drift,0,3,10,-0.85,-0.2,-0.6,-0.3,0.8,1.0,-0.9,-1.0,0.3,0.7,0.2,0.24,0.82,0.2,0.26,0.22,0.78,0.18,confused signal; unstable pull; high strain; low repair

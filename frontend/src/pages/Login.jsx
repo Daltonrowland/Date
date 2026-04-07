@@ -56,6 +56,9 @@ export default function Login() {
           Don't have an account?{' '}
           <Link to="/register" className="text-purple-400 hover:text-purple-300">Create one</Link>
         </p>
+        <p className="text-center text-white/30 text-sm mt-2">
+          <Link to="/forgot-password" className="hover:text-white/50">Forgot your password?</Link>
+        </p>
       </motion.div>
     </div>
   )

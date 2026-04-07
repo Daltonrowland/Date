@@ -17,6 +17,27 @@ export default function Dashboard() {
     api.get('/matches').then(({ data }) => {
       setMatches(data)
     }).finally(() => setLoading(false))
+
+    // SSE: real-time match notifications
+    const token = localStorage.getItem('rs_token')
+    if (token) {
+      const baseUrl = import.meta.env.VITE_API_URL || 'https://date-production-5ca0.up.railway.app'
+      const evtSource = new EventSource(`${baseUrl}/events/matches?token=${token}`)
+      evtSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          if (data.type === 'new_match') {
+            // Refresh matches list
+            api.get('/matches').then(({ data: m }) => setMatches(m))
+            // Show toast
+            import('react-hot-toast').then(({ default: toast }) => {
+              toast.success(`New match: ${data.match_name} (${Math.round(data.score)})`)
+            })
+          }
+        } catch (_) {}
+      }
+      return () => evtSource.close()
+    }
   }, [])
 
   const filtered = filter === 'all'

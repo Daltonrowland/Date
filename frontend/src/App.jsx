@@ -9,6 +9,7 @@ import ScoreReveal from './pages/ScoreReveal'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Sanctuary from './pages/Sanctuary'
+import ForgotPassword from './pages/ForgotPassword'
 import Navbar from './components/Navbar'
 
 function ProtectedRoute({ children }) {
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/profile/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/sanctuary" element={<ProtectedRoute><Sanctuary /></ProtectedRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

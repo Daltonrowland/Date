@@ -1,0 +1,18 @@
+field,type,example,why_it_matters
+user_id,string,u_123,Join data
+match_id,string,m_987,Join data
+match_score,number,724,Calibration target
+tier_label,string,Strong potential,Calibration target
+date_matched,date,2026-03-20,Time decay / cohort effects
+message_count_7d,number,42,Engagement proxy
+reply_latency_p50,number,12m,Responsiveness proxy
+date_first_meet,date,2026-04-02,Conversion
+relationship_status_30d,enum,talking/dating/ended,Outcome
+relationship_status_90d,enum,dating/ended,Outcome
+breakup_reason,enum,trust/conflict/pace/values/unknown,Penalty tuning
+conflict_events_count,number,3,Stability truth signal
+repair_events_count,number,2,Repair truth signal
+user_reported_satisfaction,1-10,8,Supervised label
+user_reported_safety,1-10,7,Supervised label
+user_reported_chemistry,1-10,9,Chemistry calibration
+flag_harmful_behavior,bool,false,Hard penalty learning

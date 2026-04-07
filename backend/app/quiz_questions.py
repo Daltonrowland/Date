@@ -1,153 +1,155 @@
 """
-60-question compatibility quiz across 6 categories (10 questions each).
-Answers are 1-5 scale. Categories:
-  0  — Attachment Style
-  1  — Communication
-  2  — Values & Life Goals
-  3  — Love Languages
-  4  — Lifestyle
-  5  — Conflict Resolution
+Genesis OS — Real quiz questions loaded from workbook seed data.
+
+60 questions across dimensions:
+  - CommunicationHealth (Q1-8)
+  - ConflictRepair (Q9-16)
+  - EmotionalRegulation (Q17-24)
+  - ValuesLifestyle (Q25-32)
+  - CommitmentPace (Q33-40)
+  - EmotionalNeeds (Q41-50)
+  - ShadowPattern (Q100-109)
+
+Each question has 5 answer options (A-E) with real answer text from the
+workbook. Answers carry archetype assignments, scoring norms, and risk
+profiles used by the Genesis OS compatibility engine.
 """
+from __future__ import annotations
+import csv
+from pathlib import Path
+from functools import lru_cache
+from typing import List, Dict, Any
 
-CATEGORIES = [
-    "Attachment Style",
-    "Communication",
-    "Values & Life Goals",
-    "Love Languages",
-    "Lifestyle",
-    "Conflict Resolution",
-]
+SEED_DIR = Path(__file__).parent / "seed_data" / "csv"
 
-QUESTIONS = [
-    # ── Attachment Style (0-9) ──────────────────────────────────────────────
-    {"id": 0,  "category": 0, "text": "How comfortable are you with emotional vulnerability in a relationship?",
-     "options": ["Very uncomfortable", "Somewhat uncomfortable", "Neutral", "Somewhat comfortable", "Very comfortable"]},
-    {"id": 1,  "category": 0, "text": "When your partner is distant, how do you typically respond?",
-     "options": ["Withdraw completely", "Feel anxious and pull back", "Give space and wait", "Gently check in", "Openly express my needs"]},
-    {"id": 2,  "category": 0, "text": "How much personal space do you need in a relationship?",
-     "options": ["Very little — I want constant togetherness", "Less than average", "A balanced mix", "More than average", "A lot — I value independence highly"]},
-    {"id": 3,  "category": 0, "text": "How do you handle feelings of jealousy?",
-     "options": ["I get very jealous and struggle to contain it", "I get jealous but keep it mostly internal", "I feel it mildly and process it", "I rarely feel jealous", "I almost never feel jealous"]},
-    {"id": 4,  "category": 0, "text": "How quickly do you typically feel secure in a new relationship?",
-     "options": ["I rarely feel fully secure", "It takes a very long time", "Several months", "A few weeks", "Fairly quickly once I trust someone"]},
-    {"id": 5,  "category": 0, "text": "How do you feel about your partner having close friendships with exes?",
-     "options": ["Very uncomfortable", "Somewhat uncomfortable", "Neutral with clear boundaries", "Fine with transparency", "Completely fine"]},
-    {"id": 6,  "category": 0, "text": "How do you respond when a partner needs more reassurance than you expected?",
-     "options": ["I find it draining and pull away", "I try but feel overwhelmed", "I adapt if communicated clearly", "I naturally offer reassurance", "I love being someone's safe space"]},
-    {"id": 7,  "category": 0, "text": "How important is it that your partner is your primary emotional support?",
-     "options": ["Not important — I rely on myself", "Slightly important", "Moderately important", "Very important", "Essential — they must be my main support"]},
-    {"id": 8,  "category": 0, "text": "How do you feel about discussing your childhood wounds with a partner?",
-     "options": ["I never would", "Very reluctantly", "Only after years of trust", "Once trust is established", "I believe deep sharing is essential"]},
-    {"id": 9,  "category": 0, "text": "When you sense your partner pulling away, what is your instinct?",
-     "options": ["Chase and pursue immediately", "Feel anxious but wait", "Give space and observe", "Trust the relationship and stay steady", "Completely give them space"]},
+# Question text — derived from dimensions and answer context
+QUESTION_TEXTS: Dict[int, str] = {
+    1:  "When something feels off between you and someone you care about, what's your most natural first response?",
+    2:  "When someone you're close to suddenly goes quiet or pulls back, what do you typically feel?",
+    3:  "When you sense tension in a relationship but nothing has been said, what do you usually do?",
+    4:  "When someone you like seems inconsistent — warm one day, distant the next — how do you respond?",
+    5:  "How much do you expect emotionally from the people close to you?",
+    6:  "When someone is unpredictable with their energy or attention, what's your instinct?",
+    7:  "When someone is quiet or seems withdrawn, what's your first move?",
+    8:  "When a pattern you've seen before starts showing up again in a relationship, what happens inside you?",
+    9:  "When you're the one who's been giving more energy in a relationship, how do you respond?",
+    10: "When you realize you've been the emotional safe place more than feels fair, what do you do?",
+    11: "After a disagreement, how do you usually handle the space between conflict and resolution?",
+    12: "When something shifts in a relationship — the energy changes but no one says why — how do you handle it?",
+    13: "When you need to clarify something before you can fully open up, how do you handle that?",
+    14: "When someone gives you minimal effort, how do you tend to respond?",
+    15: "When something new and exciting starts with someone, what's going on underneath your enthusiasm?",
+    16: "When someone's interest in you is unpredictable, what do you do?",
+    17: "When you're upset, what's your process for deciding whether to bring it up?",
+    18: "When someone you care about pulls back, what happens to your energy toward them?",
+    19: "When someone seems emotionally unavailable, how do you interpret that?",
+    20: "When you sense that someone isn't quite where you are emotionally, how do you handle it?",
+    21: "When someone's affection or attention is inconsistent, what's your default response?",
+    22: "When a relationship starts feeling one-sided, what's your first instinct?",
+    23: "When you realize you've been over-functioning in a dynamic, what do you do?",
+    24: "When someone doesn't show up in the way you needed, how do you file that away?",
+    25: "When you share something personal and it lands flat or gets ignored, what happens next?",
+    26: "When you extend effort toward someone and it goes unacknowledged, how do you respond?",
+    27: "When someone reacts to your vulnerability in a way that doesn't feel safe, what do you do?",
+    28: "When you suspect someone isn't being fully honest with you, what's your move?",
+    29: "When someone's effort toward you starts dropping off, how do you match it?",
+    30: "When you put yourself out there and it doesn't land the way you hoped, how do you recover?",
+    31: "When a moment of emotional honesty passes without acknowledgment, how do you handle it?",
+    32: "When you feel your energy going somewhere it isn't matched, how quickly do you adjust?",
+    33: "When a relationship starts to feel like it's not going anywhere, what do you do?",
+    34: "When someone prioritizes someone else over you in a way that stings, how do you respond?",
+    35: "When someone says something that catches you off guard emotionally, what's your immediate reaction?",
+    36: "When someone chooses someone else over you, what does your inner dialogue sound like?",
+    37: "When you're feeling hurt, how much do you trust your own emotional read of the situation?",
+    38: "When someone's behavior toward you changes and they don't explain it, what do you do internally?",
+    39: "When someone gets emotionally intense with you, what happens in your body?",
+    40: "When you think about why you pursue connection, what's the most honest driver?",
+    41: "What kind of person tends to pull your attention and fascination most strongly?",
+    42: "How fully do you let people into the parts of you that feel the most vulnerable?",
+    43: "What's your deepest fear when someone starts to truly know you?",
+    44: "When you're struggling emotionally, what stops you from being fully honest about it?",
+    45: "When you need to feel pulled back in and reassured, what does that look like from the other person?",
+    46: "When you're emotionally overwhelmed, what do you need most?",
+    47: "When someone does something genuinely kind for you with no strings attached, how does it land?",
+    48: "When does closeness start to feel like too much?",
+    49: "What part of a past relationship do you find yourself missing the most?",
+    50: "What's your deepest fear when something good is finally happening in a relationship?",
+    100: "When someone finds something out about you that you weren't ready to share, what's your first instinct?",
+    101: "When you're caught off guard in an argument and feel cornered, what do you tend to do?",
+    102: "When someone makes you feel guilty — even if you were partly wrong — how do you usually respond?",
+    103: "When you feel ignored or deprioritized, what's your instinct to get their attention back?",
+    104: "When someone tries to emotionally challenge you in a conversation, how do you respond?",
+    105: "When you want someone to feel the impact of something they did, how do you communicate that?",
+    106: "When a connection starts feeling distant and you want to re-engage it, what's your move?",
+    107: "When you've hurt someone and you're apologizing, what does that usually look like?",
+    108: "When you're genuinely angry at someone, how does that come out?",
+    109: "When you want someone to choose you or commit more clearly, how do you tend to communicate that?",
+}
 
-    # ── Communication (10-19) ────────────────────────────────────────────────
-    {"id": 10, "category": 1, "text": "How do you prefer to resolve misunderstandings?",
-     "options": ["Avoid until it passes", "Text or written message", "Give it a day then talk", "Talk it out immediately", "Schedule a dedicated conversation"]},
-    {"id": 11, "category": 1, "text": "How often do you like to communicate with a partner throughout the day?",
-     "options": ["A few times a week", "Once a day", "A few times a day", "Frequently throughout the day", "Constantly — I love staying connected"]},
-    {"id": 12, "category": 1, "text": "How comfortable are you expressing your emotional needs directly?",
-     "options": ["I rarely can", "I struggle but try", "Sometimes", "Usually yes", "Always — it feels natural"]},
-    {"id": 13, "category": 1, "text": "How do you respond to criticism from a partner?",
-     "options": ["I shut down", "I become defensive initially", "I take time to process then respond", "I try to hear it openly", "I welcome it as growth"]},
-    {"id": 14, "category": 1, "text": "How important is having deep intellectual conversations with a partner?",
-     "options": ["Not important", "Slightly important", "Moderately important", "Very important", "Essential to my connection"]},
-    {"id": 15, "category": 1, "text": "How do you communicate when you are upset?",
-     "options": ["I go silent", "I need a lot of alone time first", "I journal then share", "I share after a short cooldown", "I express it fairly directly"]},
-    {"id": 16, "category": 1, "text": "How do you feel about your partner expressing hard truths?",
-     "options": ["I prefer they soften everything", "I prefer gentle delivery", "Balance of honesty and sensitivity", "I appreciate directness", "I strongly value radical honesty"]},
-    {"id": 17, "category": 1, "text": "How much do you value humor and lightness in daily relationship communication?",
-     "options": ["Not important at all", "Slightly important", "Moderately important", "Very important", "Essential — laughter is core to us"]},
-    {"id": 18, "category": 1, "text": "How do you handle it when a partner interrupts you during conversations?",
-     "options": ["It deeply bothers me and I disengage", "I find it frustrating", "I note it and address it later", "I gently redirect", "It doesn't bother me much"]},
-    {"id": 19, "category": 1, "text": "How important is it that your partner remembers the small details you share?",
-     "options": ["Not important", "Slightly", "Moderately", "Very important", "It means everything to me"]},
+# Dimension labels
+DIMENSION_LABELS = {
+    "CommunicationHealth": "Communication & Emotional Needs",
+    "ConflictRepair": "Conflict & Repair",
+    "EmotionalRegulation": "Emotional Regulation",
+    "ValuesLifestyle": "Values & Lifestyle",
+    "CommitmentPace": "Commitment & Pacing",
+    "EmotionalNeeds": "Emotional Needs & Attachment",
+    "ShadowPattern": "Shadow Patterns",
+}
 
-    # ── Values & Life Goals (20-29) ──────────────────────────────────────────
-    {"id": 20, "category": 2, "text": "How important are religious or spiritual beliefs in your life?",
-     "options": ["Not at all important", "Slightly important", "Somewhat important", "Very important", "Central to my identity"]},
-    {"id": 21, "category": 2, "text": "Do you want children in the future?",
-     "options": ["Definitely not", "Probably not", "Open to it", "Probably yes", "Definitely yes"]},
-    {"id": 22, "category": 2, "text": "How important is financial ambition to you?",
-     "options": ["Not important — I value simplicity", "Slightly important", "Moderately important", "Very important", "Extremely — building wealth is a core goal"]},
-    {"id": 23, "category": 2, "text": "How do you feel about traditional relationship roles?",
-     "options": ["I strongly prefer non-traditional", "I lean non-traditional", "I like a mix", "I lean traditional", "I strongly prefer traditional"]},
-    {"id": 24, "category": 2, "text": "How important is personal freedom and autonomy in your life?",
-     "options": ["I prioritize partnership over independence", "Slightly important", "Balanced", "Very important", "Essential — independence is non-negotiable"]},
-    {"id": 25, "category": 2, "text": "How important is community and social connection to you?",
-     "options": ["Not important — I'm very introverted", "Slightly", "Moderate", "Very", "Essential — my community is central to my life"]},
-    {"id": 26, "category": 2, "text": "How do you prioritize career vs relationship?",
-     "options": ["Relationship always comes first", "Relationship usually first", "Equal balance", "Career usually first", "Career always comes first"]},
-    {"id": 27, "category": 2, "text": "How do you view personal growth and self-development?",
-     "options": ["Not a priority", "Occasionally pursue it", "I engage when inspired", "Active pursuit is important", "It is a core lifestyle commitment"]},
-    {"id": 28, "category": 2, "text": "How do you feel about living in the same city your whole life vs relocating?",
-     "options": ["Strong roots — I never want to relocate", "Prefer to stay", "Open to it under the right circumstances", "Likely to relocate", "I plan to relocate or travel extensively"]},
-    {"id": 29, "category": 2, "text": "How important is it that your partner shares your core values?",
-     "options": ["Not very — differences are fine", "Slightly important", "Somewhat important", "Very important", "Non-negotiable — we must be aligned"]},
+CATEGORIES = list(DIMENSION_LABELS.values())
 
-    # ── Love Languages (30-39) ───────────────────────────────────────────────
-    {"id": 30, "category": 3, "text": "How important is physical affection (hugs, touch, closeness) to you?",
-     "options": ["Not important", "Slightly", "Moderately", "Very", "Essential daily"]},
-    {"id": 31, "category": 3, "text": "How much do words of affirmation (compliments, verbal love) mean to you?",
-     "options": ["Not important", "Nice but not needed", "Moderately important", "Very important", "I need it to feel loved"]},
-    {"id": 32, "category": 3, "text": "How important is quality time (undivided attention) to feeling loved?",
-     "options": ["Not important", "Slightly", "Moderately", "Very", "It is my primary love language"]},
-    {"id": 33, "category": 3, "text": "How meaningful are acts of service (partner doing things for you) to you?",
-     "options": ["Not meaningful", "Slightly", "Moderately", "Very meaningful", "It is how I feel most loved"]},
-    {"id": 34, "category": 3, "text": "How important are thoughtful gifts as expressions of love?",
-     "options": ["Not important at all", "Nice but optional", "Moderately", "Very important", "Essential to feeling valued"]},
-    {"id": 35, "category": 3, "text": "How do you most naturally express love to a partner?",
-     "options": ["Through physical closeness", "Through verbal expressions", "Through dedicated time", "Through helpful actions", "Through thoughtful gestures"]},
-    {"id": 36, "category": 3, "text": "How do you feel when a partner surprises you with a small romantic gesture?",
-     "options": ["Awkward or indifferent", "Mildly appreciative", "Happy but it's not important", "Genuinely moved", "It is deeply meaningful to me"]},
-    {"id": 37, "category": 3, "text": "How important is it to have regular dedicated date nights?",
-     "options": ["Not important", "Nice occasionally", "Monthly is enough", "Weekly ideally", "Essential to my connection"]},
-    {"id": 38, "category": 3, "text": "How do you prefer your partner to show up when you're having a hard day?",
-     "options": ["Give me space", "Send a kind text", "Be present and listen", "Help me solve the problem", "Hold me and comfort me physically"]},
-    {"id": 39, "category": 3, "text": "How important is maintaining romantic energy long into a relationship?",
-     "options": ["Not very — comfort matters more", "Slightly", "Moderately", "Very important", "Non-negotiable — romance must stay alive"]},
 
-    # ── Lifestyle (40-49) ────────────────────────────────────────────────────
-    {"id": 40, "category": 4, "text": "How would you describe your ideal living environment?",
-     "options": ["Rural or very quiet", "Small town", "Suburbs", "Urban — city energy", "Major metropolitan city"]},
-    {"id": 41, "category": 4, "text": "How active is your social life?",
-     "options": ["Very private — rarely social", "Small gatherings occasionally", "Balanced mix", "Frequently social", "Very active — always socializing"]},
-    {"id": 42, "category": 4, "text": "How important is fitness and physical health in your daily life?",
-     "options": ["Not important", "Slightly", "Moderately — I stay reasonably active", "Very important", "Central — fitness is a lifestyle"]},
-    {"id": 43, "category": 4, "text": "How do you feel about alcohol and social drinking?",
-     "options": ["I don't drink and prefer a partner who doesn't", "I rarely drink", "Socially occasionally", "I enjoy it regularly", "It is an important part of my social life"]},
-    {"id": 44, "category": 4, "text": "How important is travel to you?",
-     "options": ["Not important", "Occasionally nice", "A few trips a year", "Frequent travel is important", "Travel is a core life priority"]},
-    {"id": 45, "category": 4, "text": "How do you prefer to spend a typical weekend?",
-     "options": ["Totally at home recharging", "Mostly home with one outing", "Mix of home and social activity", "Mostly out and active", "Always out exploring or socializing"]},
-    {"id": 46, "category": 4, "text": "How important are shared hobbies with a partner?",
-     "options": ["Not important — I prefer separate interests", "Slightly nice", "Good to have some overlap", "Very important", "We should share most interests"]},
-    {"id": 47, "category": 4, "text": "How do you feel about pets?",
-     "options": ["I dislike pets", "I'm neutral", "I like them but don't need them", "I love them and want them", "Pets are family — non-negotiable"]},
-    {"id": 48, "category": 4, "text": "How important is financial compatibility (similar spending habits)?",
-     "options": ["Not important", "Slightly", "Moderately", "Very important", "Essential — misalignment would end it"]},
-    {"id": 49, "category": 4, "text": "How much time do you ideally spend together vs apart each week?",
-     "options": ["Mostly apart — independence first", "More apart than together", "Roughly equal", "More together than apart", "As much time together as possible"]},
+@lru_cache(maxsize=1)
+def load_questions() -> List[Dict[str, Any]]:
+    """Load all 60 questions with real answer text from seed data."""
+    questions_csv = list(csv.DictReader(
+        (SEED_DIR / "questions.csv").open("r", encoding="utf-8", newline="")
+    ))
+    answer_bank = list(csv.DictReader(
+        (SEED_DIR / "answer_bank.csv").open("r", encoding="utf-8", newline="")
+    ))
 
-    # ── Conflict Resolution (50-59) ──────────────────────────────────────────
-    {"id": 50, "category": 5, "text": "How do you typically handle the first sign of tension in a relationship?",
-     "options": ["Avoid completely", "Minimize and move on", "Acknowledge and take space", "Address it calmly soon", "Address it immediately"]},
-    {"id": 51, "category": 5, "text": "How long do you typically need after a fight before reconnecting?",
-     "options": ["Days or more", "At least a day", "Several hours", "An hour or two", "I want to resolve it right away"]},
-    {"id": 52, "category": 5, "text": "How do you respond when you feel unheard in an argument?",
-     "options": ["I completely shut down", "I get louder or more intense", "I ask to pause and revisit", "I restate my perspective calmly", "I try to understand their view first"]},
-    {"id": 53, "category": 5, "text": "How comfortable are you apologizing first?",
-     "options": ["Very uncomfortable — I wait for them", "I struggle but can", "It depends on who was wrong", "I'm fairly comfortable", "I apologize readily if I was wrong"]},
-    {"id": 54, "category": 5, "text": "How do you feel about professional couples therapy or counseling?",
-     "options": ["Against it entirely", "Would only consider it in crisis", "Open to it if needed", "Would actively consider it proactively", "I believe all couples should do it"]},
-    {"id": 55, "category": 5, "text": "How do you handle ongoing unresolved issues in a relationship?",
-     "options": ["Ignore them hoping they pass", "Bring them up occasionally", "Revisit when calm", "Consistently work through them", "Systematically address them proactively"]},
-    {"id": 56, "category": 5, "text": "How do you feel when your partner raises a recurring complaint?",
-     "options": ["Defensive and resentful", "Defensive but I try to listen", "I acknowledge but struggle", "I receive it and reflect", "I appreciate the honesty and engage"]},
-    {"id": 57, "category": 5, "text": "How much do past relationship patterns affect your current reactions?",
-     "options": ["A lot — I carry significant wounds", "Quite a bit", "Somewhat", "A little", "Very little — I've done the work"]},
-    {"id": 58, "category": 5, "text": "How do you feel about using humor to diffuse tension?",
-     "options": ["Inappropriate — it minimizes the issue", "I'm cautious about it", "Context dependent", "I appreciate it if timed well", "I love it — lightness heals us"]},
-    {"id": 59, "category": 5, "text": "How important is full resolution before moving on after conflict?",
-     "options": ["I can move on without full resolution", "I prefer resolution but can adapt", "It depends on the issue", "Resolution is very important", "We must fully resolve before moving on"]},
-]
+    questions = []
+    for q_row in questions_csv:
+        q_num = int(q_row["question_number_int"])
+        dim = q_row["dimension_primary"]
+
+        # Get answer options for this question
+        options = sorted(
+            [row for row in answer_bank if int(row["question_number_int"]) == q_num],
+            key=lambda r: r["answer_letter"],
+        )
+
+        # Map dimension to category index
+        cat_index = list(DIMENSION_LABELS.keys()).index(dim) if dim in DIMENSION_LABELS else 0
+
+        questions.append({
+            "id": q_num,
+            "question_id": q_row["question_id"],
+            "category": cat_index,
+            "dimension": dim,
+            "phase": q_row["phase"],
+            "weight": float(q_row["question_weight_v3"]),
+            "text": QUESTION_TEXTS.get(q_num, f"Question {q_num}"),
+            "options": [opt["answer_text"] for opt in options],
+            "answer_letters": [opt["answer_letter"] for opt in options],
+            "archetypes": [opt.get("archetype", "") for opt in options],
+        })
+
+    return sorted(questions, key=lambda x: (0 if x["id"] < 100 else 1, x["id"]))
+
+
+# Legacy compat — QUESTIONS and CATEGORIES used by quiz router
+QUESTIONS = []  # populated on first access
+
+
+def _ensure_loaded():
+    global QUESTIONS
+    if not QUESTIONS:
+        QUESTIONS.extend(load_questions())
+
+
+def get_questions():
+    _ensure_loaded()
+    return QUESTIONS

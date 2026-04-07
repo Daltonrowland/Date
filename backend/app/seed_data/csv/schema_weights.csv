@@ -1,0 +1,19 @@
+layer,component,weight,definition_0_1
+Behavioral Core,Archetype interaction,0.16,archetype_fit from AnswerPairQuantum
+Behavioral Core,Communication fit,0.1,comm_fit
+Behavioral Core,Regulation fit,0.1,reg_fit
+Behavioral Core,Love language fit,0.06,love_fit
+Behavioral Core,Readiness alignment,0.1,readiness_fit
+Friction / Stability,Shadow interaction,0.09,shadow_fit
+Friction / Stability,Integrity burden (inverse),0.07,integrity_fit = 1 - integrity_burden
+Friction / Stability,Cluster contradiction (inverse),0.04,cluster_fit = 1 - cluster_burden
+Friction / Stability,Pace / attachment mismatch (inverse),0.03,pace_fit = 1 - pace_mismatch_norm
+Polarity / Chemistry,Polarity fit,0.08,polarity_fit
+Polarity / Chemistry,Pursuit / receptivity fit,0.05,pursuit_fit (proxy: reciprocity difference)
+Cosmic Overlay,Zodiac,0.07,zodiac_norm (1–10 scaled to 0–1)
+Cosmic Overlay,Numerology,0.05,numerology_norm (1–10 scaled to 0–1)
+Gating,Risk gate,,gate = 1 - (0.55*risk_avg + 0.20*risk_max)
+Penalties,Rule penalty,,rule_penalty: traps + severe risk combos
+Output,Pair quantum norm,,"pair_norm = max(0, min(1, (0.88_base * gate) - rule_penalty ))"
+Output,Final match norm,,weighted average of pair_norm across questions + cosmic overlay
+Output,Final 350–850 score,,"score = 350 + 500*clamp(final_norm,0,1)"

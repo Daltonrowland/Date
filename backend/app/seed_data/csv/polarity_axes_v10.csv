@@ -1,0 +1,11 @@
+axis,field,fit_type,inside_chemistry_weight,definition,why_it_matters
+Initiation,initiation_axis,complement,0.18,Who naturally moves first. Low = waits; high = initiates.,"Tells whether the connection stalls, chases, or flows."
+Pursuit Preference,pursuit_axis,complement,0.14,"Whether they want to pursue, be pursued, alternate, or test before engaging.",Separates mutual passivity from magnetic pursuit rhythm.
+Leadership Comfort,leadership_axis,complement,0.12,Comfort directing or holding shape in the dynamic.,Predicts whether one person can carry structure without triggering the other.
+Surrender Safety,surrender_safety_axis,similarity,0.12,How safe it feels to relax into another person’s presence.,Attraction dies fast if closeness feels dangerous.
+Calm Receptivity,calm_receptivity_axis,similarity,0.12,"Ability to feel attraction in grounded, stable energy.",Distinguishes chemistry from nervous-system activation.
+Tension Attraction,tension_attraction_axis,balance@0.45,0.1,"How much uncertainty, mystery, challenge, or emotional distance reads as exciting.",Too high on both sides often creates drama addiction.
+Structure Preference,structure_preference_axis,similarity,0.08,"Preference for the connection to feel led, fluid, mirrored, undefined, or charged.",Measures whether both people want the same kind of relational shape.
+Energetic Flexibility,flexibility_axis,similarity,0.06,"Ability to move between leading, softening, and receiving.",Rigidity creates stalemates; flexibility makes repair easier.
+Validation Dependency,validation_dependency_axis,balance@0.40,0.04,"How much attraction depends on feeling wanted, chosen, or admired.",High dependency can inflate chemistry while weakening stability.
+Erotic-Safety Alignment,erotic_safety_alignment_axis,similarity,0.04,Whether what excites them also makes them feel safe.,Strong pairings align desire with safety rather than splitting them apart.

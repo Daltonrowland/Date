@@ -16,6 +16,11 @@ class User(Base):
     looking_for = Column(String)
     bio = Column(Text, default="")
     location = Column(String, default="")
+    photo_url = Column(Text, default="")  # base64 data URI or URL
+    email_verified = Column(Boolean, default=False)
+    verification_token = Column(String, nullable=True)
+    reset_token = Column(String, nullable=True)
+    reset_token_expires = Column(DateTime, nullable=True)
     quiz_completed = Column(Boolean, default=False)
     archetype = Column(String, default="")
     archetype_score = Column(Float, default=0.0)

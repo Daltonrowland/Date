@@ -1,0 +1,33 @@
+question_id,block_id,block_multiplier,question_weight,primary_axes,secondary_axes,notes
+q1,1,1.0,1.0,structure_preference_axis;flexibility_axis,initiation_axis;leadership_axis,Plan shifts / adaptation
+q2,1,1.0,1.0,calm_receptivity_axis;surrender_safety_axis,flexibility_axis;structure_preference_axis,Silence and pause
+q3,1,1.0,1.0,initiation_axis;leadership_axis,flexibility_axis;validation_dependency_axis,Choice under uncertainty
+q4,1,1.0,1.0,tension_attraction_axis;calm_receptivity_axis,surrender_safety_axis;structure_preference_axis,Early friction / unresolved tension
+q5,1,1.0,1.0,initiation_axis;structure_preference_axis,flexibility_axis;repair_endurance,Time pressure
+q6,1,1.0,1.0,surrender_safety_axis;erotic_safety_alignment_axis,calm_receptivity_axis;validation_dependency_axis,Emotional disclosure
+q7,1,1.0,1.0,leadership_axis;structure_preference_axis,tension_attraction_axis;calm_receptivity_axis,Conflicting preferences
+q8,1,1.0,1.0,validation_dependency_axis;flexibility_axis,surrender_safety_axis;structure_preference_axis,Being observed / exposure
+q9,2,1.1,1.1,structure_preference_axis;flexibility_axis,initiation_axis;leadership_axis,Plan shifts / adaptation
+q10,2,1.1,1.1,calm_receptivity_axis;surrender_safety_axis,flexibility_axis;structure_preference_axis,Silence and pause
+q11,2,1.1,1.1,initiation_axis;leadership_axis,flexibility_axis;validation_dependency_axis,Choice under uncertainty
+q12,2,1.1,1.1,tension_attraction_axis;calm_receptivity_axis,surrender_safety_axis;structure_preference_axis,Early friction / unresolved tension
+q13,2,1.1,1.1,initiation_axis;structure_preference_axis,flexibility_axis;repair_endurance,Time pressure
+q14,2,1.1,1.1,surrender_safety_axis;erotic_safety_alignment_axis,calm_receptivity_axis;validation_dependency_axis,Emotional disclosure
+q15,2,1.1,1.1,leadership_axis;structure_preference_axis,tension_attraction_axis;calm_receptivity_axis,Conflicting preferences
+q16,2,1.1,1.1,validation_dependency_axis;flexibility_axis,surrender_safety_axis;structure_preference_axis,Being observed / exposure
+q17,3,1.15,1.21,structure_preference_axis;flexibility_axis,initiation_axis;leadership_axis,Plan shifts / adaptation
+q18,3,1.15,1.21,calm_receptivity_axis;surrender_safety_axis,flexibility_axis;structure_preference_axis,Silence and pause
+q19,3,1.15,1.15,initiation_axis;leadership_axis,flexibility_axis;validation_dependency_axis,Choice under uncertainty
+q20,3,1.15,1.15,tension_attraction_axis;calm_receptivity_axis,surrender_safety_axis;structure_preference_axis,Early friction / unresolved tension
+q21,3,1.15,1.15,initiation_axis;structure_preference_axis,flexibility_axis;repair_endurance,Time pressure
+q22,3,1.15,1.15,surrender_safety_axis;erotic_safety_alignment_axis,calm_receptivity_axis;validation_dependency_axis,Emotional disclosure
+q23,3,1.15,1.15,leadership_axis;structure_preference_axis,tension_attraction_axis;calm_receptivity_axis,Conflicting preferences
+q24,3,1.15,1.15,validation_dependency_axis;flexibility_axis,surrender_safety_axis;structure_preference_axis,Being observed / exposure
+q25,4,1.2,1.26,structure_preference_axis;flexibility_axis,initiation_axis;leadership_axis,Plan shifts / adaptation
+q26,4,1.2,1.26,calm_receptivity_axis;surrender_safety_axis,flexibility_axis;structure_preference_axis,Silence and pause
+q27,4,1.2,1.2,initiation_axis;leadership_axis,flexibility_axis;validation_dependency_axis,Choice under uncertainty
+q28,4,1.2,1.2,tension_attraction_axis;calm_receptivity_axis,surrender_safety_axis;structure_preference_axis,Early friction / unresolved tension
+q29,4,1.2,1.2,initiation_axis;structure_preference_axis,flexibility_axis;repair_endurance,Time pressure
+q30,4,1.2,1.2,surrender_safety_axis;erotic_safety_alignment_axis,calm_receptivity_axis;validation_dependency_axis,Emotional disclosure
+q31,4,1.2,1.26,leadership_axis;structure_preference_axis,tension_attraction_axis;calm_receptivity_axis,Conflicting preferences
+q32,4,1.2,1.26,validation_dependency_axis;flexibility_axis,surrender_safety_axis;structure_preference_axis,Being observed / exposure

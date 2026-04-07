@@ -36,10 +36,12 @@ class UserProfile(BaseModel):
     looking_for: Optional[str]
     bio: Optional[str]
     location: Optional[str]
+    photo_url: Optional[str] = ""
     quiz_completed: bool
     archetype: Optional[str]
     archetype_score: float
     shadow_score: float
+    email_verified: bool = False
     created_at: datetime
 
     class Config:
@@ -51,6 +53,24 @@ class UserUpdate(BaseModel):
     age: Optional[int] = None
     bio: Optional[str] = None
     location: Optional[str] = None
+    photo_url: Optional[str] = None
+
+
+class PhotoUpload(BaseModel):
+    photo_data: str  # base64 data URI
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
+
+
+class VerifyEmailRequest(BaseModel):
+    token: str
 
 
 # ── Quiz ──────────────────────────────────────────────────────────────────────

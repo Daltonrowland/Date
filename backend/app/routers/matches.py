@@ -10,7 +10,8 @@ router = APIRouter(prefix="/matches", tags=["matches"])
 
 @router.get("", response_model=list[MatchResult])
 def get_matches(
-    limit: int = Query(50, le=100),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -18,6 +19,7 @@ def get_matches(
         db.query(CompatibilityScore)
         .filter(CompatibilityScore.user_a_id == current_user.id)
         .order_by(CompatibilityScore.score.desc())
+        .offset(offset)
         .limit(limit)
         .all()
     )

@@ -1,17 +1,22 @@
+import React from 'react'
 import { motion } from 'framer-motion'
 
 const TIER_COLORS = {
-  soul_aligned:     { from: '#C084FC', to: '#9333EA', label: '💜 Soul-Aligned' },
-  deep_connection:  { from: '#F472B6', to: '#EC4899', label: '💗 Deep Connection' },
-  strong_potential: { from: '#A855F7', to: '#6B21A8', label: '✨ Strong Potential' },
-  building_ground:  { from: '#86EFAC', to: '#22C55E', label: '🌱 Building Ground' },
-  friction_zone:    { from: '#FCD34D', to: '#F59E0B', label: '⚡ Friction Zone' },
-  red_flag_zone:    { from: '#F87171', to: '#DC2626', label: '🚩 Red Flag Zone' },
+  soul_aligned:       { from: '#C084FC', to: '#9333EA', label: '💜 Soul-Aligned' },
+  strong_potential:   { from: '#A855F7', to: '#6B21A8', label: '✨ Strong Potential' },
+  healthy_growing:    { from: '#86EFAC', to: '#22C55E', label: '🌿 Healthy & Growing' },
+  magnetic_risky:     { from: '#F472B6', to: '#EC4899', label: '🔥 Magnetic but Risky' },
+  possible_unstable:  { from: '#FCD34D', to: '#F59E0B', label: '⚡ Possible but Unstable' },
+  red_flag_zone:      { from: '#F87171', to: '#DC2626', label: '🚩 Red Flag Zone' },
+  // Legacy tier keys (backward compat)
+  deep_connection:    { from: '#F472B6', to: '#EC4899', label: '💗 Deep Connection' },
+  building_ground:    { from: '#86EFAC', to: '#22C55E', label: '🌱 Building Ground' },
+  friction_zone:      { from: '#FCD34D', to: '#F59E0B', label: '⚡ Friction Zone' },
 }
 
 export default function ScoreGauge({ score = 350, tier = 'building_ground', animated = true }) {
   const pct = Math.round(((score - 350) / 500) * 100)
-  const colors = TIER_COLORS[tier] || TIER_COLORS.building_ground
+  const colors = TIER_COLORS[tier] || TIER_COLORS.strong_potential
 
   const circumference = 2 * Math.PI * 54
   const offset = circumference - (pct / 100) * circumference
@@ -31,7 +36,7 @@ export default function ScoreGauge({ score = 350, tier = 'building_ground', anim
             strokeLinecap="round"
             strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: animated ? offset : offset }}
+            animate={{ strokeDashoffset: offset }}
             transition={{ duration: 2, ease: 'easeOut', delay: 0.3 }}
           />
           <defs>
@@ -50,9 +55,7 @@ export default function ScoreGauge({ score = 350, tier = 'building_ground', anim
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
           >
-            {animated ? (
-              <AnimatedNumber target={score} />
-            ) : score}
+            {animated ? <AnimatedNumber target={score} /> : score}
           </motion.span>
           <span className="text-white/40 text-xs mt-0.5">/ 850</span>
         </div>
@@ -92,5 +95,3 @@ function AnimatedNumber({ target }) {
 
   return current
 }
-
-import React from 'react'

@@ -47,8 +47,32 @@ export default function Profile() {
         {/* Header */}
         <motion.div className="card p-8 mb-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-3xl font-bold text-white flex-shrink-0">
-              {profile.name?.[0]?.toUpperCase()}
+            <div className="relative group">
+              {profile.photo_url ? (
+                <img src={profile.photo_url} alt={profile.name} className="w-20 h-20 rounded-full object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-3xl font-bold text-white flex-shrink-0">
+                  {profile.name?.[0]?.toUpperCase()}
+                </div>
+              )}
+              {isOwn && (
+                <label className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                  📷
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    if (file.size > 2 * 1024 * 1024) { alert('Max 2MB'); return }
+                    const reader = new FileReader()
+                    reader.onload = async () => {
+                      try {
+                        const { data: updated } = await api.post('/profiles/me/photo', { photo_data: reader.result })
+                        setProfile(updated)
+                      } catch (_) { alert('Upload failed') }
+                    }
+                    reader.readAsDataURL(file)
+                  }} />
+                </label>
+              )}
             </div>
             <div>
               <h1 className="font-display text-2xl font-bold text-white">{profile.name}</h1>
