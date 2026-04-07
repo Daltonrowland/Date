@@ -24,17 +24,19 @@ def update_my_profile(
     db: Session = Depends(get_db),
 ):
     data = payload.model_dump(exclude_none=True)
-    # Handle DOB → life path
-    if "date_of_birth" in data and data["date_of_birth"]:
-        try:
-            current_user.date_of_birth = datetime.strptime(data["date_of_birth"], "%Y-%m-%d").date()
-            current_user.life_path_number = compute_life_path(data["date_of_birth"])
-        except Exception:
-            pass
-        del data["date_of_birth"]
+    # Handle DOB → life path (remove from data dict so setattr doesn't try to write a string to Date column)
+    if "date_of_birth" in data:
+        dob_str = data.pop("date_of_birth")
+        if dob_str and isinstance(dob_str, str) and len(dob_str) >= 8:
+            try:
+                current_user.date_of_birth = datetime.strptime(dob_str, "%Y-%m-%d").date()
+                current_user.life_path_number = compute_life_path(dob_str)
+            except Exception:
+                pass
     # Set primary photo from photos list if provided
     if "profile_photos" in data and data["profile_photos"]:
         current_user.profile_photo = data["profile_photos"][0]
+    # Remove empty strings for fields that shouldn't be overwritten with blanks
     for field, value in data.items():
         if hasattr(current_user, field):
             setattr(current_user, field, value)

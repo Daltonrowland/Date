@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast'
@@ -15,6 +15,7 @@ export default function Onboarding() {
   const { user, updateUser } = useAuthStore()
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
+  const [rsCode, setRsCode] = useState(user?.rs_code || '')
   const [form, setForm] = useState({
     name: user?.name || '', age: '', gender: '', location: '', dating_status: '',
     bio: '', height: '', occupation: '', education: '',
@@ -22,7 +23,17 @@ export default function Onboarding() {
   })
   const [lifePath, setLifePath] = useState(null)
 
-  const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value || e.target?.textContent }))
+  // Fetch RS code from API if not in store
+  useEffect(() => {
+    if (!rsCode) {
+      api.get('/profiles/me').then(({ data }) => {
+        setRsCode(data.rs_code || '')
+        updateUser({ rs_code: data.rs_code })
+      }).catch(() => {})
+    }
+  }, [])
+
+  const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }))
   const setVal = (key, val) => setForm(f => ({ ...f, [key]: val }))
 
   const computeLifePath = (dob) => {
@@ -41,34 +52,74 @@ export default function Onboarding() {
     setLifePath(computeLifePath(dob))
   }
 
-  const saveAndNext = async () => {
+  const copyRsCode = () => {
+    navigator.clipboard.writeText(rsCode).then(() => toast.success('RS Code copied!')).catch(() => {})
+  }
+
+  const handleNext = async () => {
+    // Step 0 (Welcome) — just advance, no API call needed
+    if (step === 0) {
+      setStep(1)
+      return
+    }
+
     setSaving(true)
     try {
-      const payload = { ...form, age: form.age ? Number(form.age) : undefined }
+      // Build payload — only send non-empty values
+      const payload = {}
+      for (const [key, value] of Object.entries(form)) {
+        if (value !== '' && value !== null && value !== undefined) {
+          payload[key] = key === 'age' ? Number(value) : value
+        }
+      }
+      // Don't send empty date_of_birth string
+      if (!payload.date_of_birth) delete payload.date_of_birth
+
       if (step === 6) payload.onboarding_completed = true
       await api.patch('/profiles/me', payload)
+
       if (step === 6) {
         updateUser({ onboarding_completed: true, ...form })
         navigate('/quiz')
       } else {
         setStep(s => s + 1)
       }
-    } catch (_) { toast.error('Save failed') }
-    finally { setSaving(false) }
+    } catch (err) {
+      toast.error('Save failed — try again')
+      console.error('Save error:', err)
+    } finally {
+      setSaving(false)
+    }
   }
 
   const steps = [
-    // Step 0: Welcome
+    // Step 0: Welcome with RS Code
     () => (
-      <div className="text-center py-8">
+      <div className="text-center py-6 sm:py-8">
         <div className="text-6xl mb-6">✦</div>
-        <h2 className="font-display text-3xl font-bold text-white mb-3">Welcome to Relationship Scores</h2>
-        <p className="text-white/50 mb-8 max-w-sm mx-auto">Your unique identity in the Relationship Scores universe.</p>
-        <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-purple-600/20 border border-purple-500/30 mb-6">
-          <span className="text-white/40 text-sm">Your RS Code</span>
-          <span className="text-purple-300 text-2xl font-mono font-bold tracking-[0.3em]">{user?.rs_code || '------'}</span>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-3">Welcome to Relationship Scores</h2>
+        <p className="text-white/50 mb-8 max-w-sm mx-auto">This is your unique identity in the Relationship Scores universe.</p>
+
+        {/* RS Code display */}
+        <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-2xl bg-gradient-to-br from-purple-600/20 to-pink-600/10 border-2 border-gold-500/40 mb-6">
+          <span className="text-gold-400 text-xs font-medium uppercase tracking-widest">Your RS Code</span>
+          <div className="flex items-center gap-3">
+            <span className="text-white text-3xl sm:text-4xl font-mono font-bold tracking-[0.4em]">
+              {rsCode || '------'}
+            </span>
+            {rsCode && (
+              <button onClick={copyRsCode}
+                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all"
+                title="Copy to clipboard">
+                📋
+              </button>
+            )}
+          </div>
         </div>
-        <p className="text-white/30 text-xs max-w-xs mx-auto">This is your private identity code used across the platform. Share it to let people find you.</p>
+
+        <p className="text-white/30 text-xs max-w-xs mx-auto leading-relaxed">
+          This is your private identity code. Share it with friends so they can find you on the platform.
+        </p>
       </div>
     ),
     // Step 1: Basics
@@ -111,7 +162,7 @@ export default function Onboarding() {
             <div className="text-white/20 text-xs text-right">{(form.bio || '').length}/500</div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="label">Height</label><input className="input min-h-[44px]" placeholder="5'10&quot;" value={form.height} onChange={set('height')} /></div>
+            <div><label className="label">Height</label><input className="input min-h-[44px]" placeholder='5&#39;10"' value={form.height} onChange={set('height')} /></div>
             <div><label className="label">Occupation</label><input className="input min-h-[44px]" placeholder="Software Engineer" value={form.occupation} onChange={set('occupation')} /></div>
           </div>
           <div><label className="label">Education</label>
@@ -151,7 +202,7 @@ export default function Onboarding() {
             }} />
           </label>
         </div>
-        {user?.profile_photo && <div className="flex justify-center mt-4"><img src={user.profile_photo} className="w-24 h-24 rounded-full object-cover" /></div>}
+        {user?.profile_photo && <div className="flex justify-center mt-4"><img src={user.profile_photo} alt="Profile" className="w-24 h-24 rounded-full object-cover" /></div>}
       </div>
     ),
     // Step 4: Preferences
@@ -207,9 +258,9 @@ export default function Onboarding() {
     ),
     // Step 6: Ready
     () => (
-      <div className="text-center py-8">
+      <div className="text-center py-6 sm:py-8">
         <div className="text-6xl mb-6">🧬</div>
-        <h2 className="font-display text-3xl font-bold text-white mb-3">You're Ready!</h2>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-3">You're Ready!</h2>
         <p className="text-white/50 mb-4 max-w-sm mx-auto">Complete the 60-question Genesis OS assessment to discover your archetype, shadow type, and compatibility score.</p>
         <p className="text-white/30 text-sm mb-8">Your archetype will be revealed after the quiz.</p>
       </div>
@@ -238,7 +289,7 @@ export default function Onboarding() {
 
         <div className="flex gap-3 mt-6">
           {step > 0 && <button onClick={() => setStep(s => s - 1)} className="btn-ghost flex-1 min-h-[44px]">← Back</button>}
-          <button onClick={saveAndNext} disabled={saving} className="btn-primary flex-1 min-h-[44px]">
+          <button onClick={handleNext} disabled={saving} className="btn-primary flex-1 min-h-[44px]">
             {saving ? 'Saving…' : step === 6 ? '🧬 Take Compatibility Quiz →' : step === 0 ? 'Get Started →' : 'Continue →'}
           </button>
         </div>
