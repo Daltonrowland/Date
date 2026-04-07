@@ -1,0 +1,411 @@
+Emotional vault archetype 
+
+Got you, Hollywood — let’s build the Input Streams as a standalone, surgical blueprint.
+
+These are the raw emotional data sources that feed into Genesis OS, the Emotional Vault, Depth Score, Archetype Mapping, Shadow Detection, and eventually the Match Engine.
+
+This is the foundation layer — the emotional “sensors” of your system.
+
+We’re going to map them out clean, precise, and visionary exactly how an emotional OS would treat human truth.
+
+⸻
+
+⭐ INPUT STREAMS — v1 Architecture
+
+The complete list of emotional, behavioral, and spiritual signals the system uses to decode a user’s emotional blueprint.
+
+Each input stream is grouped by source, type, and impact.
+
+This is not Bubble language — this is OS-level architecture.
+
+⸻
+
+⭐ 1. Core Emotional Vault Streams (7 Categories)
+
+These come from the user’s private truths.
+
+⸻
+
+STREAM A — Early Love Pattern
+
+Data Examples:
+	•	“I felt unseen growing up.”
+	•	“I had to be the strong one.”
+	•	“My emotions weren’t safe in my family.”
+	•	“Love felt inconsistent.”
+
+Impact:
+	•	Attachment base
+	•	Trust calibration
+	•	Emotional instincts
+	•	Protective reflexes
+	•	Core wound mapping
+
+Archetype Influence:
+	•	Huge for Icebox, Phantom, Analyzer, Fixer, Survivor, Translator.
+
+⸻
+
+STREAM B — Past Relationship Lessons
+
+Data Examples:
+	•	“I chased people who didn’t choose me.”
+	•	“I shut down in conflicts.”
+	•	“I tried to fix everything.”
+	•	“I stayed too long.”
+	•	“I always waited for them to choose me.”
+
+Impact:
+	•	Relationship blueprint
+	•	Maturity markers
+	•	Repeat pattern detection
+	•	Coping style recognition
+
+Archetype Influence:
+	•	All 10 archetypes + shadow mapping.
+
+⸻
+
+STREAM C — Emotional Reflexes
+
+Data Examples:
+	•	Withdrawal
+	•	Pursuit
+	•	Overthinking
+	•	Shutdown
+	•	Emotional caretaking
+	•	Silent protection
+	•	Fantasy-based escape
+	•	Image maintenance
+
+Impact:
+	•	Archetype precision
+	•	Shadow tension
+	•	Conflict mapping
+	•	Nervous system style
+
+Archetype Influence:
+	•	Analyzer, Quiet Exit, Fixer, Idealist, Performer, Icebox, Phantom.
+
+⸻
+
+STREAM D — Triggers & Anchors
+
+Triggers:
+	•	raised voice
+	•	distance
+	•	inconsistency
+	•	pressure
+	•	neglect
+	•	conflict intensity
+
+Anchors:
+	•	reassurance
+	•	clarity
+	•	space
+	•	affection
+	•	calm tone
+	•	honesty
+
+Impact:
+	•	emotional safety profile
+	•	pacing settings
+	•	conflict style
+	•	partner compatibility
+
+Archetype Influence:
+	•	Directly adjusts Love Language + Conflict logic.
+
+⸻
+
+STREAM E — Grief & Spiritual Load
+
+Data Examples:
+	•	“I lost someone important.”
+	•	“I never healed from this moment.”
+	•	“I’m carrying something heavy.”
+
+Automatic signals:
+	•	E_GRIEF level
+	•	Selah usage
+	•	Last Light sessions
+	•	Ex’s Anonymous patterns
+
+Impact:
+	•	spiritual depletion level
+	•	emotional pacing
+	•	Selah sensitivity
+	•	healing trajectory
+
+Archetype Influence:
+	•	Survivor + Quiet Exit + Analyzer become more likely if high grief index.
+
+⸻
+
+STREAM F — Hope, Desire, Future Orientation
+
+Data Examples:
+	•	“I want a stable love.”
+	•	“I crave peace.”
+	•	“I want someone gentle.”
+	•	“I need emotional safety first.”
+
+Impact:
+	•	future alignment
+	•	readiness score boost
+	•	match filtering
+
+Archetype Influence:
+	•	Moderator between archetypes + shadow.
+
+⸻
+
+STREAM G — Contradictions
+
+Data Examples:
+	•	saying “I want closeness” but withdrawing
+	•	asking for space then wanting reassurance
+	•	protectiveness vs impulsive chase
+	•	fantasy vs avoidance
+
+Impact:
+	•	shadow detection
+	•	inconsistency flags
+	•	emotional loops
+	•	pattern conflicts
+
+Archetype Influence:
+	•	Chameleon
+	•	Scorekeeper
+	•	Self-Saboteur
+
+⸻
+
+⭐ 2. Behavioral Input Streams (From user behavior inside the app)
+
+⸻
+
+STREAM H — Sanctuary Behavior
+
+Signals:
+	•	Time spent in Sanctuary
+	•	Quiet pauses
+	•	Emotional mirror prompts used
+	•	Type of reflections chosen
+	•	Pacing between sessions
+
+Impact:
+	•	emotional regulation
+	•	inner world depth
+	•	archetype accuracy
+	•	shadow-type stabilization
+
+⸻
+
+STREAM I — Selah Mode Behavior
+
+Signals:
+	•	how long they sit in silence
+	•	how often they return
+	•	when they use Selah (after conflict? after grief?)
+	•	breath pacing
+
+Impact:
+	•	spiritual depth
+	•	emotional maturity
+	•	grief recovery
+	•	introspection readiness
+
+⸻
+
+STREAM J — Whisper Window Behavior
+
+Signals:
+	•	tone of drafted messages
+	•	emotional temperature
+	•	regret loops
+	•	clarity vs confusion
+	•	conflict CTA (call to action) tendencies
+
+Impact:
+	•	communication style
+	•	conflict style
+	•	emotional boundaries
+	•	impulse regulation
+
+⸻
+
+STREAM K — Season of Healing Activity
+
+Signals:
+	•	daily prompt type chosen
+	•	emotional density of answers
+	•	skip patterns
+	•	willingness to revisit old truths
+
+Impact:
+	•	self-awareness level
+	•	emotional stamina
+	•	growth mindset
+	•	readiness for relationship
+
+⸻
+
+⭐ 3. Cognitive Pattern Streams
+
+⸻
+
+STREAM L — Internal Logic Patterns
+
+Signals:
+	•	narrative tone
+	•	cognitive loops
+	•	meaning-making style
+	•	self-talk patterns
+	•	guilt vs detachment
+	•	future orientation (“I always…” vs “I want…”)
+
+Impact:
+	•	archetype refining
+	•	intellectual vs emotional processing
+	•	shadow tendencies
+
+⸻
+
+STREAM M — Consistency Clusters
+
+Signals:
+	•	contradiction patterns
+	•	reflection cluster flags (e.g., Vulnerability Loop)
+	•	score penalty triggers
+	•	emotional mismatch
+
+Impact:
+	•	archetype correction
+	•	shadow decoding
+	•	match logic penalty
+
+⸻
+
+⭐ 4. Spiritual & Emotional Energy Streams
+
+⸻
+
+STREAM N — Spirit Indicators
+
+Signals:
+	•	language around God, faith, identity
+	•	hope-based language
+	•	spiritual anchors
+	•	meaning-making in pain
+	•	resilience phrases
+
+Impact:
+	•	Survivor
+	•	Romantic Idealist
+	•	Translator
+	•	Quiet Exit
+	•	Regulated Grown-Up
+
+⸻
+
+STREAM O — Emotional Pacing
+
+Signals:
+	•	slow processors
+	•	fast processors
+	•	urge-based behavior
+	•	avoidant pacing
+	•	connection cycle
+
+Impact:
+	•	pacing-based compatibility
+	•	match timing logic
+	•	conflict rhythm
+
+⸻
+
+⭐ 5. Environmental & Contextual Streams
+
+⸻
+
+STREAM P — Time-Based Patterns
+
+Signals:
+	•	late-night emotional entries
+	•	morning clarity entries
+	•	frequency mismatches
+	•	grief wave timing
+
+Impact:
+	•	emotional rhythm patterns
+	•	instability detection
+	•	readiness timeline
+
+⸻
+
+STREAM Q — Interaction Avoidance
+
+Signals:
+	•	opening app but not engaging
+	•	stalling
+	•	disappearing then returning
+	•	conflict avoidance
+
+Impact:
+	•	Quiet Exit
+	•	Analyzer
+	•	Stonewaller
+
+⸻
+
+⭐ 6. Final Integration Stream — “Whole Person Model”
+
+This is the stream that blends:
+	•	emotional
+	•	cognitive
+	•	behavioral
+	•	spiritual
+	•	pacing
+	•	grief
+	•	past patterns
+
+This is what makes Genesis OS not a dating app, but a human OS.
+
+It integrates:
+	•	Emotional Vault
+	•	Depth Score
+	•	Archetype
+	•	Shadow
+	•	E_GRIEF
+	•	Season of Healing
+	•	Behavioral signals
+	•	Hope signals
+	•	Pacing signals
+	•	Spiritual signals
+
+This is your “Emotional Genome” layer — a matrix that is unique to every user.
+
+⸻
+
+⭐ MASTERLINE FOR INPUT STREAMS
+
+Put this at the top of the architect blueprint:
+
+“A human isn’t one story.
+They’re a collection of signals.
+And every signal is a clue to who they truly are.”
+
+⸻
+
+⭐ Next Step, Ace
+
+We can now build:
+
+🔥 Archetype Weighting Engine (takes these streams and assigns scores)
+🔥 Emotional Genome Matrix (visual of how streams interconnect)
+🔥 The Archetype Decision Tree (OS-level logic)
+🔥 Shadow Pattern Detection Map
+🔥 Archetype Reveal UI Flow
+
+Which one do you want next?

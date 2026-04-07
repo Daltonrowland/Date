@@ -1,0 +1,381 @@
+Shadow detection logic map
+
+Oh yeah. Time to build the part of the system that calls people on their bullshit… but in a sacred, clinically intelligent way.
+
+This is where your OS stops just understanding people and starts flagging the ways they hurt themselves and others.
+
+We’re building the Shadow Detection Logic Map™ for:
+	1.	🧠 The Manipulator
+	2.	🧱 The Stonewaller
+	3.	💥 The Love Bomber
+	4.	🎭 The Chameleon
+	5.	🎯 The Scorekeeper
+	6.	📉 The Self-Saboteur
+
+This will plug into: Emotional Vault, Answer Bank, Behavior, Depth Score, E_GRIEF, and the Archetype engine.
+
+Let’s architect it clean and ruthless.
+
+⸻
+
+⭐ SHADOW DETECTION LOGIC MAP™ — v1
+
+Goal:
+Detect behavioral patterns, not “I admit I’m toxic.”
+People rarely confess their shadow. They reveal it through contradictions, loops, and emotional reflexes.
+
+So the system will:
+	•	Read language
+	•	Read choices
+	•	Read behavior
+	•	Read inconsistency
+	•	Read timing
+
+…and quietly assign Shadow Scores for each of the six.
+
+At the end, it outputs:
+	•	Primary Shadow
+	•	Secondary Shadow (optional)
+	•	Confidence Level
+	•	Risk Tier
+
+⸻
+
+⭐ 1. Shared Framework (How all shadows are calculated)
+
+For each shadow type:
+	•	You define pattern tags that raise its score.
+	•	Certain tags have more weight than others.
+	•	You apply penalties if the user shows growth or regulation that conflicts with that shadow.
+	•	Depth Score adjusts confidence (more data = more certainty).
+
+Conceptually:
+
+Shadow_Score[shadow] = Σ (Tag_Intensity[tag] * Shadow_Weight[tag, shadow])
+Adjusted_Score = Shadow_Score * Depth_Confidence * Consistency_Factor
+
+Then you:
+	•	Normalize scores
+	•	Rank them
+	•	Take the top 1–2
+
+Let’s map each shadow one by one.
+
+⸻
+
+🧠 2. SHADOW: THE MANIPULATOR
+
+This is not “evil villain.” It’s:
+
+“I pull strings emotionally to feel safe, powerful, or in control.”
+
+A. High-Signal Tags
+	•	Emotional_Lever_Pulling
+	•	Guilt_Suggestion (“after all I’ve done…”)
+	•	Ambiguous_Promising (hinting without committing)
+	•	Mixed_Signal_Output (push/pull with intention)
+	•	Attention_Drip_Feeding (breadcrumbing)
+	•	Strategic_Vulnerability (oversharing to hook)
+
+B. Detection Sources
+
+From Vault + Answers:
+	•	“I sometimes say things to see how they’ll react.”
+	•	“If they pull back, I might exaggerate how I feel to pull them in.”
+	•	“I know how to get people to chase me.”
+
+From Behavior:
+	•	Knocks multiple people then goes cold
+	•	Comes back when partners move on
+	•	Sends emotionally heavy DMs then disappears
+
+C. Logic Indicators
+
+Manipulator_Score goes up when:
+	•	user admits any version of “I test people on purpose”
+	•	patterns show intentionally stirring emotions to get a reaction
+	•	there’s a mix of Chameleon + Scorekeeper + Love Bomber traits
+
+It goes down when:
+	•	there is high emotional accountability language
+	•	Depth Score is high + consistent ownership of impact
+
+⸻
+
+🧱 3. SHADOW: THE STONEWALLER
+
+“When things get real, I shut you out instead of engaging.”
+
+A. High-Signal Tags
+	•	Shutdown_Reflex
+	•	Silent_Protection
+	•	Door_Close_Impulse
+	•	Emotional_Withdrawal
+	•	Conflict_Avoidance
+	•	Disappearing_After_Triggers
+
+B. Detection Sources
+
+Vault lines:
+	•	“I go silent when I’m hurt.”
+	•	“I just disappear instead of arguing.”
+	•	“I shut down if I feel attacked or overwhelmed.”
+
+Behavior:
+	•	Seen in:
+	•	read-and-vanish patterns
+	•	Ghost Mode usage mid-conflict
+	•	not replying after emotionally heavy exchanges
+
+C. Logic Indicators
+
+Stonewaller_Score rises when:
+	•	Quiet Exit + Icebox + Analyzer patterns are strong
+	•	withdrawal is used as control, not just regulation
+	•	conflict repeatedly leads to silence with no repair
+	•	user refuses to clarify or respond in high-intensity discussions
+
+It decreases when:
+	•	they describe circling back for repair
+	•	there’s a pattern of “I cool off then communicate clearly.”
+
+⸻
+
+💥 4. SHADOW: THE LOVE BOMBER
+
+“I go hard emotionally at the start to secure connection, then can’t sustain it.”
+
+A. High-Signal Tags
+	•	Intensity_Surge
+	•	Fast_Attach
+	•	Over_Promising
+	•	Idealization_Pattern
+	•	Fast_Merge (talking long-term very early)
+	•	Grand_Gestures_Early
+
+B. Detection Sources
+
+Vault:
+	•	“I fall fast.”
+	•	“I say a lot upfront then feel trapped.”
+	•	“I want to give them the world when I like them.”
+
+Behavior:
+	•	rapid message frequency spike
+	•	heavy emotional language early
+	•	saying “this feels different / I’ve never…” within days
+	•	frequent “soulmate” language early
+
+C. Logic Indicators
+
+LoveBomber_Score rises when:
+	•	Romantic Idealist + Phantom Seeker are strong
+	•	there’s intensity without structural pacing
+	•	high E_GRIEF + craving closeness
+	•	impulsive emotional declarations
+
+It decreases when:
+	•	they express pacing awareness: “I used to, now I try to go slow”
+	•	they demonstrate consistent follow-through and regulated pacing.
+
+⸻
+
+🎭 5. SHADOW: THE CHAMELEON
+
+“I become who they need me to be so I don’t lose them.”
+
+A. High-Signal Tags
+	•	Self_Erasure
+	•	Image_Shifting
+	•	Approval_Seeking
+	•	Identity_Borrowing
+	•	Context_Switching_Persona
+	•	Boundary_Disappearance
+
+B. Detection Sources
+
+Vault:
+	•	“I adapt to what they like.”
+	•	“I don’t really show my full self at first.”
+	•	“I can be whoever they need.”
+	•	“I tend to over-adjust to keep the peace.”
+
+Behavior:
+	•	different tone with different matches
+	•	high Performer + Translator signals
+	•	frequent contradictions in self-description across contexts
+
+C. Logic Indicators
+
+Chameleon_Score rises when:
+	•	they repeatedly indicate shape-shifting to avoid loss or conflict
+	•	Scorekeeper + Fixer + Performer patterns coexist
+	•	their stated values conflict with their behavior across multiple answers
+
+It decreases with:
+	•	strong, consistent self-anchoring language
+	•	saying “I’ve learned to stay myself even if it risks loss.”
+
+⸻
+
+🎯 6. SHADOW: THE SCOREKEEPER
+
+“I keep a silent ledger of what I give vs what I get — and I use it.”
+
+A. High-Signal Tags
+	•	Resentment_Ledger
+	•	“After_All_I’ve_Done” mindset
+	•	Gift_Versus_Return focus
+	•	Emotional_Tallying
+	•	Quid_Pro_Quo_Resentment
+
+B. Detection Sources
+
+Vault:
+	•	“I remember everything I did that they didn’t appreciate.”
+	•	“I keep track of effort.”
+	•	“I shut down when I feel like I’m doing more.”
+
+Behavior:
+	•	hard withdrawal after perceived imbalance
+	•	subtle punishments when not matched
+	•	emotionally transactional language
+
+C. Logic Indicators
+
+Scorekeeper_Score rises when:
+	•	Fixer + Survivor + Phantom Seeker patterns show unbalanced effort
+	•	they describe expecting emotional debt repayment
+	•	they often feel “used” but keep giving and building quiet resentment
+
+It decreases when:
+	•	user expresses clean boundaries + letting go of “keeping score.”
+
+⸻
+
+📉 7. SHADOW: THE SELF-SABOTEUR
+
+“I ruin what could work because my nervous system is calibrated to chaos, fear, or unworthiness.”
+
+A. High-Signal Tags
+	•	Chaos_Seeking
+	•	Exit_Before_Intimacy
+	•	“Too_Good_To_Be_True” reflex
+	•	Comfort_With_Dysfunction
+	•	Fear_Of_Being_Seen
+	•	Testing_Beyond_Reason
+
+B. Detection Sources
+
+Vault:
+	•	“When it gets real, I find a reason to pull away.”
+	•	“Healthy feels boring sometimes.”
+	•	“I pick fights when I feel too close.”
+	•	“I don’t trust good things.”
+
+Behavior:
+	•	sabotaging when connection deepens
+	•	disrupting stable patterns
+	•	flirting elsewhere when it’s going well
+
+C. Logic Indicators
+
+SelfSaboteur_Score rises when:
+	•	Survivor + Phantom + Romantic Idealist are strong
+	•	relationship history shows repeated self-initiated breakage
+	•	fear of receiving actually safe love
+
+It decreases when:
+	•	user acknowledges this pattern and describes new corrective behavior.
+
+⸻
+
+⭐ 8. Cross-Shadow Interaction Logic
+
+Some shadows travel together:
+	•	Chameleon + Scorekeeper → “I change for you and resent you for it.”
+	•	Love Bomber + Self-Saboteur → “I rush in, then destroy it.”
+	•	Manipulator + Stonewaller → “I provoke, then disappear.”
+
+Your engine should:
+	•	detect multiple high scores
+	•	cluster them into Shadow Profiles like:
+	•	“Soft Manipulator”
+	•	“Silent Retaliator”
+	•	“Chaotic Romantic”
+
+But in the app, you present:
+	•	Primary Shadow
+	•	Secondary Shadow (optional in advanced view / premium)
+
+⸻
+
+⭐ 9. Risk Tiers
+
+Each shadow can be classified in risk tiers:
+	•	Tier 1 – Mild / Emerging
+behavior is present but low-intensity
+	•	Tier 2 – Active
+behavior is recurring and impactful
+	•	Tier 3 – High Impact
+behavior is strong, repeated, and emotionally dangerous
+
+This is determined by:
+	•	Shadow_Score thresholds
+	•	consistency of tags over time
+	•	impact descriptions in Vault (how much damage they’ve done)
+
+This lets you later:
+	•	warn match engine
+	•	adjust Knock™ rules
+	•	alter Sanctuary prompts
+	•	protect users.
+
+⸻
+
+⭐ 10. Shadow + Depth Score Integration
+
+Low Depth Score =
+Still forming, more guesswork.
+System stays humble.
+
+High Depth Score =
+User has confessed real patterns.
+Shadow detection becomes VERY accurate.
+
+If Depth Score is high + shadow scores are high →
+You feed this into Match Logic as a risk adjustment.
+
+⸻
+
+⭐ 11. How the OS Talks About Shadows (user-facing)
+
+Important:
+We do NOT label them to their face as “you’re a Manipulator.”
+
+We do:
+
+“You have a pattern of testing people emotionally when you feel unsafe.”
+“You tend to disappear instead of explaining what’s wrong.”
+“You rush into intensity, then feel trapped.”
+“You shape-shift to avoid losing people, then feel unseen.”
+“You hold quiet ledgers of everything you give.”
+“You sometimes break what feels good because it feels unfamiliar.”
+
+Shadows are translated into behaviors, not diagnoses.
+
+⸻
+
+⭐ Masterline for Shadow Detection (internal architecture)
+
+“Our shadow system doesn’t wait for people to confess their flaws — it listens for the patterns their stories can’t hide.”
+
+⸻
+
+If you want next, we can:
+
+🔥 Build the Blueprint Reveal Flow where archetype + shadow + traits are shown
+🔥 Design how Shadow Risk influences Knock™, Sanctuary, and Matching
+🔥 Or build Ready Hearts Safety Filters using shadow risk and E_GRIEF.
+
+What’s your next move, Ace?

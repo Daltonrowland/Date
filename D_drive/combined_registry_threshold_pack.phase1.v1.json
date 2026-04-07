@@ -1,0 +1,1213 @@
+{
+  "manifest": {
+    "pack_id": "genesis_os_phase1_registry_threshold_pack_v1",
+    "version": "1.0.0",
+    "generated_at": "2026-04-04T02:04:12.540125",
+    "scope": "Phase 1 only",
+    "authoritative_precedence": [
+      "genesis_os_final_quantum_scoring_workbook_v10_polarity.xlsx",
+      "Genesis_OS_Phase_1_Full_Build_Spec.pdf",
+      "Genesis_OS_Unified_Developer_Blueprint_Clean_v1.pdf",
+      "Readiness_Forecast_Contract_v1.pdf",
+      "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf",
+      "Cluster_Rule_Pack_Specification_v1.pdf",
+      "Cluster_Rule_Pack_Files_Batch_1.pdf",
+      "Genesis_OS_Missing_Layers_Blueprint_Detailed_v2.pdf",
+      "Sanctuary_Core_Module_State_Machine_and_Payload_Spec_v1.pdf",
+      "Genesis_OS_System_Gap_Audit_and_Drift_Addendum.pdf"
+    ],
+    "notes": [
+      "This pack freezes code-table exports and threshold/config values for the Phase 1 build packet.",
+      "Values that were not numerically frozen in the source documents are explicitly left unresolved rather than invented.",
+      "Compatibility score law remains workbook-owned and is not re-authored in this pack."
+    ]
+  },
+  "registry": {
+    "core_enums": {
+      "account_state": [
+        "assessment_incomplete",
+        "eligible_in_pool",
+        "knock_pending",
+        "conversation_active",
+        "in_relationship",
+        "post_breakup_recovery",
+        "ghost_mode"
+      ],
+      "relationship_state": [
+        "single",
+        "talking",
+        "matched",
+        "in_relationship",
+        "ended",
+        "paused"
+      ],
+      "dating_status": [
+        "Talking",
+        "Friends",
+        "Dating",
+        "Maybe long term",
+        "Marriage"
+      ],
+      "match_visibility_mode": [
+        "public_pool",
+        "hidden",
+        "invite_only",
+        "ghost"
+      ],
+      "sanctuary_module_id_phase1": [
+        "SAN_STILL",
+        "SAN_MIRROR",
+        "SAN_WHISPER",
+        "SAN_GHOST"
+      ],
+      "sanctuary_universal_state": [
+        "IDLE",
+        "AVAILABLE",
+        "INITIATED",
+        "AWAITING_INPUT",
+        "ACTIVE",
+        "AWAITING_AI",
+        "AWAITING_CONFIRMATION",
+        "PAUSED",
+        "COMPLETED",
+        "ARCHIVED",
+        "SUPPRESSED"
+      ],
+      "cluster_severity": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "cluster_writeback_class": [
+        "ephemeral observation",
+        "soft write-back",
+        "operational write-back",
+        "persistent write-back"
+      ],
+      "sanctuary_writeback_class": [
+        "WB0",
+        "WB1",
+        "WB2",
+        "WB3",
+        "WB4",
+        "WB5"
+      ],
+      "confidence_band": [
+        "low",
+        "guarded",
+        "medium",
+        "high"
+      ],
+      "readiness_sufficiency_status": [
+        "insufficient",
+        "internal_only",
+        "user_visible"
+      ],
+      "forecast_display_posture": [
+        "suppressed",
+        "guarded",
+        "visible",
+        "expanded"
+      ],
+      "cluster_family_code": [
+        "CF-CONTRA",
+        "CF-BURDEN",
+        "CF-DRIFT",
+        "CF-REPAIR",
+        "CF-SHADOW",
+        "CF-READ"
+      ],
+      "source_type": [
+        "self_report",
+        "telemetry",
+        "ai_extract",
+        "coach",
+        "system"
+      ],
+      "lane": [
+        "fast",
+        "medium",
+        "slow",
+        "event"
+      ],
+      "sanctuary_actor_type": [
+        "user",
+        "system",
+        "ai",
+        "moderation"
+      ]
+    },
+    "workbook_labels": {
+      "archetypes": [
+        "Analyzer",
+        "Fixer",
+        "Icebox",
+        "Performer",
+        "Phantom Seeker",
+        "Quiet Exit",
+        "Regulated Grown-Up",
+        "Romantic Idealist",
+        "Survivor",
+        "Translator"
+      ],
+      "shadow_types": [
+        "Chameleon",
+        "Love Bomber",
+        "Manipulator",
+        "Scorekeeper",
+        "Self-Saboteur",
+        "Stonewaller"
+      ],
+      "access_style": [
+        "Guarded",
+        "Measured",
+        "Open",
+        "Selective"
+      ],
+      "conflict_style": [
+        "Avoidant",
+        "Direct",
+        "Emotional",
+        "Indirect",
+        "Logical",
+        "Mixed"
+      ],
+      "repair_style": [
+        "Co-repair",
+        "Delay",
+        "Re-engage",
+        "Suppress"
+      ],
+      "attachment_style": [
+        "Mixed",
+        "Rush-risk",
+        "Slow-build"
+      ],
+      "nervous_system_bias": [
+        "Calm-seeking",
+        "Mixed"
+      ]
+    },
+    "cluster_catalog": [
+      {
+        "canonical_id": "CL_VULN_LOOP",
+        "rule_pack_alias": "CL-101",
+        "display_name": "Vulnerability Loop",
+        "family_code": "CF-CONTRA",
+        "scope": "individual_primary_pair_effect_allowed",
+        "user_visible_softened_only": true,
+        "phase1_status": "included",
+        "primary_purpose": "Detect closeness sought then retreat when vulnerability becomes emotionally real.",
+        "primary_sources": [
+          "assessment",
+          "messaging",
+          "sanctuary"
+        ]
+      },
+      {
+        "canonical_id": "CL_CONTROL_AVOID",
+        "rule_pack_alias": "CL-102",
+        "display_name": "Control Avoidance",
+        "family_code": "CF-CONTRA",
+        "scope": "individual_with_pair_consequences",
+        "user_visible_softened_only": true,
+        "phase1_status": "included",
+        "primary_purpose": "Detect defensive anti-structure posture: delay, ambiguity, planning avoidance, repair avoidance.",
+        "primary_sources": [
+          "assessment",
+          "conflict_events",
+          "messaging"
+        ]
+      },
+      {
+        "canonical_id": "CL_DRIFT_SLOW",
+        "rule_pack_alias": "CL-103",
+        "display_name": "Slow Drift",
+        "family_code": "CF-DRIFT",
+        "scope": "pair_primary_with_mirrored_user_traces",
+        "user_visible_softened_only": true,
+        "phase1_status": "included_internal_first",
+        "primary_purpose": "Detect sustained deterioration in connection quality across a governed rollup window.",
+        "primary_sources": [
+          "drifteligibility_rollups",
+          "messaging_cadence",
+          "ritual_continuity",
+          "acute_state_overlays"
+        ]
+      },
+      {
+        "canonical_id": "CL_PUSH_PULL",
+        "rule_pack_alias": "CL-104",
+        "display_name": "Push-Pull",
+        "family_code": "CF-DRIFT",
+        "scope": "pair_with_mirrored_user_pattern_traces",
+        "user_visible_softened_only": true,
+        "phase1_status": "included",
+        "primary_purpose": "Detect cyclical pursue-withdraw rhythm that destabilizes reciprocity and continuity.",
+        "primary_sources": [
+          "assessment",
+          "polarity",
+          "messaging_cadence"
+        ]
+      },
+      {
+        "canonical_id": "CL_REPAIR_GAP",
+        "rule_pack_alias": "CL-105",
+        "display_name": "Repair Gap",
+        "family_code": "CF-REPAIR",
+        "scope": "pair_primary_with_user_accountability_traces",
+        "user_visible_softened_only": true,
+        "phase1_status": "included",
+        "primary_purpose": "Detect conflict without timely or functional repair.",
+        "primary_sources": [
+          "assessment",
+          "conflict_repair_telemetry",
+          "sanctuary_reflections"
+        ]
+      },
+      {
+        "canonical_id": "CL_READY_OVR",
+        "rule_pack_alias": "CL-106",
+        "display_name": "Readiness Overstatement",
+        "family_code": "CF-READ",
+        "scope": "individual",
+        "user_visible_softened_only": true,
+        "phase1_status": "included",
+        "primary_purpose": "Protect the readiness surface from confidence the evidence does not support.",
+        "primary_sources": [
+          "assessment",
+          "behavior_deltas",
+          "forecast_writebacks"
+        ]
+      }
+    ],
+    "event_codes": [
+      {
+        "code": "E_STATE_DAILY",
+        "lane": "fast",
+        "source": "self_report",
+        "purpose": "Daily emotional state snapshot"
+      },
+      {
+        "code": "E_INTERACTION_POST",
+        "lane": "fast",
+        "source": "self_report",
+        "purpose": "Post-date / post-call / post-heavy-chat reflection"
+      },
+      {
+        "code": "E_SILENCE_WINDOW",
+        "lane": "fast",
+        "source": "telemetry",
+        "purpose": "Reply-gap threshold event plus optional self-report resolution"
+      },
+      {
+        "code": "E_CONFLICT_START",
+        "lane": "event",
+        "source": "self_report_or_ai",
+        "purpose": "Conflict window open"
+      },
+      {
+        "code": "E_CONFLICT_CLOSE",
+        "lane": "event",
+        "source": "self_report_or_ai",
+        "purpose": "Conflict window close"
+      },
+      {
+        "code": "E_REPAIR_ATTEMPT",
+        "lane": "event",
+        "source": "self_report_or_telemetry",
+        "purpose": "Apology / bid / reassurance / accountability move"
+      },
+      {
+        "code": "E_BOUNDARY_SIGNAL",
+        "lane": "event",
+        "source": "self_report_or_telemetry",
+        "purpose": "Need, limit, pace, access, or clarity request"
+      },
+      {
+        "code": "E_TRIGGER_ACTIVATION",
+        "lane": "fast",
+        "source": "self_report_or_ai",
+        "purpose": "Fast-state trigger capture with stimulus/body/story"
+      },
+      {
+        "code": "E_PAIR_RHYTHM_DAILY",
+        "lane": "medium",
+        "source": "computation",
+        "purpose": "Nightly pair rhythm rollup"
+      },
+      {
+        "code": "E_OUTCOME_CHECKPOINT",
+        "lane": "slow",
+        "source": "scheduled_workflow",
+        "purpose": "7d / 30d / 90d outcome truth packet"
+      }
+    ],
+    "packet_codes": [
+      {
+        "code": "P_USER_STATE_SNAPSHOT",
+        "purpose": "Current fast state and last 7-day averages"
+      },
+      {
+        "code": "P_INTERACTION_SUMMARY",
+        "purpose": "Post-date / post-call / post-chat reflection block"
+      },
+      {
+        "code": "P_CONFLICT_EPISODE",
+        "purpose": "Conflict plus repair chain summary"
+      },
+      {
+        "code": "P_PAIR_RHYTHM_ROLLUP",
+        "purpose": "Observed pair dance over window"
+      },
+      {
+        "code": "P_TRIGGER_FINGERPRINT",
+        "purpose": "Activation classes and body/story loop map"
+      },
+      {
+        "code": "P_OUTCOME_TRAINING_LABEL",
+        "purpose": "Checkpoint truth for calibration"
+      }
+    ],
+    "missing_layers_vocabularies": {
+      "emotion_primary": [
+        "calm",
+        "hopeful",
+        "anxious",
+        "angry",
+        "ashamed",
+        "numb",
+        "lit_up",
+        "drained"
+      ],
+      "trigger_class": [
+        "abandonment",
+        "criticism",
+        "engulfment",
+        "inconsistency",
+        "rejection",
+        "comparison",
+        "ambiguity"
+      ],
+      "need_signal": [
+        "clarity",
+        "reassurance",
+        "space",
+        "consistency",
+        "affection",
+        "accountability",
+        "pacing"
+      ],
+      "boundary_type": [
+        "time",
+        "pace",
+        "access",
+        "exclusivity",
+        "communication",
+        "physical",
+        "emotional"
+      ],
+      "repair_move": [
+        "apology",
+        "ownership",
+        "reassurance",
+        "clarification",
+        "attunement",
+        "follow_through",
+        "timeout_then_return"
+      ],
+      "outcome_label": [
+        "closer",
+        "steadier",
+        "confused",
+        "pressured",
+        "disconnected",
+        "ruptured",
+        "repaired"
+      ],
+      "attraction_drift": [
+        "stronger",
+        "same",
+        "weaker",
+        "mixed",
+        "avoidant_pull",
+        "fantasy_only"
+      ],
+      "silence_response": [
+        "regulated_wait",
+        "anxious_reach",
+        "hard_withdraw",
+        "narrative_spiral",
+        "protest",
+        "reframe"
+      ]
+    },
+    "sanctuary_phase1": {
+      "modules": [
+        {
+          "module_id": "SAN_STILL",
+          "module_name": "Stillness Mode",
+          "default_writeback_classes": [
+            "WB1",
+            "WB4"
+          ],
+          "primary_scope": "single_user",
+          "phase1_status": "ship"
+        },
+        {
+          "module_id": "SAN_MIRROR",
+          "module_name": "Emotional Mirror",
+          "default_writeback_classes": [
+            "WB1",
+            "WB2"
+          ],
+          "primary_scope": "single_user",
+          "phase1_status": "ship"
+        },
+        {
+          "module_id": "SAN_WHISPER",
+          "module_name": "Whisper Window",
+          "default_writeback_classes": [
+            "WB1",
+            "WB3"
+          ],
+          "primary_scope": "single_user_or_match_context",
+          "phase1_status": "ship"
+        },
+        {
+          "module_id": "SAN_GHOST",
+          "module_name": "Ghost Mode",
+          "default_writeback_classes": [
+            "WB4"
+          ],
+          "primary_scope": "single_user_visibility_control",
+          "phase1_status": "ship"
+        }
+      ],
+      "states": [
+        "IDLE",
+        "AVAILABLE",
+        "INITIATED",
+        "AWAITING_INPUT",
+        "ACTIVE",
+        "AWAITING_AI",
+        "AWAITING_CONFIRMATION",
+        "PAUSED",
+        "COMPLETED",
+        "ARCHIVED",
+        "SUPPRESSED"
+      ],
+      "writeback_classes": {
+        "WB0": "No durable write-back",
+        "WB1": "Archive note",
+        "WB2": "Evidence packet",
+        "WB3": "Guidance context",
+        "WB4": "State update",
+        "WB5": "Governed downstream packet"
+      }
+    },
+    "heg_family_registry": [
+      {
+        "family_code": "IDN",
+        "family_name": "Identity architecture",
+        "stores": "Archetype/shadow distributions, stable communication and regulation anchors"
+      },
+      {
+        "family_code": "POL",
+        "family_name": "Polarity architecture",
+        "stores": "10 polarity axes, role-seed distributions, chemistry-relevant posture"
+      },
+      {
+        "family_code": "BHV",
+        "family_name": "Behavioral rhythm",
+        "stores": "Initiation balance, reciprocity, pacing, rupture/repair behavior"
+      },
+      {
+        "family_code": "NRV",
+        "family_name": "Nervous-system / regulation state",
+        "stores": "Activation, strain, decompression need, escalation patterns"
+      },
+      {
+        "family_code": "NAR",
+        "family_name": "Narrative theme memory",
+        "stores": "Self-authored meaning, repeated story frames, history motifs"
+      },
+      {
+        "family_code": "TRG",
+        "family_name": "Trigger and sensitivity patterns",
+        "stores": "Delay sensitivity, ambiguity strain, criticism reactivity, closeness threat"
+      },
+      {
+        "family_code": "BND",
+        "family_name": "Boundary / need signaling",
+        "stores": "Need expression style, directness, access style, hidden scorekeeping patterns"
+      },
+      {
+        "family_code": "CLS",
+        "family_name": "Cluster support features",
+        "stores": "Inputs that seed or confirm contradiction and reflection clusters"
+      },
+      {
+        "family_code": "SFT",
+        "family_name": "Safety / trust",
+        "stores": "Coercion markers, moderation-sensitive outputs, instability indicators"
+      },
+      {
+        "family_code": "OUT",
+        "family_name": "Outcome and calibration",
+        "stores": "Retention, repair completion, satisfaction, break-rate and target labels"
+      }
+    ],
+    "heg_required_feature_metadata": [
+      "feature_key",
+      "feature_family",
+      "lane",
+      "value_type",
+      "value",
+      "source_system",
+      "source_event_ids",
+      "evidence_band",
+      "confidence_score",
+      "consent_scope",
+      "freshness_class",
+      "taxonomy_version",
+      "extractor_version",
+      "validator_version",
+      "writeback_reason"
+    ]
+  },
+  "thresholds": {
+    "readiness_forecast": {
+      "component_weights": {
+        "AF_assessment_foundation": 0.34,
+        "CI_consistency_integrity": 0.18,
+        "BR_behavioral_regulation": 0.22,
+        "CS_companion_stability": 0.16,
+        "RR_reflection_and_repair_capacity": 0.1
+      },
+      "assessment_only_fallback_weights": {
+        "AF_assessment_foundation": 0.7,
+        "CI_consistency_integrity": 0.3
+      },
+      "penalty_caps": {
+        "contradiction_penalty_max": 0.12,
+        "shadow_penalty_max": 0.1,
+        "drift_penalty_max": 0.08,
+        "acute_state_penalty_max": 0.1,
+        "total_penalty_max": 0.35,
+        "assessment_only_total_penalty_max": 0.2
+      },
+      "penalty_examples": {
+        "contradiction_penalty_formula": "min(0.12, 0.03 * active_cluster_count + 0.02 * high_severity_cluster_count)",
+        "shadow_penalty_formula": "min(0.10, 0.06 * dominant_shadow_effective + 0.04 * second_shadow_effective)",
+        "drift_penalty_rules": {
+          "stable": 0.0,
+          "none": 0.0,
+          "provisional_watch": 0.03,
+          "active_micro_drift": 0.05,
+          "active_slow_drift_or_hold_unstable": 0.08
+        }
+      },
+      "confidence_formula_weights": {
+        "evidence_coverage": 0.3,
+        "recency_quality": 0.25,
+        "cross_source_agreement": 0.2,
+        "behavior_depth": 0.15,
+        "stability_of_components": 0.1
+      },
+      "confidence_bands": [
+        {
+          "name": "low",
+          "min": 0,
+          "max": 49,
+          "display_rule": "internal_only"
+        },
+        {
+          "name": "guarded",
+          "min": 50,
+          "max": 64,
+          "display_rule": "band_only"
+        },
+        {
+          "name": "usable",
+          "min": 65,
+          "max": 79,
+          "display_rule": "rounded_score_allowed"
+        },
+        {
+          "name": "strong",
+          "min": 80,
+          "max": 100,
+          "display_rule": "rounded_score_plus_deeper_explanation_allowed"
+        }
+      ],
+      "public_bands": [
+        {
+          "label": "Red",
+          "min": 0,
+          "max": 39,
+          "public_meaning": "Not relationship-ready right now"
+        },
+        {
+          "label": "Amber",
+          "min": 40,
+          "max": 54,
+          "public_meaning": "Needs grounding before deeper connection"
+        },
+        {
+          "label": "Yellow-Green",
+          "min": 55,
+          "max": 69,
+          "public_meaning": "Emerging readiness"
+        },
+        {
+          "label": "Green",
+          "min": 70,
+          "max": 84,
+          "public_meaning": "Relationship-ready with normal growth edges"
+        },
+        {
+          "label": "Deep Green",
+          "min": 85,
+          "max": 100,
+          "public_meaning": "Strong readiness signal"
+        }
+      ],
+      "sufficiency_rules": {
+        "user_visible_requires": [
+          "one_complete_assessment",
+          "contradiction_processing_complete",
+          "either_behavior_evidence_or_declared_onboarding_only_label"
+        ],
+        "confidence_below_50": "internal_only",
+        "active_drift_unresolved": "band_only_unless_policy_allows_numeric",
+        "stale_evidence_outside_recency_window": "do_not_show_as_current"
+      },
+      "forecast": {
+        "required_outputs": [
+          "forecast_pair_stability",
+          "forecast_rupture_risk_30d",
+          "forecast_repair_capacity",
+          "forecast_reciprocity_health",
+          "forecast_pacing_alignment",
+          "forecast_shadow_pressure",
+          "forecast_drift_pressure",
+          "forecast_confidence"
+        ],
+        "pair_stability_base_weights": {
+          "compat_norm": 0.4,
+          "pair_rhythm_norm": 0.2,
+          "repair_norm": 0.2,
+          "conflict_norm": 0.1,
+          "reciprocity_norm": 0.1
+        },
+        "pair_stability_penalty_weights": {
+          "shadow_load_norm": 0.3,
+          "drift_load_norm": 0.25,
+          "acute_pressure_norm": 0.2,
+          "contradiction_load_norm": 0.25
+        },
+        "rupture_risk_weights": {
+          "escalation_rate_30d": 0.35,
+          "unresolved_tension_density": 0.2,
+          "low_repair_rate": 0.15,
+          "shadow_load_norm": 0.15,
+          "drift_load_norm": 0.15
+        },
+        "repair_capacity_weights": {
+          "repair_success_rate": 0.4,
+          "apology_follow_through": 0.2,
+          "reduced_latency_norm": 0.15,
+          "mutual_repair_participation": 0.15,
+          "reflection_completion_pair": 0.1
+        },
+        "reciprocity_health_weights": {
+          "mutual_initiation_balance": 0.45,
+          "response_reciprocity": 0.25,
+          "effort_balance": 0.15,
+          "conversation_continuity": 0.15
+        },
+        "pacing_alignment_weights": {
+          "intention_alignment": 0.4,
+          "cadence_alignment": 0.25,
+          "exclusivity_or_depth_alignment": 0.2,
+          "pressure_mismatch_inverse": 0.15
+        },
+        "confidence_formula_weights": {
+          "pair_event_depth": 0.35,
+          "recency_quality": 0.2,
+          "cross_signal_agreement": 0.2,
+          "duration_coverage": 0.15,
+          "evidence_diversity": 0.1
+        },
+        "confidence_display_bands": [
+          {
+            "name": "suppressed",
+            "min": 0,
+            "max": 49,
+            "user_view": "no_forecast_number"
+          },
+          {
+            "name": "guarded",
+            "min": 50,
+            "max": 64,
+            "user_view": "soft_labels_and_guidance_only"
+          },
+          {
+            "name": "visible",
+            "min": 65,
+            "max": 79,
+            "user_view": "rounded_outputs_and_short_explanation"
+          },
+          {
+            "name": "expanded",
+            "min": 80,
+            "max": 100,
+            "user_view": "rounded_outputs_plus_deeper_relational_insight"
+          }
+        ],
+        "output_thresholds": {
+          "pair_stability_outlook": {
+            "strong": [
+              70,
+              100
+            ],
+            "guarded": [
+              55,
+              69
+            ],
+            "risk_zone": [
+              0,
+              54
+            ]
+          },
+          "repair_capacity": {
+            "strong": [
+              70,
+              100
+            ],
+            "guarded": [
+              55,
+              69
+            ],
+            "risk_zone": [
+              0,
+              54
+            ]
+          },
+          "reciprocity_health": {
+            "strong": [
+              70,
+              100
+            ],
+            "guarded": [
+              55,
+              69
+            ],
+            "risk_zone": [
+              0,
+              54
+            ]
+          },
+          "pacing_alignment": {
+            "strong": [
+              70,
+              100
+            ],
+            "guarded": [
+              55,
+              69
+            ],
+            "risk_zone": [
+              0,
+              54
+            ]
+          },
+          "rupture_risk_30d": {
+            "strong": [
+              0,
+              29
+            ],
+            "guarded": [
+              30,
+              49
+            ],
+            "risk_zone": [
+              50,
+              100
+            ]
+          }
+        },
+        "suppression_rules": {
+          "forecast_confidence_below_50": "no_user_visible_forecast",
+          "first_contact_or_low_evidence": "no_raw_rupture_risk_number",
+          "hold_unstable_or_acute_grief_or_acute_anger_or_high_active_contradiction": "guarded_mode_only",
+          "moderation_blocks_override_forecast": true,
+          "pair_event_depth_min_config_required": true
+        }
+      }
+    },
+    "drift_eligibility": {
+      "meta": {
+        "version": "1.0.0",
+        "phase": "Phase 1",
+        "pack_type": "threshold_pack",
+        "generated_at": "2026-04-04T02:04:12.540125",
+        "source_docs": [
+          "Readiness_Forecast_Contract_v1.pdf",
+          "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf",
+          "Genesis_OS_System_Gap_Audit_and_Drift_Addendum.pdf",
+          "Genesis_OS_Phase_1_Full_Build_Spec.pdf"
+        ],
+        "note": "Drift remains internal-first in Phase 1. This file freezes the conservative DriftEligibility gates and update caps."
+      },
+      "phase1_policy": {
+        "public_drift_labels_enabled": false,
+        "slow_drift_enabled_for_public_ui": false,
+        "slow_identity_mutation_enabled": false,
+        "micro_drift_allowed_fields": [
+          "shadow_trait_prior",
+          "attachment_stability_index"
+        ],
+        "archetype_drift_enabled": false
+      },
+      "inputs": [
+        "rollup_n50",
+        "rollup_n20",
+        "rollup_prev50",
+        "current_genome",
+        "config_thresholds"
+      ],
+      "required_metrics": {
+        "E20_escalation_rate_max": 0.35,
+        "A_std50_arousal_volatility_max": 0.22,
+        "A_slope50_abs_max": 0.05,
+        "C50_contradiction_severity_mean_max": 0.55,
+        "C50_improvement_min_vs_prev50": 0.1,
+        "H_norm_move_entropy_max": 0.78,
+        "N50_min_event_count": 50,
+        "D50_min_unique_day_spread": 10,
+        "eligibility_confidence_min": 0.6
+      },
+      "confidence_formula_weights": {
+        "recent_escalation_component": 0.25,
+        "volatility_component": 0.2,
+        "trend_settled_component": 0.2,
+        "contradiction_component": 0.2,
+        "behavior_stability_component": 0.15
+      },
+      "reason_codes": [
+        "insufficient_events",
+        "insufficient_day_spread",
+        "too_unstable_recently",
+        "high_volatility",
+        "trend_not_settled",
+        "contradictions_spiking",
+        "behavior_inconsistent"
+      ],
+      "state_machine": [
+        "none",
+        "provisional_watch",
+        "hold_unstable",
+        "eligible_micro_drift",
+        "eligible_slow_drift",
+        "active_slow_drift",
+        "cooldown"
+      ],
+      "update_caps": {
+        "shadow_activation_recent_update_factor_B": 0.06,
+        "shadow_activation_recent_daily_increase_cap": 0.12,
+        "shadow_effective_formula": "clip(0.70 * shadow_trait_prior_k + 0.30 * shadow_activation_recent_k, 0.00, 1.00)",
+        "meaningful_shadow_activation_requires": "a_k >= 0.70 in at least 3 of the last 10 eligible events"
+      }
+    },
+    "clusters_batch1": {
+      "meta": {
+        "version": "1.0.0",
+        "phase": "Phase 1",
+        "pack_type": "threshold_pack",
+        "generated_at": "2026-04-04T02:04:12.540125",
+        "source_docs": [
+          "Cluster_Rule_Pack_Specification_v1.pdf",
+          "Cluster_Rule_Pack_Files_Batch_1.pdf",
+          "Genesis_OS_Phase_1_Full_Build_Spec.pdf",
+          "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf"
+        ],
+        "note": "This file freezes explicit cluster thresholds and preserves qualitative rule text where the source docs did not publish a numeric constant."
+      },
+      "universal": {
+        "severity_ladder": {
+          "S1": {
+            "meaning": "Informational pattern",
+            "default_visibility": "usually_internal_only",
+            "persistence": "fast_decay_nonpersistent_unless_repeated"
+          },
+          "S2": {
+            "meaning": "Mild tension",
+            "default_visibility": "softened_label_allowed_if_confidence_gte_medium",
+            "persistence": "writes_only_after_minimum_evidence"
+          },
+          "S3": {
+            "meaning": "Active contradiction_or_instability",
+            "default_visibility": "user_softened_insight_allowed_partner_never_sees_raw_label",
+            "persistence": "persistent_until_decay_or_reflection_completion"
+          },
+          "S4": {
+            "meaning": "Repeating destabilizer",
+            "default_visibility": "mostly_internal_derived_user_prompt_allowed",
+            "persistence": "persistent_state_with_audit_trail_and_recurrence_memory"
+          },
+          "S5": {
+            "meaning": "Critical pattern",
+            "default_visibility": "internal_only_except_safe_intervention_copy",
+            "persistence": "requires_manual_safe_clear_or_strong_decay_logic"
+          }
+        },
+        "evidence_quality_tiers": {
+          "Q1": {
+            "name": "assessment_only",
+            "default_confidence_ceiling": "low_to_guarded"
+          },
+          "Q2": {
+            "name": "assessment_plus_one_telemetry_source",
+            "default_confidence_ceiling": "guarded_to_medium"
+          },
+          "Q3": {
+            "name": "two_live_behavioral_sources",
+            "default_confidence_ceiling": "medium"
+          },
+          "Q4": {
+            "name": "cross_family_convergence",
+            "default_confidence_ceiling": "high"
+          },
+          "Q5": {
+            "name": "manual_review_confirmed",
+            "default_confidence_ceiling": "high"
+          }
+        },
+        "default_threshold_guidance": {
+          "open_threshold": "at_least_one_qualifying_rule_path_satisfied",
+          "writeback_threshold": "at_least_medium_confidence_or_approved_S5_exception",
+          "escalation_threshold": "reinforcement_within_review_window_or_cross_source_convergence",
+          "suppression_threshold": "S3_plus_when_public_surface_would_overstate_certainty_or_safety",
+          "manual_review_threshold": "S5_or_policy_marked_clusters_with_consumer_impact"
+        },
+        "partner_exposure_rule": "never expose raw cluster catalog, severity stack, contradiction labels, or shadow activation state to a match partner"
+      },
+      "clusters": {
+        "CL_VULN_LOOP": {
+          "alias": "CL-101",
+          "scope": "individual_first_pair_visible_effect_only_through_softened_downstream_signals",
+          "constants": {
+            "s2_min_qualifying_events_30d": 2,
+            "s3_persistent_ttl_days": 30,
+            "pair_writeback_min_severity": "S4",
+            "decay_one_level_after_quiet_days": 21,
+            "hard_clear_after_quiet_days": 60,
+            "hard_clear_alt_requires": "2_approved_reflection_completions_plus_stable_reciprocity_evidence"
+          },
+          "qualitative_rules": {
+            "S1": "assessment contradiction pair suggests closeness-seeking plus retreat-protective posture OR one behavioral retreat event follows a strong closeness bid within recent window",
+            "S3": "pattern repeats after reassurance, after vulnerable conversation, or after user explicitly asks for closeness then reduces continuity",
+            "S4": "cycle repeats across at least two separate connection episodes OR materially drags repair, reciprocity, or pair stability",
+            "S5": "persistent and reinforced patterning keeps producing rupture-level instability despite reflection prompts and sufficient opportunity for repair"
+          }
+        },
+        "CL_CONTROL_AVOID": {
+          "alias": "CL-102",
+          "scope": "individual_with_pair_state_consequences",
+          "constants": {
+            "s2_min_qualifying_events_45d": 2,
+            "pair_writeback_min_severity": "S3",
+            "decay_one_level_after_quiet_days": 28,
+            "hard_clear_after_quiet_days": 75,
+            "decay_support_conditions_any": [
+              "completed_plan",
+              "direct_clarification",
+              "successful_repair_conversation"
+            ]
+          },
+          "qualitative_rules": {
+            "S1": "assessment posture strongly resists structure OR one behavioral episode dodges planning or clarity after previously signaling interest",
+            "S3": "repeated ambiguity maintenance materially harms pacing alignment or leaves the other person carrying definition labor",
+            "S4": "sustained patterning across multiple attempts at clarification, planning, or accountability, especially with excuse churn or selective availability",
+            "S5": "chronic anti-structure behavior drives repeated guarded or suppressed forecast outputs"
+          }
+        },
+        "CL_DRIFT_SLOW": {
+          "alias": "CL-103",
+          "scope": "pair_state_first_with_mirrored_user_traces",
+          "constants": {
+            "open_above_s1_requires_drifteligibility": true,
+            "s2_min_shifted_governed_drift_metrics": 2,
+            "hard_clear_min_stable_windows": 2
+          },
+          "qualitative_rules": {
+            "S1": "rollup metrics soften but remain inside watch range; no public number changes",
+            "S3": "qualified deterioration persists across current window and remains directionally weaker than previous window after acute-state adjustments",
+            "S4": "persistent connection erosion with weak repair recovery or continued reciprocity loss despite opportunity to stabilize",
+            "S5": "prolonged and reinforced instability materially threatens pair continuity and keeps forecast in guarded or high-risk posture",
+            "decay": "downgrade only after governed improvement across next qualified rollup window plus repair stabilization"
+          }
+        },
+        "CL_PUSH_PULL": {
+          "alias": "CL-104",
+          "scope": "pair_state_with_mirrored_user_pattern_traces",
+          "constants": {
+            "s2_min_swings_in_configured_window": 2,
+            "or_one_strong_swing_plus_supporting_cluster": true,
+            "decay_after_steady_reciprocity_days": 21,
+            "decay_requires_any": [
+              "successful_repair",
+              "stable_progression_marker"
+            ],
+            "hard_clear_after_stable_days": 60,
+            "hard_clear_alt_requires": "2_qualified_stable_windows"
+          },
+          "qualitative_rules": {
+            "S1": "one early pursue-retreat swing OR one reciprocity pattern hints at cyclic instability",
+            "S3": "repeatable hot-cold rhythm visibly lowers conversation continuity or pacing alignment",
+            "S4": "chronic cycling repeatedly destabilizes the pair and prevents stable repair or stable progression",
+            "S5": "entrenched cycling keeps producing rupture risk and forecast suppression despite interventions"
+          }
+        },
+        "CL_REPAIR_GAP": {
+          "alias": "CL-105",
+          "scope": "pair_state_first_with_user_accountability_traces",
+          "constants": {
+            "s2_min_unresolved_or_poorly_repaired_events_active_window": 2,
+            "s2_alt": "1_significant_rupture_followed_by_no_qualifying_repair_attempt",
+            "decay_after_successful_repair_and_quiet_days": 14,
+            "hard_clear_after_successful_repairs": 2,
+            "hard_clear_after_stable_days": 45
+          },
+          "qualitative_rules": {
+            "S1": "one conflict or rupture event lacks timely repair and evidence is sparse",
+            "S3": "repeated repair failure, apology without follow-through, or unresolved tension drags continuity and forecast quality",
+            "S4": "chronic recovery collapse, issue looping, or repeated rupture without functional repair participation",
+            "S5": "persistent inability to recover materially threatens connection survival and keeps rupture risk elevated",
+            "do_not_clear_if": [
+              "slow_drift_active",
+              "hold_unstable_active"
+            ]
+          }
+        },
+        "CL_READY_OVR": {
+          "alias": "CL-106",
+          "scope": "individual",
+          "constants": {
+            "hard_clear_after_aligned_cycles": 2,
+            "hard_clear_requires_no_active_supporting_cluster_above": "S2"
+          },
+          "qualitative_rules": {
+            "S1": "self-reported readiness or serious-intent posture is materially stronger than evidence confidence, but not yet enough contradiction for persistent mismatch",
+            "S2": "repeated mismatch across refreshed evidence states OR one clear mismatch combined with an active contradiction or repair-related cluster",
+            "S3": "durable overstatement: user continues presenting high readiness while behavior, active clusters, or unresolved pressure clearly pull lower",
+            "S4": "repeated overstatement across multiple evidence windows or product surfaces, especially if public numeric readiness would be misleading",
+            "S5": "severe mismatch combined with protected states where public exposure must be suppressed until evidence stabilizes"
+          }
+        }
+      }
+    },
+    "policy_caps": {
+      "compatibility": {
+        "public_primary_match_ranking_score": true,
+        "client_side_score_math_allowed": false
+      },
+      "readiness": {
+        "public_numeric_visible_min_confidence": 65,
+        "band_only_min_confidence": 50,
+        "internal_only_below_confidence": 50,
+        "public_numeric_may_be_suppressed_by_active_drift_or_contradiction": true
+      },
+      "forecast": {
+        "public_numeric_visible_min_confidence": 65,
+        "soft_label_min_confidence": 50,
+        "raw_rupture_number_first_contact_allowed": false
+      },
+      "ai": {
+        "durable_memory_allowed": false,
+        "profile_enrichment_from_chat_allowed": false,
+        "partner_inference_without_dual_consent_allowed": false,
+        "raw_cluster_names_to_match_partners_allowed": false,
+        "workbook_weight_mutation_allowed": false,
+        "slow_identity_mutation_from_single_session_allowed": false
+      },
+      "drift": {
+        "public_drift_labels_enabled": false,
+        "slow_archetype_drift_enabled": false,
+        "slow_shadow_mutation_enabled": false,
+        "internal_watch_and_forecast_support_only": true
+      },
+      "shadow_activation": {
+        "raw_exposure_to_users": false,
+        "raw_exposure_to_partners": false,
+        "internal_or_soft_owner_translation_only": true
+      },
+      "companion_state": {
+        "anger_raw_partner_exposure": false,
+        "grief_raw_public_numeric_exposure": false,
+        "premium_mechanics_may_alter_score_rank_confidence": false
+      }
+    },
+    "observational_windows": {
+      "fast_state_coaching_window_hours": 24,
+      "short_term_forecasting_window_days": 7,
+      "relationship_health_trend_window_days": 30,
+      "model_training_and_profile_review_window_days": 90,
+      "post_interaction_reflection_prompt_window_minutes_min": 30,
+      "post_interaction_reflection_prompt_window_minutes_max": 90,
+      "event_scheduling": {
+        "daily_emotional_state": "daily_checkin_sanctuary_open_or_morning_reminder",
+        "silence_window_threshold": null,
+        "silence_window_threshold_requires_product_freeze": true,
+        "pair_rhythm_rollup_frequency": "nightly_and_after_major_episodes",
+        "outcome_checkpoints": [
+          "7d",
+          "30d",
+          "90d"
+        ]
+      }
+    },
+    "unresolved_freeze_points": [
+      {
+        "key": "compatibility_tier_thresholds",
+        "why": "Phase 1 spec says tier comes from versioned threshold config, but numeric ranges are not frozen in the attached docs."
+      },
+      {
+        "key": "knock_access_thresholds",
+        "why": "Knock rules are referenced, but exact threshold constants are not frozen in the provided files."
+      },
+      {
+        "key": "forecast_pair_event_depth_min",
+        "why": "Forecast suppression requires a configured minimum pair_event_depth, but no numeric cutoff is published."
+      },
+      {
+        "key": "push_pull_configured_window_days",
+        "why": "Batch 1 references a configured window for swings but does not publish a numeric day count."
+      },
+      {
+        "key": "repair_gap_active_window_days",
+        "why": "Batch 1 references an active window for unresolved repair events but does not publish a numeric day count."
+      },
+      {
+        "key": "silence_gap_detection_threshold",
+        "why": "Missing Layers references a configured reply-gap threshold but does not publish the exact value."
+      },
+      {
+        "key": "sanctuary_emotion_code_registry",
+        "why": "Sanctuary session packets require pre/post emotion codes, but the final machine-readable emotion code registry is not attached."
+      },
+      {
+        "key": "allowed_consumer_service_lists_per_cluster",
+        "why": "Batch 1 requires allowed consumer services on write-back records, but exhaustive service-by-cluster allowlists are not enumerated."
+      },
+      {
+        "key": "workbook_contradiction_pair_ids",
+        "why": "Batch 1 assumes workbook contradiction pair references, but the exact exported pair IDs are not yet packaged in machine-readable form."
+      }
+    ]
+  }
+}

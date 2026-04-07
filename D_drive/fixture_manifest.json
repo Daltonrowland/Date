@@ -1,0 +1,79 @@
+{
+  "generated_at_utc": "2026-04-04T02:40:28Z",
+  "workbook_sha256": "d6bd5676ee786dbf59a99932293dfebc8bdef784c217c7da425bca002b8fa6a7",
+  "diagnostic_resolution": "stability_avg and chemistry_avg are normalized category diagnostics derived from weighted component averages divided by 0.23 and 0.13 respectively; CompatibilityScore itself uses workbook pair_norm_0_1 exactly.",
+  "fixtures": [
+    {
+      "fixture_id": "fixture_001_default_all_a_vs_all_a",
+      "file": "fixtures/matchharness/fixture_001_default_all_a_vs_all_a.json",
+      "compatibility_score": 732.751991,
+      "tier": "Strong potential",
+      "core_norm": 0.69105953837,
+      "stability_avg": 0.92292313114,
+      "chemistry_avg": 1.0,
+      "zodiac_norm": 0.666666666667,
+      "numerology_norm": 0.555555555556,
+      "sha256": "5c861d538de3d7a46944f28c23364ea3390e8f0e77ea37b49f2519ae4a119419"
+    },
+    {
+      "fixture_id": "fixture_002_all_a_vs_all_max",
+      "file": "fixtures/matchharness/fixture_002_all_a_vs_all_max.json",
+      "compatibility_score": 692.599618,
+      "tier": "Healthy but growing",
+      "core_norm": 0.607421457562,
+      "stability_avg": 0.922718641098,
+      "chemistry_avg": 0.828274498394,
+      "zodiac_norm": 0.555555555556,
+      "numerology_norm": 0.777777777778,
+      "sha256": "427760e1d7674394bb73783bc455e3c08fe4307c25a47f3a705bdf3ddb1a8694"
+    },
+    {
+      "fixture_id": "fixture_003_mid_vs_mid",
+      "file": "fixtures/matchharness/fixture_003_mid_vs_mid.json",
+      "compatibility_score": 781.013267,
+      "tier": "Soul-aligned match",
+      "core_norm": 0.763137644582,
+      "stability_avg": 0.960741729439,
+      "chemistry_avg": 1.0,
+      "zodiac_norm": 0.777777777778,
+      "numerology_norm": 0.888888888889,
+      "sha256": "d0a7ac160350368cc7bd9cca7e7012d517e056d845a7c99e3d961ef2b9741e5c"
+    },
+    {
+      "fixture_id": "fixture_004_cycle_forward_vs_cycle_reverse",
+      "file": "fixtures/matchharness/fixture_004_cycle_forward_vs_cycle_reverse.json",
+      "compatibility_score": 716.332672,
+      "tier": "Strong potential",
+      "core_norm": 0.647109788581,
+      "stability_avg": 0.923493994525,
+      "chemistry_avg": 0.864434188034,
+      "zodiac_norm": 0.666666666667,
+      "numerology_norm": 0.777777777778,
+      "sha256": "d498900639155cb926043b4614503c149e019e7037a50351247fb05c955978af"
+    },
+    {
+      "fixture_id": "fixture_005_cycle_shift2_vs_all_a",
+      "file": "fixtures/matchharness/fixture_005_cycle_shift2_vs_all_a.json",
+      "compatibility_score": 693.404458,
+      "tier": "Healthy but growing",
+      "core_norm": 0.619031139117,
+      "stability_avg": 0.907948861347,
+      "chemistry_avg": 0.885289834515,
+      "zodiac_norm": 0.333333333333,
+      "numerology_norm": 0.888888888889,
+      "sha256": "1a2738cd0240bb4a7b0b925b3fe467dd0663bbfa1423f3a00b0cefba6cffc6b7"
+    },
+    {
+      "fixture_id": "fixture_006_all_max_vs_all_max",
+      "file": "fixtures/matchharness/fixture_006_all_max_vs_all_max.json",
+      "compatibility_score": 743.439966,
+      "tier": "Strong potential",
+      "core_norm": 0.727991044016,
+      "stability_avg": 0.962301132109,
+      "chemistry_avg": 1.0,
+      "zodiac_norm": 0.444444444444,
+      "numerology_norm": 0.555555555556,
+      "sha256": "afdc771c31537c5d815bdc086494c77123c6cd548622deba761bcfa6f160c069"
+    }
+  ]
+}

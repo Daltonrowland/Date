@@ -12,8 +12,8 @@ class UserRegister(BaseModel):
     age: int
     gender: str
     looking_for: str
-    date_of_birth: Optional[str] = None   # YYYY-MM-DD
-    sun_sign: Optional[str] = None        # zodiac sign
+    date_of_birth: Optional[str] = None
+    sun_sign: Optional[str] = None
 
 
 class UserLogin(BaseModel):
@@ -27,6 +27,7 @@ class TokenResponse(BaseModel):
     user_id: int
     name: str
     rs_code: str = ""
+    is_verified: bool = True
 
 
 class PasswordResetRequest(BaseModel):
@@ -40,6 +41,14 @@ class PasswordResetConfirm(BaseModel):
 
 class VerifyEmailRequest(BaseModel):
     token: str
+
+
+class VerifyCodeRequest(BaseModel):
+    code: str
+
+
+class ResendCodeRequest(BaseModel):
+    email: EmailStr
 
 
 # ── User / Profile ────────────────────────────────────────────────────────────
@@ -57,8 +66,8 @@ class UserProfile(BaseModel):
     bio: Optional[str]
     location: Optional[str]
     photo_url: Optional[str] = ""
+    profile_photo: Optional[str] = ""
     quiz_completed: bool
-    # Genesis OS profile
     archetype: Optional[str]
     archetype_secondary: Optional[str] = ""
     shadow_type: Optional[str] = ""
@@ -67,6 +76,7 @@ class UserProfile(BaseModel):
     readiness_score: Optional[float] = 0.0
     readiness_forecast: Optional[str] = ""
     email_verified: bool = False
+    is_verified: bool = False
     created_at: datetime
 
     class Config:
@@ -90,7 +100,7 @@ class PhotoUpload(BaseModel):
 # ── Quiz ──────────────────────────────────────────────────────────────────────
 
 class QuizSubmit(BaseModel):
-    answers: dict[str, Any]  # {question_id: answer_letter or 1-5}
+    answers: dict[str, Any]
 
 
 class QuizResult(BaseModel):
@@ -107,7 +117,6 @@ class QuizResult(BaseModel):
     readiness_score: Optional[float] = 0.0
     readiness_forecast: Optional[str] = ""
     percentage: float
-    # Canonical diagnostics
     core_norm: Optional[float] = None
     stability_avg: Optional[float] = None
     chemistry_avg: Optional[float] = None
@@ -126,18 +135,79 @@ class MatchResult(BaseModel):
     age: Optional[int]
     gender: Optional[str]
     bio: Optional[str]
+    photo_url: Optional[str] = ""
+    profile_photo: Optional[str] = ""
     archetype: Optional[str]
+    archetype_secondary: Optional[str] = ""
     shadow_type: Optional[str] = ""
+    sun_sign: Optional[str] = ""
+    life_path_number: Optional[int] = None
     score: float
     tier: str
     tier_label: str
     percentage: float
     breakdown: dict[str, Any]
-    # Diagnostics
     core_norm: Optional[float] = None
     stability_avg: Optional[float] = None
     chemistry_avg: Optional[float] = None
     cosmic_overlay: Optional[float] = None
+    zodiac_norm: Optional[float] = None
+    numerology_norm: Optional[float] = None
+    archetype_fit_label: Optional[str] = ""  # short description of archetype pairing
+
+
+# ── Messages ──────────────────────────────────────────────────────────────────
+
+class MessageSend(BaseModel):
+    content: str
+
+
+class MessageResponse(BaseModel):
+    id: int
+    sender_id: int
+    recipient_id: int
+    content: str
+    created_at: datetime
+    read_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class ConversationPreview(BaseModel):
+    user_id: int
+    name: str
+    rs_code: str
+    profile_photo: str
+    last_message: str
+    last_message_at: datetime
+    unread_count: int
+
+
+# ── Knocks ────────────────────────────────────────────────────────────────────
+
+class KnockSend(BaseModel):
+    message: Optional[str] = ""
+
+
+class KnockResponse(BaseModel):
+    id: int
+    sender_id: int
+    recipient_id: int
+    status: str
+    message: str
+    created_at: datetime
+    sender_name: Optional[str] = ""
+    sender_rs_code: Optional[str] = ""
+    sender_photo: Optional[str] = ""
+    sender_score: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
+class KnockAction(BaseModel):
+    action: str  # "accept" or "decline"
 
 
 # ── Sanctuary ─────────────────────────────────────────────────────────────────

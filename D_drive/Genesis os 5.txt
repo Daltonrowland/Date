@@ -1,0 +1,227 @@
+Perfect. I’m taking that “Yes” as “Ace, build the thing.”
+
+Let’s wire this so Andrea or Future-You can actually implement it in Bubble without wanting to scream.
+
+I will do two things for you right now:
+	1.	Give you the data structure for the Curtain Engine.
+	2.	Show you a sample user-facing report so you can feel how it shows up in the app.
+
+⸻
+
+1. DATA STRUCTURE FOR THE CURTAIN ENGINE
+
+You already have:
+	•	User
+	•	Archetype
+	•	Shadow Type
+	•	EnergySubtype (Protector, Nurturer, Blended with Guardian, Healer, etc)
+	•	Astrology tables in progress
+
+We are adding a curtain layer that reads all of that.
+
+1.1 New Data Type: Curtain Profile
+
+Type: CurtainProfile
+Linked to: User
+
+Fields:
+	•	user → User
+	•	baseline_open_speed (number 1 to 10)
+	•	baseline_close_speed (number 1 to 10)
+	•	baseline_openness (number 1 to 10, like resting openness)
+	•	trust_threshold (number 1 to 10)
+	•	reopen_difficulty (number 1 to 10)
+	•	masculine_curtain_position (number 0 to 100)
+	•	feminine_curtain_position (number 0 to 100)
+	•	polarity_switch_style (text or option set: slow_shifter, fast_switch, situational, frozen)
+	•	open_style_summary (text, auto generated)
+	•	close_style_summary (text, auto generated)
+	•	reopen_style_summary (text, auto generated)
+
+You can recompute these with a backend workflow every time:
+	•	they finish the main test
+	•	they complete a Sanctuary ritual
+	•	they update astrology info
+
+⸻
+
+1.2 Zodiac Layer: Zodiac Curtain Profile
+
+Type: ZodiacCurtainProfile
+
+Fields:
+	•	zodiac_sign (link to your existing Zodiac type or text like “Aries”)
+	•	base_open_speed (number 1 to 10)
+	•	base_close_speed (number 1 to 10)
+	•	trust_threshold (number 1 to 10)
+	•	default_openness (number 1 to 10)
+	•	reopen_style (text or option set, examples: steady, sudden, only_with_proof, time_based, never_go_back)
+	•	perceived_by_others_as (short text, for example “intense at first, then guarded”)
+
+You will create 12 rows here, one for each sign.
+
+⸻
+
+1.3 Archetype Layer: Archetype Curtain Profile
+
+Type: ArchetypeCurtainProfile
+
+Fields:
+	•	archetype (link to Archetype, example: Icebox, Phantom Seeker, Fixer, etc)
+	•	open_speed_modifier (number from -3 to +3)
+	•	close_speed_modifier (number from -3 to +3)
+	•	comfort_zone_openness (number 1 to 10)
+	•	open_style (text, example: “tests first, then softens” or “dives in then monitors”)
+	•	close_trigger_style (text or option set, example: stonewall, fade_out, argument_then_retreat)
+	•	reopen_requirements (text, example: “needs proof in actions over time”)
+
+One row for each of your 10 archetypes.
+
+⸻
+
+1.4 Shadow Layer: Shadow Curtain Profile
+
+Type: ShadowCurtainProfile
+
+Fields:
+	•	shadow_type (link to ShadowType, example: Manipulator, Stonewaller, Love Bomber, etc)
+	•	shadow_open_pattern (text, example: “opens fast when chasing validation”)
+	•	shadow_close_pattern (text, example: “cuts off contact without explaining”)
+	•	open_distortion_factor (number -3 to +3, how much it makes them look “more open” or “more closed” than they really are)
+	•	closure_risk_level (number 1 to 10, how hard it is to re-open them once hurt)
+
+One row per shadow type.
+
+⸻
+
+1.5 Protector / Nurturer / Blended Layer: EnergySubtype Curtain Profile
+
+You already have something like EnergySubtype with:
+	•	Protector
+	•	Nurturer
+	•	Blended
+and subtypes like Guardian, Healer, Seeker, etc.
+
+You add a table to store how each one handles opening and closing.
+
+Type: EnergySubtypeCurtainProfile
+
+Fields:
+	•	energy_subtype (link to your EnergySubtype, example: Guardian, Healer, Seeker, Balancer)
+	•	role_based_openness (number 1 to 10, how open they are when caring for others)
+	•	receiving_openness (number 1 to 10, how open they are to receiving care)
+	•	conflict_curtain_reaction (text or option set, example: fix, pull_back, appease, freeze)
+	•	giving_vs_receiving_gap (number 0 to 10, how much easier it is to give than to receive)
+
+⸻
+
+1.6 Polarity Layer (stored on User and CurtainProfile)
+
+You already planned polarity scores.
+
+On User (or CurtainProfile if you prefer):
+	•	masculine_polarity_level (number 0 to 100)
+	•	feminine_polarity_level (number 0 to 100)
+
+And on CurtainProfile:
+	•	masculine_curtain_position (0 to 100, how open that energy is)
+	•	feminine_curtain_position (0 to 100)
+
+You will adjust these from:
+	•	test answers
+	•	Sanctuary logs
+	•	rituals
+
+⸻
+
+1.7 Backend Logic: Combine All Layers
+
+In Bubble terms, in a backend workflow called for example build_curtain_profile_for_user:
+
+Step 1: Pull components
+	•	user
+	•	zodiac_profile = Do a search for ZodiacCurtainProfile:first item where zodiac_sign = user's zodiac_sign
+	•	archetype_profile = Do a search for ArchetypeCurtainProfile:first item where archetype = user's main_archetype
+	•	shadow_profile = Do a search for ShadowCurtainProfile:first item where shadow_type = user's main_shadow_type
+	•	energy_profile = Do a search for EnergySubtypeCurtainProfile:first item where energy_subtype = user's energy_subtype
+
+Step 2: Compute baseline numbers
+
+You can store them in temporary custom states or directly in fields on CurtainProfile.
+
+For example:
+	•	baseline_open_speed =
+`zodiac_profile.base_open_speed
+	•	archetype_profile.open_speed_modifier
+	•	(energy_profile.role_based_openness - 5) / 2
+	•	(user.masculine_polarity_level + user.feminine_polarity_level) / 40`
+
+Then clamp it to 1 to 10.
+
+Same idea with:
+	•	baseline_close_speed
+	•	baseline_openness
+	•	trust_threshold
+	•	reopen_difficulty
+
+You do not need to be mathematically perfect on day one. You just need consistent logic you can tune later.
+
+⸻
+
+2. USER FACING: WHAT THEY SEE
+
+Let’s say someone finishes the test and you want to show them how they open and close, factoring astrology, archetype, shadow, energy subtype, and polarity.
+
+You show a card called:
+
+“Your Curtain Style”
+
+Example output for a user:
+
+Your curtain does not open all at once.
+
+Your Aries fire and Guardian nature mean you open through action first, not words. People experience you as present and helpful long before they feel your deeper emotions.
+
+Your Icebox archetype and Stonewaller shadow add a layer of protection. When you feel tested or misread, your curtain closes fast and you shift into distance instead of debate.
+
+Underneath that, your masculine polarity is strong and steady. Once someone earns your trust, your curtain opens in phases and stays open unless there is repeated disrespect.
+
+From the outside, your pace can feel slower than it really is. On the inside, you are already opening as far as feels safe right now.
+
+Then a simple visual:
+	•	A rod with rings and a marker:
+	•	“Open speed: 7 of 10”
+	•	“Close speed: 8 of 10”
+	•	“Trust threshold: High”
+	•	“Polarity curtain: Masculine 70 percent open, Feminine 35 percent open”
+
+⸻
+
+2.1 Match Insight Example
+
+On a match screen you could have:
+
+Section title:
+Curtain Pace Between You Two
+
+Text example:
+
+You open emotionally faster than they do.
+Your Pisces Nurturer energy and Romantic Idealist archetype bring a soft, fast opening curtain. You show warmth early and expect emotional feedback.
+
+Their Aries Protector energy and Icebox archetype open in layers. They need clear actions and time before they pull the curtain all the way back.
+
+To you, their curtain may feel slow or guarded.
+To them, your pace may feel intense or risky.
+
+If you can respect each other’s timing, this actually balances well. Your softness invites them out, and their pacing keeps both of you from burning out too fast.
+
+That is “understanding the relationship pace and perspective partner” in clean, human language, built on the curtain logic.
+
+⸻
+
+If you want next, I can:
+	•	Turn this into a Bubble checklist for Andrea
+	•	Or write the exact phrases you will use as dynamic text fields in the app like: Current User's CurtainProfile's open_style_summary etc.
+
+Either way, the engine you described is very buildable. And it is pure Relationship Scores. No one else even has language for this.

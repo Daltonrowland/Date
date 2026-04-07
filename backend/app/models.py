@@ -8,32 +8,33 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    rs_code = Column(String(6), unique=True, index=True, nullable=False)  # 6-char RS Code
+    rs_code = Column(String(6), unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     name = Column(String, nullable=False)
-    date_of_birth = Column(Date, nullable=True)       # for numerology life path
-    sun_sign = Column(String(20), nullable=True)       # zodiac sign
+    date_of_birth = Column(Date, nullable=True)
+    sun_sign = Column(String(20), nullable=True)
     gender = Column(String)
     looking_for = Column(String)
     age = Column(Integer)
     bio = Column(Text, default="")
     location = Column(String, default="")
     photo_url = Column(Text, default="")
+    profile_photo = Column(Text, default="")  # base64 encoded photo (400x400)
     email_verified = Column(Boolean, default=False)
+    is_verified = Column(Boolean, default=False)  # email code verified
     verification_token = Column(String, nullable=True)
     reset_token = Column(String, nullable=True)
     reset_token_expires = Column(DateTime, nullable=True)
     quiz_completed = Column(Boolean, default=False)
-    # Genesis OS profile outputs
-    archetype = Column(String, default="")             # primary archetype (10 real)
-    archetype_secondary = Column(String, default="")   # secondary archetype
-    shadow_type = Column(String, default="")           # shadow (6 real)
+    archetype = Column(String, default="")
+    archetype_secondary = Column(String, default="")
+    shadow_type = Column(String, default="")
     archetype_score = Column(Float, default=0.0)
     shadow_score = Column(Float, default=0.0)
     readiness_score = Column(Float, default=0.0)
     readiness_forecast = Column(String, default="")
-    life_path_number = Column(Integer, nullable=True)  # computed from DOB
+    life_path_number = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     quiz_responses = relationship("QuizResponse", back_populates="user", uselist=False)
@@ -47,8 +48,8 @@ class QuizResponse(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
-    answers = Column(JSON, nullable=False)         # {question_id: answer_letter}
-    answer_details = Column(JSON, nullable=True)   # [{question_number, answer_id, answer_text, phase}]
+    answers = Column(JSON, nullable=False)
+    answer_details = Column(JSON, nullable=True)
     scoring_version = Column(String, default="phase1.v1")
     completed_at = Column(DateTime, default=datetime.utcnow)
 
@@ -64,7 +65,6 @@ class CompatibilityScore(Base):
     score = Column(Float, nullable=False)
     tier = Column(String, nullable=False)
     tier_label = Column(String, nullable=False)
-    # Canonical diagnostics
     final_norm = Column(Float, nullable=True)
     core_norm = Column(Float, nullable=True)
     behavioral_avg = Column(Float, nullable=True)
@@ -73,7 +73,6 @@ class CompatibilityScore(Base):
     zodiac_norm = Column(Float, nullable=True)
     numerology_norm = Column(Float, nullable=True)
     cosmic_overlay = Column(Float, nullable=True)
-    # Drivers and breakdown
     breakdown = Column(JSON)
     top_positive_drivers = Column(JSON, nullable=True)
     top_friction_drivers = Column(JSON, nullable=True)
@@ -82,6 +81,44 @@ class CompatibilityScore(Base):
 
     user_a = relationship("User", foreign_keys=[user_a_id], back_populates="sent_scores")
     user_b = relationship("User", foreign_keys=[user_b_id], back_populates="received_scores")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    recipient_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    read_at = Column(DateTime, nullable=True)
+
+    sender = relationship("User", foreign_keys=[sender_id])
+    recipient = relationship("User", foreign_keys=[recipient_id])
+
+
+class Knock(Base):
+    __tablename__ = "knocks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    recipient_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    status = Column(String, default="pending")  # pending, accepted, declined
+    message = Column(Text, default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    sender = relationship("User", foreign_keys=[sender_id])
+    recipient = relationship("User", foreign_keys=[recipient_id])
+
+
+class EmailVerificationCode(Base):
+    __tablename__ = "email_verification_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    code = Column(String(6), nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Sanctuary(Base):

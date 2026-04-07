@@ -1,0 +1,23 @@
+{
+  "pack_id": "genesis_os_phase1_registry_threshold_pack_v1",
+  "version": "1.0.0",
+  "generated_at": "2026-04-04T02:04:12.540125",
+  "scope": "Phase 1 only",
+  "authoritative_precedence": [
+    "genesis_os_final_quantum_scoring_workbook_v10_polarity.xlsx",
+    "Genesis_OS_Phase_1_Full_Build_Spec.pdf",
+    "Genesis_OS_Unified_Developer_Blueprint_Clean_v1.pdf",
+    "Readiness_Forecast_Contract_v1.pdf",
+    "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf",
+    "Cluster_Rule_Pack_Specification_v1.pdf",
+    "Cluster_Rule_Pack_Files_Batch_1.pdf",
+    "Genesis_OS_Missing_Layers_Blueprint_Detailed_v2.pdf",
+    "Sanctuary_Core_Module_State_Machine_and_Payload_Spec_v1.pdf",
+    "Genesis_OS_System_Gap_Audit_and_Drift_Addendum.pdf"
+  ],
+  "notes": [
+    "This pack freezes code-table exports and threshold/config values for the Phase 1 build packet.",
+    "Values that were not numerically frozen in the source documents are explicitly left unresolved rather than invented.",
+    "Compatibility score law remains workbook-owned and is not re-authored in this pack."
+  ]
+}

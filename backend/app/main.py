@@ -4,21 +4,22 @@ import json
 import time
 from pathlib import Path
 from collections import defaultdict
-from fastapi import FastAPI, Request, Depends, Query
+from fastapi import FastAPI, Request, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
+from sqlalchemy.orm import Session
 from .config import get_settings
-from .routers import auth, quiz, matches, profiles, sanctuary
-from .auth import get_current_user, decode_token
-from .models import User
+from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks
+from .auth import decode_token
+from .database import get_db
 
 settings = get_settings()
 
 app = FastAPI(
     title="Relationship Scores API",
     description="Premium compatibility scoring for modern relationships",
-    version="1.0.0",
+    version="2.0.0",
 )
 
 app.add_middleware(
@@ -41,31 +42,43 @@ app.include_router(quiz.router)
 app.include_router(matches.router)
 app.include_router(profiles.router)
 app.include_router(sanctuary.router)
+app.include_router(messages.router)
+app.include_router(knocks.router)
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "relationship-scores-api"}
+    return {"status": "ok", "service": "relationship-scores-api", "version": "2.0.0"}
+
+
+# ── Admin seed endpoint ───────────────────────────────────────────────────────
+
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "rs-admin-seed-2026")
+
+
+@app.post("/admin/seed-demo")
+def seed_demo(token: str = Query(...), db: Session = Depends(get_db)):
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from scripts.seed_demo_users import seed_demo_data
+    from .scoring import compute_compatibility, compute_life_path
+    from .auth import hash_password
+    count = seed_demo_data(db, compute_compatibility, compute_life_path, hash_password)
+    return {"status": "ok", "users_created": count}
 
 
 # ── Real-time match notifications via SSE ─────────────────────────────────────
-# In-memory notification store: {user_id: [{"match_name": ..., "score": ..., "time": ...}]}
 _match_notifications: dict[int, list[dict]] = defaultdict(list)
 
 
 def notify_new_match(user_id: int, match_name: str, score: float, tier: str):
-    """Called from quiz router when new matches are computed."""
     _match_notifications[user_id].append({
-        "match_name": match_name,
-        "score": score,
-        "tier": tier,
-        "time": time.time(),
+        "match_name": match_name, "score": score, "tier": tier, "time": time.time(),
     })
 
 
 @app.get("/events/matches")
 async def match_events(token: str = Query(...)):
-    """SSE endpoint — frontend connects with ?token=JWT to get live match updates."""
     user_id = decode_token(token)
     if user_id is None:
         return StreamingResponse(iter([]), status_code=401)
@@ -85,22 +98,18 @@ async def match_events(token: str = Query(...)):
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
-# Serve frontend SPA — static assets + fallback to index.html
+# ── Serve frontend SPA ────────────────────────────────────────────────────────
 STATIC_DIR = Path(__file__).parent.parent / "static"
 
 if STATIC_DIR.exists():
-    # Serve JS/CSS/images from /assets
     app.mount("/assets", StaticFiles(directory=str(STATIC_DIR / "assets")), name="static-assets")
 
-    # Serve favicon
     @app.get("/favicon.svg")
     async def favicon():
         return FileResponse(str(STATIC_DIR / "favicon.svg"))
 
-    # Catch-all: serve index.html for any non-API route (SPA client routing)
     @app.get("/{full_path:path}")
     async def serve_spa(request: Request, full_path: str):
-        # Don't intercept API docs
         if full_path in ("docs", "redoc", "openapi.json"):
             return None
         file_path = STATIC_DIR / full_path

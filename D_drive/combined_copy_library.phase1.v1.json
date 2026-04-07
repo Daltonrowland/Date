@@ -1,0 +1,210 @@
+{
+  "generated_at_utc": "2026-04-04T02:40:28Z",
+  "libraries": {
+    "readiness": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf",
+        "Readiness_Forecast_Contract_v1.pdf",
+        "Genesis_OS_Phase_1_Full_Build_Spec.pdf"
+      ],
+      "copy_rules": [
+        "Use signal, pattern, trend, current outlook, and current evidence.",
+        "Avoid destiny, guaranteed outcome, diagnosis, final truth, doomed, and soulmate certainty.",
+        "Use present-tense language and avoid prophetic framing.",
+        "Do not equate readiness with personal worth."
+      ],
+      "templates": {
+        "primary_score_card": "Your current Readiness score is {{score}}. This is a signal of how steady and relationship-ready your current patterns look right now.",
+        "band_only_low_confidence": "We are still gathering enough real evidence to turn this into a stronger signal. For now, your readiness looks {{band_label}}.",
+        "readiness_explanation": "This score reflects your current mix of consistency, emotional regulation, and follow-through \u2014 not your worth.",
+        "improvement_nudge": "Your score can move when your patterns move. Reflection, repair, and steadier behavior matter more than perfect answers.",
+        "suppressed_due_to_stale_evidence": "Your readiness signal is paused until we have fresher evidence.",
+        "readiness_dip": "Your score dipped because the system sees more pressure than steadiness right now. That is a signal to slow down and reset, not a verdict about your future.",
+        "contradiction_cluster": "Some of your answers and behaviors are pulling in different directions. Before your score can rise, the system needs to see those signals settle."
+      },
+      "bands": [
+        {
+          "range": "0-39",
+          "label": "Not relationship-ready right now",
+          "meaning": "High instability, contradiction, or active disruption is still present."
+        },
+        {
+          "range": "40-54",
+          "label": "Needs grounding before deeper connection",
+          "meaning": "Some capacity is present, but reliable readiness is not yet stable."
+        },
+        {
+          "range": "55-69",
+          "label": "Emerging readiness",
+          "meaning": "Functional signs exist, but the system still sees pressure points."
+        },
+        {
+          "range": "70-84",
+          "label": "Relationship-ready with normal growth edges",
+          "meaning": "This is a generally healthy operating range."
+        },
+        {
+          "range": "85-100",
+          "label": "Strong readiness signal",
+          "meaning": "Current evidence supports a high-functioning profile with steadiness and follow-through."
+        }
+      ]
+    },
+    "forecast": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Readiness_Forecast_Contract_Part2_Appendix_Pack.pdf",
+        "Readiness_Forecast_Contract_v1.pdf",
+        "Genesis_OS_Phase_1_Full_Build_Spec.pdf"
+      ],
+      "copy_rules": [
+        "Forecast is a governed outlook family, not a guarantee.",
+        "Forecast must never sound like fate, prophecy, or diagnosis.",
+        "If confidence is low, say that plainly and avoid numeric theater."
+      ],
+      "templates": {
+        "forecast_intro": "Forecast shows the current outlook of this connection based on shared evidence, not a guaranteed future.",
+        "low_evidence_pair": "Not enough shared evidence yet to show a full forecast. As this connection develops, the signal will sharpen.",
+        "strong_pair_stability": "Current evidence suggests a strong stability outlook if both people keep showing up the same way.",
+        "elevated_rupture_risk": "The current pattern shows pressure around conflict and recovery. That does not equal failure, but it does call for care.",
+        "good_repair_capacity": "You both show signs of coming back together after tension instead of getting stuck in it.",
+        "forecast_guarded": "This connection still has more questions than proof. Move slower. Let behavior answer what chemistry cannot.",
+        "repair_nudge": "The strongest improvement here will not come from saying the right thing once \u2014 it will come from what happens after tension."
+      },
+      "labels": {
+        "forecast": [
+          "Early signal only",
+          "Guarded outlook",
+          "Mixed outlook",
+          "Stable outlook",
+          "Strong outlook"
+        ],
+        "risk": [
+          "Low current risk",
+          "Moderate pressure",
+          "Elevated pressure",
+          "High pressure"
+        ]
+      }
+    },
+    "chemistry": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Genesis_OS_Phase_1_Full_Build_Spec.pdf",
+        "Genesis_OS_Unified_Developer_Blueprint_Clean_v1.pdf",
+        "genesis_os_final_quantum_scoring_workbook_v10_polarity.xlsx"
+      ],
+      "copy_rules": [
+        "Chemistry explains felt pull, not long-term fate.",
+        "Do not oversell chaos as destiny.",
+        "Translate polarity fit, pursuit rhythm, and attraction pattern in calm language."
+      ],
+      "templates": {
+        "card_intro": "Chemistry explains the felt pull in this match. It is not the same thing as readiness or long-term stability.",
+        "strong_chemistry": "The chemistry layer looks strong. Attraction, rhythm, and polarity fit are doing real work here.",
+        "steady_chemistry": "Chemistry is present and workable. It supports the match without needing drama to stay alive.",
+        "mixed_chemistry": "There is chemistry here, but it may not be the clearest driver of the connection yet.",
+        "guarded_chemistry": "The chemistry signal is lighter right now. Stability, communication, or pacing may matter more than spark.",
+        "pursuit_rhythm_note": "Chemistry can feel strong while pacing still needs care. Attraction and stability are siblings, not twins.",
+        "polarity_note": "Polarity helps explain initiation, receptivity, tension, and ease. It does not replace the core score."
+      }
+    },
+    "clusters": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Cluster_Rule_Pack_Specification_v1.pdf",
+        "Cluster_Rule_Pack_Files_Batch_1.pdf"
+      ],
+      "clusters": {
+        "CL_VULN_LOOP": {
+          "user_safe_name": "Closeness overload pattern",
+          "short_label": "Wanting closeness, then pulling back",
+          "explanation": "You may genuinely want closeness and honesty, then feel overloaded once intimacy becomes emotionally real.",
+          "coaching": "Slow the pace just enough that closeness still feels safe after it starts."
+        },
+        "CL_CONTROL_AVOID": {
+          "user_safe_name": "Structure resistance",
+          "short_label": "Pressure mismatch around clarity",
+          "explanation": "When structure, definition, or accountability starts to feel like pressure, you may protect autonomy through delay, ambiguity, or selective disengagement.",
+          "coaching": "Practice cleaner pacing and more direct clarity before the other person has to carry all the definition work."
+        },
+        "CL_DRIFT_SLOW": {
+          "user_safe_name": "Stability softening",
+          "short_label": "Recent connection slippage",
+          "explanation": "The connection is not exploding \u2014 it is gradually losing continuity, reciprocity, or shared upkeep across the active evidence window.",
+          "coaching": "Look for steadying moves: timely response, completed plans, and actual repair after friction."
+        },
+        "CL_PUSH_PULL": {
+          "user_safe_name": "Hot-cold rhythm",
+          "short_label": "Unstable reciprocity pattern",
+          "explanation": "One or both people may intensify and then withdraw, creating a cycle that keeps chemistry alive but makes continuity expensive.",
+          "coaching": "Do not outsource clarity to chemistry spikes. Slow the swings and protect steadier reciprocity."
+        },
+        "CL_REPAIR_GAP": {
+          "user_safe_name": "Repair strain",
+          "short_label": "Slow recovery after tension",
+          "explanation": "The issue is not that conflict happened. The issue is that repair is absent, delayed, or not strong enough to actually restore safety.",
+          "coaching": "Make the next repair attempt concrete: acknowledge the issue, return after the pause, and follow through."
+        },
+        "CL_READY_OVR": {
+          "user_safe_name": "Readiness still stabilizing",
+          "short_label": "Current actions trail stated intention",
+          "explanation": "Your current readiness signal is being held back because the evidence does not fully match the confidence or seriousness you are presenting.",
+          "coaching": "Let behavior catch up to intention. Stable follow-through matters more than sounding ready."
+        }
+      }
+    },
+    "sanctuary": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Sanctuary_Core_Module_State_Machine_and_Payload_Spec_v1.pdf",
+        "Genesis_OS_Phase_1_Full_Build_Spec.pdf"
+      ],
+      "modules": {
+        "SAN_STILL": {
+          "title": "Stillness",
+          "entry_copy": "Use Stillness to slow the body down and create a cleaner emotional baseline before you react.",
+          "completion_copy": "Take a second to notice what shifted. Even a small drop in pressure counts.",
+          "ai_failure_fallback": "Stillness is still available without AI. You can complete the reset with the guided timer and check-in."
+        },
+        "SAN_MIRROR": {
+          "title": "Emotional Mirror",
+          "entry_copy": "Use Emotional Mirror when you need words for what you are feeling and what might be underneath it.",
+          "completion_copy": "You do not have to treat one reflection like a permanent identity statement. Take what is useful and leave the rest.",
+          "sparse_input_fallback": "Not enough signal yet for a deep mirror. Start with a simpler feeling label and build from there."
+        },
+        "SAN_WHISPER": {
+          "title": "Whisper Window",
+          "entry_copy": "Use Whisper Window when you need to say something honestly, soften it, or keep it private without sending it yet.",
+          "completion_copy": "You can keep this private, refine it, or turn it into a cleaner message when you are ready.",
+          "safety_redirect": "This draft is too sharp to send as-is. Slow down, keep it private for now, and choose a safer version."
+        },
+        "SAN_GHOST": {
+          "title": "Ghost Mode",
+          "entry_copy": "Ghost Mode gives you emotional shelter without taking away your private reflection tools.",
+          "completion_copy": "Your visibility has been updated. This is a privacy choice, not a punishment.",
+          "cooldown_copy": "Some surfaces are muted for now. You can still reflect privately while your visibility settings hold."
+        }
+      },
+      "shared": {
+        "safety_hold": "This looks heavier than a normal reflection flow. Let us slow down and move more carefully.",
+        "suppressed": "This module is not available right now because a policy or visibility rule is in the way."
+      }
+    },
+    "moderation": {
+      "version": "phase1.v1",
+      "source_docs": [
+        "Quantum_Mirror_Genesis_OS_Master_Blueprint_Revised.pdf",
+        "Genesis_OS_Phase_1_Full_Build_Spec.pdf"
+      ],
+      "refusal_classes": {
+        "self_harm_or_crisis": "I cannot treat this like a normal reflection request. Your safety matters more than the product flow right now.",
+        "coercion_or_stalking": "I cannot help with pressure, surveillance, or coercive behavior. I can help you communicate directly and respectfully instead.",
+        "manipulation_request": "I cannot help you manipulate another person. I can help you say what you mean clearly and cleanly.",
+        "non_consented_partner_exposure": "I cannot expose another person's private data or hidden internal signals without consent.",
+        "clinical_or_diagnostic_request": "I cannot diagnose you or another person. I can help translate patterns, pressure points, and current signals in plain language."
+      }
+    }
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "generated_at_utc": "2026-04-04T02:59:00Z",
+  "package_name": "Genesis_OS_Phase1_Import_Fixtures_Copy_Migration_Pack",
+  "workbook_source_file": "genesis_os_final_quantum_scoring_workbook_v10_polarity.xlsx",
+  "workbook_sha256": "d6bd5676ee786dbf59a99932293dfebc8bdef784c217c7da425bca002b8fa6a7",
+  "top_level_directories": [
+    "imports",
+    "fixtures",
+    "copy",
+    "migrations"
+  ],
+  "file_count": 57,
+  "files": [
+    {
+      "path": "README.md",
+      "size_bytes": 504,
+      "sha256": "749dbc722c1c7bc0da2aceb7717f0b3060714fea478dbca5e304ef9d79674be2"
+    },
+    {
+      "path": "copy/README.md",
+      "size_bytes": 431,
+      "sha256": "8de27bb79b133b963008c92c271f93533880fe9649cda85c8838d936a38057dd"
+    },
+    {
+      "path": "copy/chemistry.phase1.v1.json",
+      "size_bytes": 1339,
+      "sha256": "71040f0f1222b4e25127b88fa0faf508c78e08f38c85f8512519c7c1c04338da"
+    },
+    {
+      "path": "copy/cluster_translations.phase1.v1.json",
+      "size_bytes": 2607,
+      "sha256": "e9f9dccf0be8a88a2f07e195b49496b6776c4d1c8315380eadb95d0aee400d1c"
+    },
+    {
+      "path": "copy/combined_copy_library.phase1.v1.json",
+      "size_bytes": 12187,
+      "sha256": "37f333abdbac74f5cc7618a7bfd8a3b9659e94fd35f9e0a7ffc2551df0334447"
+    },
+    {
+      "path": "copy/forecast.phase1.v1.json",
+      "size_bytes": 1695,
+      "sha256": "b8a41fb14f8c6bfa5a65431bec482d816477ca5cbeb6a218408245d352a09ffc"
+    },
+    {
+      "path": "copy/moderation.phase1.v1.json",
+      "size_bytes": 916,
+      "sha256": "e54f355cb844ea463623c926a7b21a320f70932a07904e48a395961a64913220"
+    },
+    {
+      "path": "copy/readiness.phase1.v1.json",
+      "size_bytes": 2507,
+      "sha256": "ca79246a817b00553ccdc3cada4aa934dc9d1cbb9b0674e3fb1ece5adde6a82a"
+    },
+    {
+      "path": "copy/sanctuary.phase1.v1.json",
+      "size_bytes": 2145,
+      "sha256": "fbd688d879480c18d08a28b5e0e08e8c6acfd47e8e8a71e06d6ef9902a2ae094"
+    },
+    {
+      "path": "fixtures/README.md",
+      "size_bytes": 667,
+      "sha256": "5df0bed0131b2dafba07dd62d94aa1989425b01c0b3a6d8dae8bf2ee70dfec56"
+    },
+    {
+      "path": "fixtures/fixture_manifest.json",
+      "size_bytes": 3335,
+      "sha256": "603c1e3431664976fbb13de3fa32acadbe875c82cfe4394025385194dad93475"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_001_default_all_a_vs_all_a.json",
+      "size_bytes": 33718,
+      "sha256": "5c861d538de3d7a46944f28c23364ea3390e8f0e77ea37b49f2519ae4a119419"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_002_all_a_vs_all_max.json",
+      "size_bytes": 34801,
+      "sha256": "427760e1d7674394bb73783bc455e3c08fe4307c25a47f3a705bdf3ddb1a8694"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_003_mid_vs_mid.json",
+      "size_bytes": 33717,
+      "sha256": "d0a7ac160350368cc7bd9cca7e7012d517e056d845a7c99e3d961ef2b9741e5c"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_004_cycle_forward_vs_cycle_reverse.json",
+      "size_bytes": 34607,
+      "sha256": "d498900639155cb926043b4614503c149e019e7037a50351247fb05c955978af"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_005_cycle_shift2_vs_all_a.json",
+      "size_bytes": 34515,
+      "sha256": "1a2738cd0240bb4a7b0b925b3fe467dd0663bbfa1423f3a00b0cefba6cffc6b7"
+    },
+    {
+      "path": "fixtures/matchharness/fixture_006_all_max_vs_all_max.json",
+      "size_bytes": 33703,
+      "sha256": "afdc771c31537c5d815bdc086494c77123c6cd548622deba761bcfa6f160c069"
+    },
+    {
+      "path": "fixtures/verify_matchharness.py",
+      "size_bytes": 3307,
+      "sha256": "2dfe51a66b1e8ca93be74a07fe7a24df7a50d093a255e442fce263dc603831eb"
+    },
+    {
+      "path": "imports/IMPLEMENTATION_NOTES.md",
+      "size_bytes": 1590,
+      "sha256": "e032f1a689c42abe3b00707eb0422b507003fc343875d98f7886557e0c3775b2"
+    },
+    {
+      "path": "imports/README.md",
+      "size_bytes": 1453,
+      "sha256": "ff4c8cd2374f710e368e5de4100a1851d084d4eb7be8b2f672ccd20b8e9b35f3"
+    },
+    {
+      "path": "imports/export_phase1_workbook.py",
+      "size_bytes": 7518,
+      "sha256": "c853cbfd5823ff7e4ba95c54909d373342bdeb483b5ca778412aaf94bc360e7b"
+    },
+    {
+      "path": "imports/genesis_phase1_imports.sqlite",
+      "size_bytes": 13430784,
+      "sha256": "b9adcc5f03da6ba64dab8eb04fc91a75f37b25a9d4bb163223c976b55ddd8b0f"
+    },
+    {
+      "path": "imports/load_phase1_sqlite.py",
+      "size_bytes": 3340,
+      "sha256": "bc31ad9a216926c381c470968304b82db715b103483f8d840919d64be84da2b5"
+    },
+    {
+      "path": "imports/phase1_import_tables.sqlite.sql",
+      "size_bytes": 7272,
+      "sha256": "69b3b76404eef1d01423e8b26ba97884a21e1d9791e48be50a3318752b4f0cd6"
+    },
+    {
+      "path": "imports/score_engine_phase1.py",
+      "size_bytes": 10370,
+      "sha256": "093bc1596caec3d0b21e70497eae72057ede05678457e9a77536b81071c9e9be"
+    },
+    {
+      "path": "imports/seed_exports/csv/answer_bank.csv",
+      "size_bytes": 118203,
+      "sha256": "4dbd14fa317100c355714f954db9dae3365f5f55dc7a0380e4d466aef0035143"
+    },
+    {
+      "path": "imports/seed_exports/csv/answer_pair_quantum.csv",
+      "size_bytes": 13362333,
+      "sha256": "aa62847f62081b7d9b086b0dd97229e4a021d95add1ddf2674558dec7bd2e1ce"
+    },
+    {
+      "path": "imports/seed_exports/csv/archetype_matrix.csv",
+      "size_bytes": 732,
+      "sha256": "60e7d48144f232944f2374bd27529d59627e9e7f67e804e0e02e2d9de471f940"
+    },
+    {
+      "path": "imports/seed_exports/csv/feedback_data_fields.csv",
+      "size_bytes": 872,
+      "sha256": "bf2582013c74ba9f0e1b05006e466f98da3623c7b3e4912fe6f8e02a0dbb1bf6"
+    },
+    {
+      "path": "imports/seed_exports/csv/numerology_lookup.csv",
+      "size_bytes": 2166,
+      "sha256": "967fd9c7abc43e35251cb41bb18b13862238f40a7030348afaf5581d808cad65"
+    },
+    {
+      "path": "imports/seed_exports/csv/polarity_answer_bank_v10.csv",
+      "size_bytes": 29735,
+      "sha256": "f639badaaadc5be2f1a3ecebd3099d263ce3e410fd03989305222f9c930128ef"
+    },
+    {
+      "path": "imports/seed_exports/csv/polarity_axes_v10.csv",
+      "size_bytes": 1919,
+      "sha256": "97c601e9f560590975b1e644c674b7ab23d2190a3515b519c170a54f8721a9e6"
+    },
+    {
+      "path": "imports/seed_exports/csv/polarity_question_map_v10.csv",
+      "size_bytes": 4055,
+      "sha256": "f38b708716e087c4f05388123e16f328d25f1c4046e3fd1ca2119b087983bd81"
+    },
+    {
+      "path": "imports/seed_exports/csv/polarity_role_seeds_v10.csv",
+      "size_bytes": 1257,
+      "sha256": "da470fd0418c5e01776733f0bb4015cfe769ac1d7e8f25bb4e560b5b13abefac"
+    },
+    {
+      "path": "imports/seed_exports/csv/questions.csv",
+      "size_bytes": 5524,
+      "sha256": "7ce5e638c8f2566fc60027fab4c59b4bd109f0efb78c2179283357a5400a8dd2"
+    },
+    {
+      "path": "imports/seed_exports/csv/rewrite_rules_v10.csv",
+      "size_bytes": 2081,
+      "sha256": "edc3d2834afd8cc7a7c2cc4b7a8a131bbc53f131d1278a512dce2da7c081cf7a"
+    },
+    {
+      "path": "imports/seed_exports/csv/schema_weights.csv",
+      "size_bytes": 1306,
+      "sha256": "736f091db2051d95297517356ae254a99bceed9f8f8dbf5ebff32d55e6c5c215"
+    },
+    {
+      "path": "imports/seed_exports/csv/shadow_matrix.csv",
+      "size_bytes": 404,
+      "sha256": "74406980413ae78847a67d437e98e359dae6df6ac494566e4867a81ba7b2bda9"
+    },
+    {
+      "path": "imports/seed_exports/csv/zodiac_lookup.csv",
+      "size_bytes": 33856,
+      "sha256": "4642b6b31d8196136a680c725dd5fe090990042d189a862a8c6cc70d93f00ce4"
+    },
+    {
+      "path": "imports/seed_exports/json/answer_bank.json",
+      "size_bytes": 373448,
+      "sha256": "a927414e45ead2b38fb530feacbadcd305fa11265a12f4edd1e5b6422faf164d"
+    },
+    {
+      "path": "imports/seed_exports/json/answer_pair_quantum.json",
+      "size_bytes": 35396323,
+      "sha256": "1968c929ce74bd02cdacc064502695e493317de2de4f258a9d4c4539804bdc6c"
+    },
+    {
+      "path": "imports/seed_exports/json/archetype_matrix.json",
+      "size_bytes": 2729,
+      "sha256": "32c8898366981b412310def0bddc46c509c9896dd61ec49d2f62bec4720b33c1"
+    },
+    {
+      "path": "imports/seed_exports/json/feedback_data_fields.json",
+      "size_bytes": 2174,
+      "sha256": "f53c7ce667dc524f11d0a6ddf0686a49573bf7116623a6af2c03ca839e057b74"
+    },
+    {
+      "path": "imports/seed_exports/json/numerology_lookup.json",
+      "size_bytes": 8342,
+      "sha256": "638abe8d26e005f5443c5a9dc37fecc66930874f1a13b7df965c33e4e770e17e"
+    },
+    {
+      "path": "imports/seed_exports/json/polarity_answer_bank_v10.json",
+      "size_bytes": 157329,
+      "sha256": "a797b0bf1ecd8b1fafe66aaa8aa1f0ef5f1fe9014aacf0db5ca0aa072543c5f2"
+    },
+    {
+      "path": "imports/seed_exports/json/polarity_axes_v10.json",
+      "size_bytes": 3137,
+      "sha256": "90846174de8a32f08dccb3571a74d54538e2fdee046bbe2eab99e2eaea084314"
+    },
+    {
+      "path": "imports/seed_exports/json/polarity_pair_engine_v10.json",
+      "size_bytes": 3557,
+      "sha256": "c34f6687b5e2ab73cea9fc17a967c4e5d164a20606e91ec38e9f93bfce50e13c"
+    },
+    {
+      "path": "imports/seed_exports/json/polarity_question_map_v10.json",
+      "size_bytes": 8877,
+      "sha256": "b469f0081d453edfce40a4b61cfdc11a783bc40065c2973e7053aa30f1485f2e"
+    },
+    {
+      "path": "imports/seed_exports/json/polarity_role_seeds_v10.json",
+      "size_bytes": 3905,
+      "sha256": "af5e23407378eb93a5a740705ca25420775d587634d88394b499131ce67bea54"
+    },
+    {
+      "path": "imports/seed_exports/json/questions.json",
+      "size_bytes": 18589,
+      "sha256": "e0ff9c6ae0b078fd38b6de9c3d2f2533bcae24358ebe7c24ed8d46d24acb0e26"
+    },
+    {
+      "path": "imports/seed_exports/json/rewrite_rules_v10.json",
+      "size_bytes": 2784,
+      "sha256": "c8baaebab14da2eeb6200607ec26d7645bf71add1d07c7a77cc63ae5effe0cb9"
+    },
+    {
+      "path": "imports/seed_exports/json/schema_weights.json",
+      "size_bytes": 2734,
+      "sha256": "40def037fb33d14a815ea51f10e902463fde5e6549b4d4ca1cf1a7a548be4c62"
+    },
+    {
+      "path": "imports/seed_exports/json/shadow_matrix.json",
+      "size_bytes": 1100,
+      "sha256": "bc277808a913f08693839a7a326dfcd6aab97484cb223e8ceeef2c30997f37ec"
+    },
+    {
+      "path": "imports/seed_exports/json/workbook_summary.json",
+      "size_bytes": 10874,
+      "sha256": "46c2515f84be3eec5809c479fbefc40cf7e24cc398836f191cd187d813b67511"
+    },
+    {
+      "path": "imports/seed_exports/json/zodiac_lookup.json",
+      "size_bytes": 105794,
+      "sha256": "a66d61c5c5d70ac395c70a466ba7a395b47cd7d34fd3283456ef767098cb169f"
+    },
+    {
+      "path": "migrations/MIGRATION_LEDGER.md",
+      "size_bytes": 5328,
+      "sha256": "51fa6c804e37821c0183afebd415f9e8cd42842f78b58648fff4072ab8918b79"
+    },
+    {
+      "path": "migrations/migration_ledger.json",
+      "size_bytes": 5738,
+      "sha256": "ca7d87a9277afd704c7ed438293c50c410f1e47c6ef2a3408359458dcbf2edab"
+    }
+  ]
+}

@@ -10,6 +10,9 @@ import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Sanctuary from './pages/Sanctuary'
 import ForgotPassword from './pages/ForgotPassword'
+import Messages from './pages/Messages'
+import Knocks from './pages/Knocks'
+import VerifyEmail from './pages/VerifyEmail'
 import Navbar from './components/Navbar'
 
 function ProtectedRoute({ children }) {
@@ -38,12 +41,15 @@ export default function App() {
         <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+        <Route path="/verify" element={<ProtectedRoute><VerifyEmail /></ProtectedRoute>} />
         <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
         <Route path="/score" element={<ProtectedRoute><ScoreReveal /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/profile/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+        <Route path="/knocks" element={<ProtectedRoute><Knocks /></ProtectedRoute>} />
         <Route path="/sanctuary" element={<ProtectedRoute><Sanctuary /></ProtectedRoute>} />
-        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

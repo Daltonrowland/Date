@@ -1,0 +1,330 @@
+Archetype decision tree
+
+Alright Hollywood — this is the crown jewel of emotional logic.
+The Archetype Decision Tree™ is the system that takes everything the user gives (Vault, behavior, grief, patterns, pacing, Depth Score) and produces a clean, defensible, emotionally accurate archetype assignment.
+
+This is the emotional equivalent of a medical diagnostic flowchart — but spiritually intelligent, trauma-safe, and pattern-aware.
+
+It must be:
+	•	precise
+	•	fair
+	•	scalable
+	•	explainable
+	•	resistant to user self-deception
+	•	and able to differentiate all 10 archetypes
+
+Let’s build it piece by piece.
+
+⸻
+
+⭐ ARCHETYPE DECISION TREE™ — v1 Architecture
+
+A multi-stage logic system that determines which archetype(s) a user actually is.
+
+The system runs through 6 stages:
+	1.	Foundation Signals (Core Wound + Early Pattern)
+	2.	Primary Reflex (Fight / Flight / Freeze / Fix / Fantasy / Fawn)
+	3.	Emotional Behavior Loops
+	4.	Attachment + Activation Style
+	5.	Relational Pattern Clusters
+	6.	Stability Overrides & Depth Score Confidence
+
+Let’s build the tree.
+
+⸻
+
+⭐ STAGE 1 — Foundation Signal Routing
+
+The system begins with two big inputs:
+
+A. The Core Wound (from Vault)
+
+Examples:
+	•	abandonment
+	•	neglect
+	•	pressure
+	•	chaos
+	•	invisibility
+	•	over-responsibility
+	•	inconsistency
+	•	emotional suppression
+
+B. The Early Love Pattern
+
+Signals:
+	•	had to be perfect
+	•	unheard / unseen
+	•	unstable home
+	•	emotional parent
+	•	absent parent
+	•	chaotic love
+	•	emotionally cold environment
+
+These two combined give the OS the root of the user’s emotional style.
+
+From this stage alone, the system routes users into four early branches:
+
+Branch 1 — Overprotection
+
+(quiet, distant, shutdown)
+→ Icebox, Quiet Exit, Analyzer
+
+Branch 2 — Overpursuit
+
+(chasing, proving, emotional intensity)
+→ Phantom Seeker, Romantic Idealist, Survivor
+
+Branch 3 — Overfunctioning
+
+(fixing, carrying, emotional labor)
+→ Fixer, Translator, Survivor
+
+Branch 4 — Overperformance
+
+(image, charm, projection)
+→ Performer
+
+Every archetype is downstream of one of these four macro patterns.
+
+⸻
+
+⭐ STAGE 2 — Primary Reflex Routing
+
+Once routed into a branch, the OS examines their reflex under emotional stress:
+
+Reflex Types:
+	•	Freeze (shut down)
+	•	Disappear (quiet exit)
+	•	Think (analysis)
+	•	Fix (caretake)
+	•	Pursue (anxious chase)
+	•	Dream (idealize)
+	•	Perform (image-manage)
+	•	Detach (emotional retreat)
+	•	Anchor (regulate)
+
+This determines the sub-branch.
+
+Examples:
+
+If Branch = Overprotection AND Reflex = Freeze
+→ Icebox or Analyzer
+
+If Branch = Overprotection AND Reflex = Disappear
+→ Quiet Exit
+
+If Branch = Overpursuit AND Reflex = Pursue
+→ Phantom Seeker
+
+If Branch = Overpursuit AND Reflex = Dream
+→ Romantic Idealist
+
+If Branch = Overfunctioning AND Reflex = Fix
+→ Fixer
+
+If Branch = Overfunctioning AND Reflex = Think
+→ Translator
+
+This step narrows the field dramatically.
+
+⸻
+
+⭐ STAGE 3 — Behavior Loop Analysis (Pattern Clusters)
+
+The system now checks for pattern loops, using cluster data:
+
+Withdrawal Loop
+	•	silent retreat
+	•	vanishing
+	•	emotional numbness
+→ Quiet Exit or Icebox
+
+Analysis Loop
+	•	overthinking
+	•	self-interrogation
+	•	pausing emotions
+→ Analyzer
+
+Fixing Loop
+	•	emotional responsibility
+	•	thinking they must “hold it together”
+→ Fixer or Translator
+
+Pursuit Loop
+	•	fear of abandonment
+	•	chasing emotionally distant partners
+→ Phantom Seeker
+
+Fantasy Loop
+	•	idealizing partners
+	•	falling in love with potential
+→ Romantic Idealist
+
+Performing Loop
+	•	masking
+	•	being the “charismatic one”
+→ Performer
+
+Resilience Loop
+	•	surviving emotional chaos
+	•	absorbing pain
+→ Survivor
+
+This solidifies the top 2–3 candidates.
+
+⸻
+
+⭐ STAGE 4 — Attachment + Activation Style Check
+
+Now you determine the relationship wiring:
+
+Avoidant Activation
+
+→ Icebox, Quiet Exit, Analyzer
+
+Anxious Activation
+
+→ Phantom Seeker, Romantic Idealist, Survivor
+
+Mixed Activation (push-pull)
+
+→ Translator, Quiet Exit, Analyzer, Survivor
+
+Secure Activation
+
+→ Regulated Grown-Up (rare, only if Depth Score + consistency is high)
+
+Trauma-Calibrated Activation
+
+→ Survivor, Fixer, Translator
+
+This step eliminates mismatching archetypes.
+
+⸻
+
+⭐ STAGE 5 — Relational Pattern Signatures
+
+These are high-signal patterns that IDENTIFY archetypes instantly:
+
+Icebox Signature
+	•	“I don’t feel safe being vulnerable.”
+	•	“I withdraw when I feel overwhelmed.”
+	•	“I need space before anything else.”
+
+Phantom Signature
+	•	“I pursue people who pull away.”
+	•	“I need reassurance.”
+
+Analyzer Signature
+	•	“I need to process before I respond.”
+	•	“My mind goes into loops.”
+
+Quiet Exit Signature
+	•	“I disappear to protect peace.”
+	•	“I get quiet instead of fighting.”
+
+Fixer Signature
+	•	“I carry the emotional weight.”
+	•	“I try to keep everything together.”
+
+Idealist Signature
+	•	“I dream the relationship before it exists.”
+	•	“I see potential in everyone.”
+
+Performer Signature
+	•	“I become who they need me to be.”
+
+Survivor Signature
+	•	“I learned to survive love, not enjoy it.”
+
+Translator Signature
+	•	“I absorb emotions & translate them for others.”
+
+Regulated Signature
+	•	“I communicate clearly and calmly.”
+	•	“I’m grounded even under stress.”
+
+The system checks which signatures match the user’s Vault + behavior patterns.
+
+⸻
+
+⭐ STAGE 6 — Final Determination & Confidence Scoring
+
+After narrowing to top 2–4 archetypes, the system applies:
+
+Depth Score Weighting
+	•	Low depth = lower confidence
+	•	High depth = strong classification
+
+Consistency Penalty
+	•	If contradictions appear, reduce confidence in self-aware archetypes and boost shadow tension types.
+
+Shadow Overlay
+	•	If user has a strong shadow (Self-Saboteur, Stonewaller, Chameleon), adjust archetype weighting accordingly.
+
+E_GRIEF Adjustment
+	•	Heavy grief shifts user toward Survivor, Quiet Exit, Analyzer temporarily
+(But Depth Score corrects this over time.)
+
+Finally, the system sorts scores:
+	1.	Primary Archetype (Highest Score)
+	2.	Secondary Influence
+	3.	Minor Influence
+
+And produces a Confidence Index:
+	•	High Confidence (85–100)
+	•	Medium Confidence (60–84)
+	•	Low Confidence (40–59)
+	•	Uncertain (<40 — prompts user for more Vault entries)
+
+⸻
+
+⭐ EXAMPLE FLOW (Short Version)
+
+Let’s walk a quick example:
+
+User Entry:
+	•	“I disappear when overwhelmed.”
+	•	“I carried the emotional weight in past relationships.”
+	•	“Love felt inconsistent growing up.”
+	•	“I overthink everything before acting.”
+	•	Uses Selah often.
+	•	High E_GRIEF.
+
+Tree Decisions:
+	1.	Foundation: Overprotection + Overfunctioning
+	2.	Reflex: Freeze + Analyze
+	3.	Loop: Withdrawal Loop + Analysis Loop
+	4.	Attachment: Avoidant
+	5.	Signatures match: Quiet Exit + Analyzer
+	6.	Depth Score: 62% → high confidence
+
+Result:
+	•	Primary: Quiet Exit
+	•	Secondary: Analyzer
+	•	Minor: Survivor
+	•	Shadow: Stonewaller
+
+Perfect example of how the tree works.
+
+⸻
+
+⭐ MASTERLINE FOR THIS SYSTEM
+
+“The Archetype Decision Tree is the emotional logic engine that interprets a human story, not their answers.”
+
+This is the line you use in pitch decks and internal docs.
+
+⸻
+
+⭐ What’s next, Ace?
+
+Pick the next architecture layer:
+
+🔥 Shadow Detection Logic Map
+🔥 Emotional Genome Visual (for UI)
+🔥 Blueprint Reveal Flow
+🔥 Season of Healing 30-Day Prompt Set
+🔥 Archetype ↔ Shadow Compatibility Map
+
+Which one do you want?
