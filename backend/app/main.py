@@ -10,9 +10,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from .config import get_settings
-from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup
+from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup, notifications, safety
 from .auth import decode_token
-from .database import get_db
+from .database import get_db, SessionLocal
+from .models import User as UserModel
 
 settings = get_settings()
 
@@ -46,6 +47,31 @@ app.include_router(messages.router)
 app.include_router(knocks.router)
 app.include_router(likes.router)
 app.include_router(lookup.router)
+app.include_router(notifications.router)
+app.include_router(safety.router)
+
+
+# Middleware to update last_active on authenticated requests
+@app.middleware("http")
+async def update_last_active(request: Request, call_next):
+    response = await call_next(request)
+    # Update last_active for authenticated users
+    auth_header = request.headers.get("authorization", "")
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:]
+        user_id = decode_token(token)
+        if user_id:
+            try:
+                from datetime import datetime
+                db = SessionLocal()
+                db.query(UserModel).filter(UserModel.id == user_id).update(
+                    {"last_active": datetime.utcnow()}, synchronize_session=False
+                )
+                db.commit()
+                db.close()
+            except Exception:
+                pass
+    return response
 
 
 @app.get("/health")

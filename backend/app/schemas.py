@@ -72,8 +72,10 @@ class UserProfile(BaseModel):
     education: Optional[str] = ""
     dating_status: Optional[str] = ""
     relationship_state: Optional[str] = ""
+    onboarding_completed: bool = False
     email_verified: bool = False
     is_verified: bool = False
+    last_active: Optional[datetime] = None
     created_at: datetime
 
     class Config:
@@ -96,6 +98,7 @@ class UserUpdate(BaseModel):
     education: Optional[str] = None
     dating_status: Optional[str] = None
     relationship_state: Optional[str] = None
+    onboarding_completed: Optional[bool] = None
 
 class PhotoUpload(BaseModel):
     photo_data: str

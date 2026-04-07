@@ -34,7 +34,7 @@ export default function Register() {
       const { data } = await api.post('/auth/register', payload)
       setAuth(data.access_token, { id: data.user_id, name: data.name, rs_code: data.rs_code, quiz_completed: false })
       toast.success(`Welcome, ${data.name}! Your RS Code: ${data.rs_code}`)
-      navigate('/quiz')
+      navigate('/onboarding')
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Registration failed')
     } finally {

@@ -6,7 +6,6 @@ from .database import Base
 
 class User(Base):
     __tablename__ = "users"
-
     id = Column(Integer, primary_key=True, index=True)
     rs_code = Column(String(6), unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
@@ -21,13 +20,14 @@ class User(Base):
     location = Column(String, default="")
     photo_url = Column(Text, default="")
     profile_photo = Column(Text, default="")
-    profile_photos = Column(JSON, default=list)  # list of base64 photo strings (up to 6)
+    profile_photos = Column(JSON, default=list)
     email_verified = Column(Boolean, default=False)
     is_verified = Column(Boolean, default=False)
     verification_token = Column(String, nullable=True)
     reset_token = Column(String, nullable=True)
     reset_token_expires = Column(DateTime, nullable=True)
     quiz_completed = Column(Boolean, default=False)
+    onboarding_completed = Column(Boolean, default=False)
     archetype = Column(String, default="")
     archetype_secondary = Column(String, default="")
     shadow_type = Column(String, default="")
@@ -36,12 +36,12 @@ class User(Base):
     readiness_score = Column(Float, default=0.0)
     readiness_forecast = Column(String, default="")
     life_path_number = Column(Integer, nullable=True)
-    # New profile fields
     height = Column(String, default="")
     occupation = Column(String, default="")
     education = Column(String, default="")
-    dating_status = Column(String, default="")  # Talking/Friends/Dating/Maybe long term/Marriage
-    relationship_state = Column(String, default="")  # in_relationship, single, etc.
+    dating_status = Column(String, default="")
+    relationship_state = Column(String, default="")
+    last_active = Column(DateTime, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     quiz_responses = relationship("QuizResponse", back_populates="user", uselist=False)
@@ -118,6 +118,35 @@ class Like(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     liker = relationship("User", foreign_keys=[liker_id])
     liked = relationship("User", foreign_keys=[liked_id])
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    type = Column(String, nullable=False)  # mutual_match, new_message, knock_received, knock_accepted
+    message = Column(Text, nullable=False)
+    read = Column(Boolean, default=False)
+    reference_id = Column(Integer, nullable=True)  # related user_id or message_id
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Report(Base):
+    __tablename__ = "reports"
+    id = Column(Integer, primary_key=True, index=True)
+    reporter_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reported_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reason = Column(String, nullable=False)
+    details = Column(Text, default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Block(Base):
+    __tablename__ = "blocks"
+    id = Column(Integer, primary_key=True, index=True)
+    blocker_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    blocked_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class EmailVerificationCode(Base):
