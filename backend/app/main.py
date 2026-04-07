@@ -68,31 +68,39 @@ def seed_demo(token: str = Query(...), db: Session = Depends(get_db)):
 
 
 @app.post("/admin/cleanup-test-users")
-def cleanup_test(token: str = Query(...), db: Session = Depends(get_db)):
-    """Delete all test/demo users EXCEPT real users (user IDs you want to keep)."""
+def cleanup_test(token: str = Query(...), keep_email: str = Query(""), db: Session = Depends(get_db)):
+    """Delete all test/demo users. Optionally keep a specific email."""
     if token != ADMIN_TOKEN:
         raise HTTPException(status_code=403, detail="Invalid admin token")
-    from .models import User, QuizResponse, CompatibilityScore, Message, Knock
-    # Delete users with test email patterns (keep real user accounts)
-    test_patterns = ["%@test.com", "%@demo.relationshipscores.app", "%@relationshipscores.app", "%demo%@%", "%genesis%@test%", "%blueprint%@test%", "%fulltest%@test%", "%matcher%@test%", "%full%@test%"]
-    deleted = 0
-    for pattern in test_patterns:
-        test_ids = [u.id for u in db.query(User.id).filter(User.email.like(pattern)).all()]
-        if test_ids:
-            db.query(CompatibilityScore).filter(
-                (CompatibilityScore.user_a_id.in_(test_ids)) | (CompatibilityScore.user_b_id.in_(test_ids))
-            ).delete(synchronize_session=False)
-            db.query(Message).filter(
-                (Message.sender_id.in_(test_ids)) | (Message.recipient_id.in_(test_ids))
-            ).delete(synchronize_session=False)
-            db.query(Knock).filter(
-                (Knock.sender_id.in_(test_ids)) | (Knock.recipient_id.in_(test_ids))
-            ).delete(synchronize_session=False)
-            db.query(QuizResponse).filter(QuizResponse.user_id.in_(test_ids)).delete(synchronize_session=False)
-            db.query(User).filter(User.id.in_(test_ids)).delete(synchronize_session=False)
-            deleted += len(test_ids)
+    from .models import User, QuizResponse, CompatibilityScore, Message, Knock, EmailVerificationCode
+    from sqlalchemy import or_, text
+
+    # Find all test/demo user IDs
+    test_patterns = [
+        "%@test.com", "%@demo.relationshipscores.app", "%@relationshipscores.app",
+        "%demo%@%", "test%@%",
+    ]
+    query = db.query(User.id)
+    conditions = [User.email.like(p) for p in test_patterns]
+    query = query.filter(or_(*conditions))
+    if keep_email:
+        query = query.filter(User.email != keep_email)
+    test_ids = [u.id for u in query.all()]
+
+    if not test_ids:
+        return {"status": "ok", "deleted_users": 0}
+
+    # Delete related data in correct FK order
+    db.execute(text(f"DELETE FROM compatibility_scores WHERE user_a_id IN ({','.join(str(i) for i in test_ids)}) OR user_b_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM messages WHERE sender_id IN ({','.join(str(i) for i in test_ids)}) OR recipient_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM knocks WHERE sender_id IN ({','.join(str(i) for i in test_ids)}) OR recipient_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM email_verification_codes WHERE user_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM sanctuaries WHERE user_id IN ({','.join(str(i) for i in test_ids)}) OR partner_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM quiz_responses WHERE user_id IN ({','.join(str(i) for i in test_ids)})"))
+    db.execute(text(f"DELETE FROM users WHERE id IN ({','.join(str(i) for i in test_ids)})"))
     db.commit()
-    return {"status": "ok", "deleted_users": deleted}
+
+    return {"status": "ok", "deleted_users": len(test_ids)}
 
 
 # ── Real-time match notifications via SSE ─────────────────────────────────────
