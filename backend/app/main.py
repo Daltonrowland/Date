@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from .config import get_settings
-from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks
+from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup
 from .auth import decode_token
 from .database import get_db
 
@@ -44,6 +44,8 @@ app.include_router(profiles.router)
 app.include_router(sanctuary.router)
 app.include_router(messages.router)
 app.include_router(knocks.router)
+app.include_router(likes.router)
+app.include_router(lookup.router)
 
 
 @app.get("/health")

@@ -25,11 +25,7 @@ def get_sanctuary(current_user: User = Depends(get_current_user), db: Session = 
 
 
 @router.patch("", response_model=SanctuaryResponse)
-def update_sanctuary(
-    payload: SanctuaryUpdate,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
+def update_sanctuary(payload: SanctuaryUpdate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     s = _get_or_create(current_user.id, db)
     for field, value in payload.model_dump(exclude_none=True).items():
         setattr(s, field, value)

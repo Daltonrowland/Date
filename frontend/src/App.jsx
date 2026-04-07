@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import Messages from './pages/Messages'
 import Knocks from './pages/Knocks'
 import VerifyEmail from './pages/VerifyEmail'
+import Search from './pages/Search'
 import Navbar from './components/Navbar'
 
 function ProtectedRoute({ children }) {
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
         <Route path="/knocks" element={<ProtectedRoute><Knocks /></ProtectedRoute>} />
         <Route path="/sanctuary" element={<ProtectedRoute><Sanctuary /></ProtectedRoute>} />
+        <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

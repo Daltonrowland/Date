@@ -20,9 +20,10 @@ class User(Base):
     bio = Column(Text, default="")
     location = Column(String, default="")
     photo_url = Column(Text, default="")
-    profile_photo = Column(Text, default="")  # base64 encoded photo (400x400)
+    profile_photo = Column(Text, default="")
+    profile_photos = Column(JSON, default=list)  # list of base64 photo strings (up to 6)
     email_verified = Column(Boolean, default=False)
-    is_verified = Column(Boolean, default=False)  # email code verified
+    is_verified = Column(Boolean, default=False)
     verification_token = Column(String, nullable=True)
     reset_token = Column(String, nullable=True)
     reset_token_expires = Column(DateTime, nullable=True)
@@ -35,6 +36,12 @@ class User(Base):
     readiness_score = Column(Float, default=0.0)
     readiness_forecast = Column(String, default="")
     life_path_number = Column(Integer, nullable=True)
+    # New profile fields
+    height = Column(String, default="")
+    occupation = Column(String, default="")
+    education = Column(String, default="")
+    dating_status = Column(String, default="")  # Talking/Friends/Dating/Maybe long term/Marriage
+    relationship_state = Column(String, default="")  # in_relationship, single, etc.
     created_at = Column(DateTime, default=datetime.utcnow)
 
     quiz_responses = relationship("QuizResponse", back_populates="user", uselist=False)
@@ -45,20 +52,17 @@ class User(Base):
 
 class QuizResponse(Base):
     __tablename__ = "quiz_responses"
-
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
     answers = Column(JSON, nullable=False)
     answer_details = Column(JSON, nullable=True)
     scoring_version = Column(String, default="phase1.v1")
     completed_at = Column(DateTime, default=datetime.utcnow)
-
     user = relationship("User", back_populates="quiz_responses")
 
 
 class CompatibilityScore(Base):
     __tablename__ = "compatibility_scores"
-
     id = Column(Integer, primary_key=True, index=True)
     user_a_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user_b_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -78,42 +82,46 @@ class CompatibilityScore(Base):
     top_friction_drivers = Column(JSON, nullable=True)
     scoring_version = Column(String, default="phase1.v1")
     created_at = Column(DateTime, default=datetime.utcnow)
-
     user_a = relationship("User", foreign_keys=[user_a_id], back_populates="sent_scores")
     user_b = relationship("User", foreign_keys=[user_b_id], back_populates="received_scores")
 
 
 class Message(Base):
     __tablename__ = "messages"
-
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     recipient_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     read_at = Column(DateTime, nullable=True)
-
     sender = relationship("User", foreign_keys=[sender_id])
     recipient = relationship("User", foreign_keys=[recipient_id])
 
 
 class Knock(Base):
     __tablename__ = "knocks"
-
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     recipient_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    status = Column(String, default="pending")  # pending, accepted, declined
+    status = Column(String, default="pending")
     message = Column(Text, default="")
     created_at = Column(DateTime, default=datetime.utcnow)
-
     sender = relationship("User", foreign_keys=[sender_id])
     recipient = relationship("User", foreign_keys=[recipient_id])
 
 
+class Like(Base):
+    __tablename__ = "likes"
+    id = Column(Integer, primary_key=True, index=True)
+    liker_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    liked_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    liker = relationship("User", foreign_keys=[liker_id])
+    liked = relationship("User", foreign_keys=[liked_id])
+
+
 class EmailVerificationCode(Base):
     __tablename__ = "email_verification_codes"
-
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     code = Column(String(6), nullable=False)
@@ -123,7 +131,6 @@ class EmailVerificationCode(Base):
 
 class Sanctuary(Base):
     __tablename__ = "sanctuaries"
-
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     partner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
@@ -133,8 +140,10 @@ class Sanctuary(Base):
     notes = Column(Text, default="")
     love_language = Column(String, default="")
     anniversary = Column(String, default="")
+    personal_reflections = Column(JSON, default=list)
+    emotional_state = Column(String, default="")
+    personal_goals = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
-
     user = relationship("User", foreign_keys=[user_id], back_populates="sanctuary")
     partner = relationship("User", foreign_keys=[partner_id])
