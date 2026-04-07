@@ -63,8 +63,36 @@ def seed_demo(token: str = Query(...), db: Session = Depends(get_db)):
     from scripts.seed_demo_users import seed_demo_data
     from .scoring import compute_compatibility, compute_life_path
     from .auth import hash_password
-    count = seed_demo_data(db, compute_compatibility, compute_life_path, hash_password)
-    return {"status": "ok", "users_created": count}
+    result = seed_demo_data(db, compute_compatibility, compute_life_path, hash_password)
+    return {"status": "ok", **result}
+
+
+@app.post("/admin/cleanup-test-users")
+def cleanup_test(token: str = Query(...), db: Session = Depends(get_db)):
+    """Delete all test/demo users EXCEPT real users (user IDs you want to keep)."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from .models import User, QuizResponse, CompatibilityScore, Message, Knock
+    # Delete users with test email patterns (keep real user accounts)
+    test_patterns = ["%@test.com", "%@demo.relationshipscores.app", "%demo%@%"]
+    deleted = 0
+    for pattern in test_patterns:
+        test_ids = [u.id for u in db.query(User.id).filter(User.email.like(pattern)).all()]
+        if test_ids:
+            db.query(CompatibilityScore).filter(
+                (CompatibilityScore.user_a_id.in_(test_ids)) | (CompatibilityScore.user_b_id.in_(test_ids))
+            ).delete(synchronize_session=False)
+            db.query(Message).filter(
+                (Message.sender_id.in_(test_ids)) | (Message.recipient_id.in_(test_ids))
+            ).delete(synchronize_session=False)
+            db.query(Knock).filter(
+                (Knock.sender_id.in_(test_ids)) | (Knock.recipient_id.in_(test_ids))
+            ).delete(synchronize_session=False)
+            db.query(QuizResponse).filter(QuizResponse.user_id.in_(test_ids)).delete(synchronize_session=False)
+            db.query(User).filter(User.id.in_(test_ids)).delete(synchronize_session=False)
+            deleted += len(test_ids)
+    db.commit()
+    return {"status": "ok", "deleted_users": deleted}
 
 
 # ── Real-time match notifications via SSE ─────────────────────────────────────

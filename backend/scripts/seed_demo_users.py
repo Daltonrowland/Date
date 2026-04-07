@@ -1,54 +1,72 @@
 """
 Seed 20 realistic demo users with varied archetypes, shadows, zodiac signs,
-life paths, completed quizzes, and pre-computed compatibility scores.
+life paths, completed quizzes, and pre-computed compatibility scores
+against ALL existing real users (so they show up on everyone's dashboard).
 """
 import random
 import string
 import secrets
-from datetime import datetime, date
+from datetime import datetime
 
 DEMO_USERS = [
-    {"name": "Aria Chen", "age": 28, "gender": "Woman", "looking_for": "Men", "sun_sign": "aries", "dob": "1998-04-05", "bio": "Artist and coffee enthusiast. Looking for someone who gets my chaos."},
-    {"name": "Marcus Rivera", "age": 32, "gender": "Man", "looking_for": "Women", "sun_sign": "taurus", "dob": "1994-05-12", "bio": "Engineer by day, chef by night. Steady and grounded."},
-    {"name": "Luna Park", "age": 25, "gender": "Woman", "looking_for": "Men", "sun_sign": "gemini", "dob": "2001-06-18", "bio": "Can talk about anything for hours. Dual personality warning."},
-    {"name": "Darius Thompson", "age": 35, "gender": "Man", "looking_for": "Women", "sun_sign": "cancer", "dob": "1991-07-09", "bio": "Family-oriented with a soft heart and a strong back."},
-    {"name": "Sofia Petrov", "age": 29, "gender": "Woman", "looking_for": "Everyone", "sun_sign": "leo", "dob": "1997-08-15", "bio": "Life of the party but secretly an introvert recharging at home."},
-    {"name": "Kai Nakamura", "age": 27, "gender": "Non-binary", "looking_for": "Everyone", "sun_sign": "virgo", "dob": "1999-09-02", "bio": "Perfectionist healing from perfectionism. It's a journey."},
-    {"name": "Isabella Torres", "age": 31, "gender": "Woman", "looking_for": "Men", "sun_sign": "libra", "dob": "1995-10-11", "bio": "Diplomat by nature. I just want everyone to be okay."},
-    {"name": "Elijah Carter", "age": 33, "gender": "Man", "looking_for": "Women", "sun_sign": "scorpio", "dob": "1993-11-07", "bio": "Intense but loyal. If I let you in, you're in for life."},
-    {"name": "Zara Williams", "age": 24, "gender": "Woman", "looking_for": "Men", "sun_sign": "sagittarius", "dob": "2002-12-03", "bio": "Adventure seeker. Next destination: wherever love takes me."},
-    {"name": "Liam O'Brien", "age": 30, "gender": "Man", "looking_for": "Women", "sun_sign": "capricorn", "dob": "1996-01-14", "bio": "Building an empire and looking for my queen."},
-    {"name": "Mia Johansson", "age": 26, "gender": "Woman", "looking_for": "Everyone", "sun_sign": "aquarius", "dob": "2000-02-08", "bio": "Free spirit with a scientific mind. I contain multitudes."},
-    {"name": "Noah Kim", "age": 34, "gender": "Man", "looking_for": "Women", "sun_sign": "pisces", "dob": "1992-03-20", "bio": "Dreamer, musician, hopeless romantic. Yes, all three."},
-    {"name": "Jade Mitchell", "age": 27, "gender": "Woman", "looking_for": "Men", "sun_sign": "aries", "dob": "1999-04-01", "bio": "Fiery and direct. Don't waste my time and I won't waste yours."},
-    {"name": "Roman Vasquez", "age": 36, "gender": "Man", "looking_for": "Women", "sun_sign": "taurus", "dob": "1990-05-22", "bio": "Old soul in a modern world. Looking for depth, not drama."},
-    {"name": "Priya Sharma", "age": 28, "gender": "Woman", "looking_for": "Men", "sun_sign": "gemini", "dob": "1998-06-11", "bio": "Data scientist who believes in horoscopes. The duality is real."},
-    {"name": "Xavier Lewis", "age": 29, "gender": "Man", "looking_for": "Everyone", "sun_sign": "cancer", "dob": "1997-07-25", "bio": "Emotional intelligence is my superpower. Also I make great soup."},
-    {"name": "Aisha Okonkwo", "age": 31, "gender": "Woman", "looking_for": "Men", "sun_sign": "leo", "dob": "1995-08-19", "bio": "Confident, compassionate, and tired of settling."},
-    {"name": "Theo Anderson", "age": 22, "gender": "Man", "looking_for": "Women", "sun_sign": "virgo", "dob": "2004-09-14", "bio": "Young but old enough to know what I want. Clarity is attractive."},
-    {"name": "Camille Dubois", "age": 33, "gender": "Woman", "looking_for": "Men", "sun_sign": "libra", "dob": "1993-10-05", "bio": "French-American. I believe in love but I also believe in boundaries."},
-    {"name": "Jayden Walker", "age": 45, "gender": "Man", "looking_for": "Women", "sun_sign": "scorpio", "dob": "1981-11-30", "bio": "Divorced, healed, and ready. Experience is the best teacher."},
+    {"name": "Jessica Martinez", "age": 27, "gender": "Woman", "looking_for": "Men", "sun_sign": "aries", "dob": "1999-04-02", "bio": "Spontaneous, passionate, and always planning the next adventure. I need someone who can keep up."},
+    {"name": "Marcus Johnson", "age": 31, "gender": "Man", "looking_for": "Women", "sun_sign": "taurus", "dob": "1995-05-14", "bio": "Steady hands, warm heart. I cook better than most restaurants."},
+    {"name": "Priya Patel", "age": 26, "gender": "Woman", "looking_for": "Men", "sun_sign": "gemini", "dob": "2000-06-07", "bio": "Data scientist by day, stargazer by night. I believe in patterns and chemistry."},
+    {"name": "Darius Thompson", "age": 34, "gender": "Man", "looking_for": "Women", "sun_sign": "cancer", "dob": "1992-07-19", "bio": "Family-oriented with a soft heart and a strong back. Loyalty is everything."},
+    {"name": "Sofia Reyes", "age": 29, "gender": "Woman", "looking_for": "Everyone", "sun_sign": "leo", "dob": "1997-08-08", "bio": "Life of the party but secretly an introvert recharging at home with my cat."},
+    {"name": "Kai Nakamura", "age": 28, "gender": "Non-binary", "looking_for": "Everyone", "sun_sign": "virgo", "dob": "1998-09-12", "bio": "Perfectionist healing from perfectionism. Art, tea, and honest conversations."},
+    {"name": "Isabella Torres", "age": 30, "gender": "Woman", "looking_for": "Men", "sun_sign": "libra", "dob": "1996-10-23", "bio": "Diplomat by nature, romantic by choice. Balance is my love language."},
+    {"name": "Elijah Carter", "age": 33, "gender": "Man", "looking_for": "Women", "sun_sign": "scorpio", "dob": "1993-11-15", "bio": "Intense but loyal. If I let you in, you're in for life. No half-measures."},
+    {"name": "Zara Williams", "age": 24, "gender": "Woman", "looking_for": "Men", "sun_sign": "sagittarius", "dob": "2002-12-03", "bio": "Wanderlust in human form. I'll try anything once and most things twice."},
+    {"name": "Liam O'Brien", "age": 32, "gender": "Man", "looking_for": "Women", "sun_sign": "capricorn", "dob": "1994-01-09", "bio": "Building something real — career, home, relationship. Ambition meets warmth."},
+    {"name": "Mia Johansson", "age": 25, "gender": "Woman", "looking_for": "Everyone", "sun_sign": "aquarius", "dob": "2001-02-14", "bio": "Free spirit with a scientific mind. I contain multitudes and contradictions."},
+    {"name": "Noah Kim", "age": 35, "gender": "Man", "looking_for": "Women", "sun_sign": "pisces", "dob": "1991-03-05", "bio": "Dreamer, musician, hopeless romantic. If you quote Rumi I'll probably propose."},
+    {"name": "Jade Mitchell", "age": 27, "gender": "Woman", "looking_for": "Men", "sun_sign": "aries", "dob": "1999-04-18", "bio": "Fiery, direct, no games. I know what I want and I'm not afraid to say it."},
+    {"name": "Roman Vasquez", "age": 36, "gender": "Man", "looking_for": "Women", "sun_sign": "taurus", "dob": "1990-05-01", "bio": "Old soul in a modern world. Looking for depth, not drama. Quality over everything."},
+    {"name": "Aaliyah Brooks", "age": 28, "gender": "Woman", "looking_for": "Men", "sun_sign": "gemini", "dob": "1998-06-21", "bio": "Writer, overthinker, and the best person to bring to a dinner party."},
+    {"name": "Xavier Lewis", "age": 29, "gender": "Man", "looking_for": "Everyone", "sun_sign": "cancer", "dob": "1997-07-04", "bio": "Emotional intelligence is my superpower. Also I make incredible pasta."},
+    {"name": "Aisha Okonkwo", "age": 31, "gender": "Woman", "looking_for": "Men", "sun_sign": "leo", "dob": "1995-08-22", "bio": "Confident, compassionate, and done settling. Show up or step aside."},
+    {"name": "Theo Anderson", "age": 23, "gender": "Man", "looking_for": "Women", "sun_sign": "virgo", "dob": "2003-09-09", "bio": "Young but emotionally literate. Clarity is the most attractive quality."},
+    {"name": "Camille Dubois", "age": 33, "gender": "Woman", "looking_for": "Men", "sun_sign": "libra", "dob": "1993-10-16", "bio": "Half French, fully romantic. I believe in love and healthy boundaries equally."},
+    {"name": "Jayden Walker", "age": 40, "gender": "Man", "looking_for": "Women", "sun_sign": "scorpio", "dob": "1986-11-28", "bio": "Divorced, healed, and wide open. The best chapters are unwritten."},
 ]
 
 ARCHETYPES = ["Analyzer", "Fixer", "Icebox", "Performer", "Phantom Seeker",
               "Quiet Exit", "Regulated Grown-Up", "Romantic Idealist", "Survivor", "Translator"]
 SHADOWS = ["Chameleon", "Love Bomber", "Manipulator", "Scorekeeper", "Self-Saboteur", "Stonewaller"]
 
+DEMO_EMAIL_DOMAIN = "@demo.relationshipscores.app"
+
 
 def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
-    """Create 20 demo users with quizzes and compatibility scores."""
-    from app.models import User, QuizResponse, CompatibilityScore
+    """
+    Wipe existing demo users, create 20 fresh demo users,
+    and compute compatibility scores against ALL real users.
+    """
+    from app.models import User, QuizResponse, CompatibilityScore, Message, Knock
 
-    created_users = []
+    # ── Step 1: Delete existing demo data ─────────────────────────────────
+    demo_ids = [u.id for u in db_session.query(User.id).filter(User.email.like(f"%{DEMO_EMAIL_DOMAIN}")).all()]
+    if demo_ids:
+        db_session.query(CompatibilityScore).filter(
+            (CompatibilityScore.user_a_id.in_(demo_ids)) | (CompatibilityScore.user_b_id.in_(demo_ids))
+        ).delete(synchronize_session=False)
+        db_session.query(Message).filter(
+            (Message.sender_id.in_(demo_ids)) | (Message.recipient_id.in_(demo_ids))
+        ).delete(synchronize_session=False)
+        db_session.query(Knock).filter(
+            (Knock.sender_id.in_(demo_ids)) | (Knock.recipient_id.in_(demo_ids))
+        ).delete(synchronize_session=False)
+        db_session.query(QuizResponse).filter(QuizResponse.user_id.in_(demo_ids)).delete(synchronize_session=False)
+        db_session.query(User).filter(User.id.in_(demo_ids)).delete(synchronize_session=False)
+        db_session.commit()
+
+    # ── Step 2: Create 20 demo users ──────────────────────────────────────
     q_ids = list(range(1, 51)) + list(range(100, 110))
+    hashed_pw = hash_fn("DemoPass123!")
+    demo_users = []
 
     for i, u in enumerate(DEMO_USERS):
-        # Check if already exists
-        existing = db_session.query(User).filter(User.email == f"demo{i+1}@relationshipscores.app").first()
-        if existing:
-            created_users.append(existing)
-            continue
-
         rs_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
         while db_session.query(User).filter(User.rs_code == rs_code).first():
             rs_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
@@ -56,8 +74,8 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
         lp = life_path_fn(u["dob"])
         user = User(
             rs_code=rs_code,
-            email=f"demo{i+1}@relationshipscores.app",
-            hashed_password=hash_fn("DemoPass123!"),
+            email=f"demo{i+1}{DEMO_EMAIL_DOMAIN}",
+            hashed_password=hashed_pw,
             name=u["name"],
             age=u["age"],
             gender=u["gender"],
@@ -66,8 +84,8 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
             date_of_birth=datetime.strptime(u["dob"], "%Y-%m-%d").date(),
             life_path_number=lp,
             bio=u["bio"],
-            photo_url=f"https://i.pravatar.cc/400?img={i+1}",
-            profile_photo=f"https://i.pravatar.cc/400?img={i+1}",
+            photo_url=f"https://i.pravatar.cc/400?img={i + 1}",
+            profile_photo=f"https://i.pravatar.cc/400?img={i + 1}",
             email_verified=True,
             is_verified=True,
             quiz_completed=True,
@@ -82,20 +100,31 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
         db_session.add(user)
         db_session.flush()
 
-        # Create quiz answers
         answers = {str(q): random.choice(["A", "B", "C", "D", "E"]) for q in q_ids}
-        qr = QuizResponse(user_id=user.id, answers=answers, scoring_version="phase1.v1")
-        db_session.add(qr)
-
-        created_users.append(user)
+        db_session.add(QuizResponse(user_id=user.id, answers=answers, scoring_version="phase1.v1"))
+        demo_users.append(user)
 
     db_session.commit()
 
-    # Compute pairwise compatibility scores
-    for i, user_a in enumerate(created_users):
-        for j, user_b in enumerate(created_users):
-            if i >= j:
+    # ── Step 3: Find ALL real users with completed quizzes ────────────────
+    real_users = db_session.query(User).filter(
+        User.quiz_completed == True,
+        ~User.email.like(f"%{DEMO_EMAIL_DOMAIN}"),
+    ).all()
+
+    # ── Step 4: Compute compatibility between demo users AND all real users ─
+    all_scorable = demo_users + real_users
+
+    for i, user_a in enumerate(all_scorable):
+        for j, user_b in enumerate(all_scorable):
+            if user_a.id == user_b.id:
                 continue
+            # Only compute if at least one is a demo user (avoid re-scoring real×real)
+            if user_a.email and DEMO_EMAIL_DOMAIN not in user_a.email and \
+               user_b.email and DEMO_EMAIL_DOMAIN not in user_b.email:
+                continue
+
+            # Skip if already exists
             existing = db_session.query(CompatibilityScore).filter(
                 CompatibilityScore.user_a_id == user_a.id,
                 CompatibilityScore.user_b_id == user_b.id,
@@ -108,12 +137,12 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
             if not qr_a or not qr_b:
                 continue
 
-            a_answers = {int(k): v for k, v in qr_a.answers.items()}
-            b_answers = {int(k): v for k, v in qr_b.answers.items()}
+            a_ans = {int(k): v for k, v in qr_a.answers.items()}
+            b_ans = {int(k): v for k, v in qr_b.answers.items()}
 
             try:
                 result = scoring_fn(
-                    a_answers, b_answers,
+                    a_ans, b_ans,
                     gender_a=user_a.gender or "other",
                     gender_b=user_b.gender or "other",
                     zodiac_a=user_a.sun_sign or "aries",
@@ -124,23 +153,27 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
             except Exception:
                 continue
 
-            for a_id, b_id in [(user_a.id, user_b.id), (user_b.id, user_a.id)]:
-                db_session.add(CompatibilityScore(
-                    user_a_id=a_id, user_b_id=b_id,
-                    score=result["score"], tier=result["tier"], tier_label=result["tier_label"],
-                    final_norm=result.get("final_norm"),
-                    core_norm=result.get("core_norm"),
-                    behavioral_avg=result.get("behavioral_avg"),
-                    stability_avg=result.get("stability_avg"),
-                    chemistry_avg=result.get("chemistry_avg"),
-                    zodiac_norm=result.get("zodiac_norm"),
-                    numerology_norm=result.get("numerology_norm"),
-                    cosmic_overlay=result.get("cosmic_overlay"),
-                    breakdown=result.get("breakdown"),
-                    top_positive_drivers=result.get("top_positive_drivers"),
-                    top_friction_drivers=result.get("top_friction_drivers"),
-                    scoring_version="phase1.v1",
-                ))
+            db_session.add(CompatibilityScore(
+                user_a_id=user_a.id, user_b_id=user_b.id,
+                score=result["score"], tier=result["tier"], tier_label=result["tier_label"],
+                final_norm=result.get("final_norm"),
+                core_norm=result.get("core_norm"),
+                behavioral_avg=result.get("behavioral_avg"),
+                stability_avg=result.get("stability_avg"),
+                chemistry_avg=result.get("chemistry_avg"),
+                zodiac_norm=result.get("zodiac_norm"),
+                numerology_norm=result.get("numerology_norm"),
+                cosmic_overlay=result.get("cosmic_overlay"),
+                breakdown=result.get("breakdown"),
+                top_positive_drivers=result.get("top_positive_drivers"),
+                top_friction_drivers=result.get("top_friction_drivers"),
+                scoring_version="phase1.v1",
+            ))
 
     db_session.commit()
-    return len(created_users)
+
+    return {
+        "demo_users_created": len(demo_users),
+        "real_users_found": len(real_users),
+        "scores_direction": "demo↔demo + demo↔real (both directions)",
+    }
