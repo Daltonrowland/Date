@@ -80,11 +80,24 @@ export default function Profile() {
                 {profile.age && `${profile.age} · `}
                 {profile.gender}{profile.location && ` · ${profile.location}`}
               </p>
-              {profile.archetype && (
-                <span className="inline-block mt-2 px-3 py-1 rounded-full bg-purple-600/20 border border-purple-500/20 text-purple-300 text-xs font-medium">
-                  {profile.archetype}
-                </span>
+              {profile.rs_code && (
+                <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-700/60 border border-white/5">
+                  <span className="text-white/30 text-xs">RS</span>
+                  <span className="text-purple-300 text-xs font-mono font-bold tracking-wider">{profile.rs_code}</span>
+                </div>
               )}
+              <div className="flex flex-wrap gap-2 mt-2">
+                {profile.archetype && (
+                  <span className="px-3 py-1 rounded-full bg-purple-600/20 border border-purple-500/20 text-purple-300 text-xs font-medium">
+                    {profile.archetype}
+                  </span>
+                )}
+                {profile.shadow_type && (
+                  <span className="px-3 py-1 rounded-full bg-pink-600/20 border border-pink-500/20 text-pink-300 text-xs font-medium">
+                    Shadow: {profile.shadow_type}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

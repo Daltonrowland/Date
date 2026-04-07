@@ -337,14 +337,25 @@ def compute_compatibility(
     positive = sorted(per_question, key=lambda r: r["pair_norm_0_1"], reverse=True)[:5]
     friction = sorted(per_question, key=lambda r: r["pair_norm_0_1"])[:5]
 
-    # Category breakdown from dimensions
+    # ── Blueprint-canonical breakdown ────────────────────────────────────────
+    # The pair_quantum CSV encodes the full score law:
+    #   BehavioralComponent = 0.16*archetype_fit + 0.10*comm_fit + 0.10*reg_fit + 0.06*love_fit + 0.10*readiness_fit
+    #   StabilityComponent = 0.09*shadow_fit + 0.07*integrity_fit + 0.04*cluster_fit + 0.03*pace_fit
+    #   ChemistryComponent = 0.08*polarity_fit + 0.05*pursuit_fit
+    #   base_0_88 = Behavioral + Stability + Chemistry
+    #   gate = 1 - (0.55*risk_avg + 0.20*risk_max)
+    #   pair_norm_0_1 = clamp((base_0_88 * gate) - rule_penalty, 0, 1)
+    #
+    # We expose the NORMALIZED diagnostics (divided by weight totals → 0-1 range):
     breakdown = {
-        "Core Alignment": round(core_norm * 100),
-        "Emotional Stability": round(stability_avg * 100),
-        "Chemistry & Polarity": round(chemistry_avg * 100),
-        "Archetype Fit": round(arch_fit * 100),
-        "Shadow Compatibility": round(shadow_fit * 100),
-        "Zodiac Alignment": round(zodiac_norm * 100),
+        "BehavioralComponent": round(behavioral_avg * 100),   # normalized /0.52
+        "StabilityComponent": round(stability_avg * 100),     # normalized /0.23
+        "ChemistryComponent": round(chemistry_avg * 100),     # normalized /0.13
+        "CosmicOverlay": round(cosmic_overlay * 100, 1),      # zodiac 7% + numerology 5%
+        "ArchetypeFit": round(arch_fit * 100),
+        "ShadowFit": round(shadow_fit * 100),
+        "ZodiacAlignment": round(zodiac_norm * 100),
+        "NumerologyAlignment": round(numerology_norm * 100),
     }
 
     return {
@@ -358,20 +369,23 @@ def compute_compatibility(
         "archetype": arch_a_primary,
         "archetype_secondary": arch_a_secondary,
         "shadow_pattern": shadow_a,
+        "shadow_pattern_b": shadow_b,
         "percentage": round((score - 350) / 500 * 100),
-        "core_norm": round(core_norm, 4),
-        "stability_avg": round(stability_avg, 4),
-        "chemistry_avg": round(chemistry_avg, 4),
-        "behavioral_avg": round(behavioral_avg, 4),
-        "zodiac_norm": round(zodiac_norm, 4),
-        "numerology_norm": round(numerology_norm, 4),
-        "cosmic_overlay": round(cosmic_overlay, 4),
+        "final_norm": round(final_norm, 6),
+        "core_norm": round(core_norm, 6),
+        "stability_avg": round(stability_avg, 6),
+        "chemistry_avg": round(chemistry_avg, 6),
+        "behavioral_avg": round(behavioral_avg, 6),
+        "zodiac_norm": round(zodiac_norm, 6),
+        "numerology_norm": round(numerology_norm, 6),
+        "cosmic_overlay": round(cosmic_overlay, 6),
         "readiness_a": readiness_a,
         "readiness_b": readiness_b,
         "readiness_forecast_a": readiness_forecast(readiness_a),
         "readiness_forecast_b": readiness_forecast(readiness_b),
         "top_positive_drivers": positive,
         "top_friction_drivers": friction,
+        "scoring_version": "phase1.v1",
     }
 
 

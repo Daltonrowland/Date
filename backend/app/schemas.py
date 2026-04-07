@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, Any
-from datetime import datetime
+from datetime import datetime, date
 
 
 # ── Auth ─────────────────────────────────────────────────────────────────────
@@ -12,6 +12,8 @@ class UserRegister(BaseModel):
     age: int
     gender: str
     looking_for: str
+    date_of_birth: Optional[str] = None   # YYYY-MM-DD
+    sun_sign: Optional[str] = None        # zodiac sign
 
 
 class UserLogin(BaseModel):
@@ -24,40 +26,7 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     user_id: int
     name: str
-
-
-# ── User / Profile ────────────────────────────────────────────────────────────
-
-class UserProfile(BaseModel):
-    id: int
-    name: str
-    age: Optional[int]
-    gender: Optional[str]
-    looking_for: Optional[str]
-    bio: Optional[str]
-    location: Optional[str]
-    photo_url: Optional[str] = ""
-    quiz_completed: bool
-    archetype: Optional[str]
-    archetype_score: float
-    shadow_score: float
-    email_verified: bool = False
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class UserUpdate(BaseModel):
-    name: Optional[str] = None
-    age: Optional[int] = None
-    bio: Optional[str] = None
-    location: Optional[str] = None
-    photo_url: Optional[str] = None
-
-
-class PhotoUpload(BaseModel):
-    photo_data: str  # base64 data URI
+    rs_code: str = ""
 
 
 class PasswordResetRequest(BaseModel):
@@ -73,10 +42,55 @@ class VerifyEmailRequest(BaseModel):
     token: str
 
 
+# ── User / Profile ────────────────────────────────────────────────────────────
+
+class UserProfile(BaseModel):
+    id: int
+    rs_code: Optional[str] = ""
+    name: str
+    age: Optional[int]
+    gender: Optional[str]
+    looking_for: Optional[str]
+    date_of_birth: Optional[date] = None
+    sun_sign: Optional[str] = None
+    life_path_number: Optional[int] = None
+    bio: Optional[str]
+    location: Optional[str]
+    photo_url: Optional[str] = ""
+    quiz_completed: bool
+    # Genesis OS profile
+    archetype: Optional[str]
+    archetype_secondary: Optional[str] = ""
+    shadow_type: Optional[str] = ""
+    archetype_score: float
+    shadow_score: float
+    readiness_score: Optional[float] = 0.0
+    readiness_forecast: Optional[str] = ""
+    email_verified: bool = False
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    bio: Optional[str] = None
+    location: Optional[str] = None
+    photo_url: Optional[str] = None
+    sun_sign: Optional[str] = None
+    date_of_birth: Optional[str] = None
+
+
+class PhotoUpload(BaseModel):
+    photo_data: str
+
+
 # ── Quiz ──────────────────────────────────────────────────────────────────────
 
 class QuizSubmit(BaseModel):
-    answers: dict[str, int]  # {question_id: answer (1-5)}
+    answers: dict[str, Any]  # {question_id: answer_letter or 1-5}
 
 
 class QuizResult(BaseModel):
@@ -88,7 +102,19 @@ class QuizResult(BaseModel):
     archetype_score: float
     shadow_score: float
     archetype: str
+    archetype_secondary: Optional[str] = ""
+    shadow_type: Optional[str] = ""
+    readiness_score: Optional[float] = 0.0
+    readiness_forecast: Optional[str] = ""
     percentage: float
+    # Canonical diagnostics
+    core_norm: Optional[float] = None
+    stability_avg: Optional[float] = None
+    chemistry_avg: Optional[float] = None
+    behavioral_avg: Optional[float] = None
+    zodiac_norm: Optional[float] = None
+    numerology_norm: Optional[float] = None
+    cosmic_overlay: Optional[float] = None
 
 
 # ── Compatibility ─────────────────────────────────────────────────────────────
@@ -96,15 +122,22 @@ class QuizResult(BaseModel):
 class MatchResult(BaseModel):
     user_id: int
     name: str
+    rs_code: Optional[str] = ""
     age: Optional[int]
     gender: Optional[str]
     bio: Optional[str]
     archetype: Optional[str]
+    shadow_type: Optional[str] = ""
     score: float
     tier: str
     tier_label: str
     percentage: float
     breakdown: dict[str, Any]
+    # Diagnostics
+    core_norm: Optional[float] = None
+    stability_avg: Optional[float] = None
+    chemistry_avg: Optional[float] = None
+    cosmic_overlay: Optional[float] = None
 
 
 # ── Sanctuary ─────────────────────────────────────────────────────────────────
