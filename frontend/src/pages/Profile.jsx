@@ -278,7 +278,7 @@ export default function Profile() {
             {!isOwn && score && (
               <motion.div className="flex gap-3 mb-4 sm:mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
                 {score.score >= 550 ? (
-                  <button onClick={() => navigate('/messages')} className="btn-primary flex-1 min-h-[44px]">💬 Message</button>
+                  <button onClick={() => navigate(`/messages/${userId}`)} className="btn-primary flex-1 min-h-[44px]">💬 Message</button>
                 ) : (
                   <button onClick={async () => {
                     try { await api.post(`/knocks/${userId}`, { message: '' }); toast.success('Knock sent!') }

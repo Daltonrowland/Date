@@ -107,6 +107,13 @@ def send_message(user_id: int, payload: MessageSend, current_user: User = Depend
     msg = Message(sender_id=current_user.id, recipient_id=user_id, content=payload.content.strip())
     db.add(msg)
     db.commit()
+
+    # Notification for recipient
+    try:
+        from .notifications import create_notification
+        create_notification(db, user_id, "new_message", f"New message from {current_user.name}", current_user.id)
+    except Exception:
+        pass
     db.refresh(msg)
     return msg
 

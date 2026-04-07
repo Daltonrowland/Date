@@ -32,7 +32,7 @@ export default function Register() {
         sun_sign: form.sun_sign || undefined,
       }
       const { data } = await api.post('/auth/register', payload)
-      setAuth(data.access_token, { id: data.user_id, name: data.name, rs_code: data.rs_code, quiz_completed: false })
+      setAuth(data.access_token, { id: data.user_id, name: data.name, rs_code: data.rs_code, quiz_completed: false, onboarding_completed: false })
       toast.success(`Welcome, ${data.name}! Your RS Code: ${data.rs_code}`)
       navigate('/onboarding')
     } catch (err) {

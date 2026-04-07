@@ -45,12 +45,22 @@ export default function Dashboard() {
       const { data } = await api.post(`/likes/${userId}`)
       setMatches(prev => prev.map(m => m.user_id === userId ? { ...m, i_liked: true, they_liked: m.they_liked || data.mutual } : m))
       if (data.mutual) {
-        toast.success(`It's a match with ${name}! 💜`, { duration: 4000 })
+        const match = matches.find(m => m.user_id === userId)
+        toast((t) => (
+          <div className="flex items-center gap-3">
+            {match?.profile_photo && <img src={match.profile_photo} className="w-10 h-10 rounded-full object-cover" />}
+            <div>
+              <p className="font-semibold text-sm">It's a match with {name}! 💜</p>
+              <button onClick={() => { toast.dismiss(t.id); window.location.href = `/profile/${userId}` }}
+                className="text-purple-400 text-xs mt-1 hover:text-purple-300">View Match →</button>
+            </div>
+          </div>
+        ), { duration: 6000 })
       } else {
-        toast('Liked! 💜', { icon: '💜' })
+        toast('Liked! 💜', { icon: '💜', duration: 1500 })
       }
     } catch (err) {
-      if (err.response?.status === 400) toast('Already liked')
+      if (err.response?.status === 400) toast('Already liked', { icon: '💜' })
     }
   }
 

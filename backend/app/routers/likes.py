@@ -22,6 +22,14 @@ def like_user(user_id: int, current_user: User = Depends(get_current_user), db: 
     db.refresh(like)
     # Check if mutual
     mutual = db.query(Like).filter(Like.liker_id == user_id, Like.liked_id == current_user.id).first() is not None
+
+    # Create notifications
+    from .notifications import create_notification
+    other = db.query(User).filter(User.id == user_id).first()
+    if mutual and other:
+        create_notification(db, user_id, "mutual_match", f"It's a match! You and {current_user.name} liked each other 💜", current_user.id)
+        create_notification(db, current_user.id, "mutual_match", f"It's a match! You and {other.name} liked each other 💜", user_id)
+
     return LikeResponse(id=like.id, liker_id=like.liker_id, liked_id=like.liked_id, mutual=mutual)
 
 

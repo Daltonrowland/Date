@@ -44,7 +44,7 @@ export default function Navbar() {
   }
 
   const handleLogout = () => { logout(); navigate('/') }
-  const active = (path) => location.pathname === path ? 'text-purple-400' : 'text-white/50 hover:text-white/80'
+  const active = (path) => location.pathname.startsWith(path) ? 'text-purple-400' : 'text-white/50 hover:text-white/80'
   const NOTIF_ICONS = { mutual_match: '💜', new_message: '💬', knock_received: '🚪', knock_accepted: '✅' }
 
   return (
@@ -55,6 +55,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-5 text-sm font-medium">
           <Link to="/dashboard" className={`transition-colors ${active('/dashboard')}`}>Matches</Link>
+          <Link to="/likes" className={`transition-colors ${active('/likes')}`}>Likes</Link>
           <Link to="/messages" className={`transition-colors relative ${active('/messages')}`}>
             Messages {unread > 0 && <span className="absolute -top-1 -right-3 bg-pink-500 text-white text-xs min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-0.5">{unread > 9 ? '9+' : unread}</span>}
           </Link>
@@ -131,6 +132,7 @@ export default function Navbar() {
         <div className="md:hidden bg-dark-900/95 backdrop-blur-md border-t border-white/5 px-4 py-2">
           {[
             ['/dashboard', 'Matches'],
+            ['/likes', 'Likes'],
             ['/messages', `Messages${unread ? ` (${unread})` : ''}`],
             ['/knocks', 'Knocks'],
             ['/sanctuary', 'Sanctuary'],

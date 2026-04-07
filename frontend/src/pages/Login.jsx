@@ -22,7 +22,10 @@ export default function Login() {
         headers: { Authorization: `Bearer ${data.access_token}` },
       })
       setAuth(data.access_token, profile.data)
-      navigate('/dashboard')
+      // Redirect based on user state
+      if (!profile.data.onboarding_completed) navigate('/onboarding')
+      else if (!profile.data.quiz_completed) navigate('/quiz')
+      else navigate('/dashboard')
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Invalid email or password')
     } finally {

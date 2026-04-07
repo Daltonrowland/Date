@@ -148,7 +148,7 @@ export default function MatchDetail() {
         <motion.div className="flex gap-3 mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
           <button onClick={handleLike} className="btn-primary flex-1 min-h-[48px] text-sm">♥ Like</button>
           {match.score >= 550 ? (
-            <button onClick={() => navigate('/messages')} className="btn-ghost flex-1 min-h-[48px] text-sm">💬 Message</button>
+            <button onClick={() => navigate(`/messages/${userId}`)} className="btn-ghost flex-1 min-h-[48px] text-sm">💬 Message</button>
           ) : (
             <button onClick={async () => { try { await api.post(`/knocks/${userId}`); toast.success('Knock sent!') } catch (e) { toast.error(e.response?.data?.detail || 'Failed') }}}
               className="btn-ghost flex-1 min-h-[48px] text-sm">🚪 Knock</button>
