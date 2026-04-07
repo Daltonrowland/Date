@@ -74,7 +74,7 @@ def cleanup_test(token: str = Query(...), db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail="Invalid admin token")
     from .models import User, QuizResponse, CompatibilityScore, Message, Knock
     # Delete users with test email patterns (keep real user accounts)
-    test_patterns = ["%@test.com", "%@demo.relationshipscores.app", "%demo%@%"]
+    test_patterns = ["%@test.com", "%@demo.relationshipscores.app", "%@relationshipscores.app", "%demo%@%", "%genesis%@test%", "%blueprint%@test%", "%fulltest%@test%", "%matcher%@test%", "%full%@test%"]
     deleted = 0
     for pattern in test_patterns:
         test_ids = [u.id for u in db.query(User.id).filter(User.email.like(pattern)).all()]
