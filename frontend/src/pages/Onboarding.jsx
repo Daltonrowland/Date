@@ -15,7 +15,9 @@ export default function Onboarding() {
   const { user, updateUser } = useAuthStore()
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
-  const [rsCode, setRsCode] = useState(user?.rs_code || '')
+  const [rsCode, setRsCode] = useState('')
+  const [rsLoading, setRsLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
   const [form, setForm] = useState({
     name: user?.name || '', age: '', gender: '', location: '', dating_status: '',
     bio: '', height: '', occupation: '', education: '',
@@ -23,14 +25,27 @@ export default function Onboarding() {
   })
   const [lifePath, setLifePath] = useState(null)
 
-  // Fetch RS code from API if not in store
+  // ALWAYS fetch profile from API on mount to get RS code
   useEffect(() => {
-    if (!rsCode) {
+    let retries = 0
+    const fetchProfile = () => {
       api.get('/profiles/me').then(({ data }) => {
-        setRsCode(data.rs_code || '')
-        updateUser({ rs_code: data.rs_code })
-      }).catch(() => {})
+        if (data.rs_code) {
+          setRsCode(data.rs_code)
+          setRsLoading(false)
+          updateUser({ rs_code: data.rs_code })
+        } else if (retries < 3) {
+          retries++
+          setTimeout(fetchProfile, 2000)
+        } else {
+          setRsLoading(false)
+        }
+      }).catch(() => {
+        if (retries < 3) { retries++; setTimeout(fetchProfile, 2000) }
+        else setRsLoading(false)
+      })
     }
+    fetchProfile()
   }, [])
 
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }))
@@ -53,29 +68,26 @@ export default function Onboarding() {
   }
 
   const copyRsCode = () => {
-    navigator.clipboard.writeText(rsCode).then(() => toast.success('RS Code copied!')).catch(() => {})
+    navigator.clipboard.writeText(rsCode).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {})
   }
 
   const handleNext = async () => {
-    // Step 0 (Welcome) — just advance, no API call needed
-    if (step === 0) {
-      setStep(1)
-      return
-    }
+    if (step === 0) { setStep(1); return }
 
     setSaving(true)
     try {
-      // Build payload — only send non-empty values
       const payload = {}
       for (const [key, value] of Object.entries(form)) {
         if (value !== '' && value !== null && value !== undefined) {
           payload[key] = key === 'age' ? Number(value) : value
         }
       }
-      // Don't send empty date_of_birth string
       if (!payload.date_of_birth) delete payload.date_of_birth
-
       if (step === 6) payload.onboarding_completed = true
+
       await api.patch('/profiles/me', payload)
 
       if (step === 6) {
@@ -84,12 +96,8 @@ export default function Onboarding() {
       } else {
         setStep(s => s + 1)
       }
-    } catch (err) {
-      toast.error('Save failed — try again')
-      console.error('Save error:', err)
-    } finally {
-      setSaving(false)
-    }
+    } catch (_) { toast.error('Save failed — try again') }
+    finally { setSaving(false) }
   }
 
   const steps = [
@@ -100,25 +108,28 @@ export default function Onboarding() {
         <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-3">Welcome to Relationship Scores</h2>
         <p className="text-white/50 mb-8 max-w-sm mx-auto">This is your unique identity in the Relationship Scores universe.</p>
 
-        {/* RS Code display */}
-        <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-2xl bg-gradient-to-br from-purple-600/20 to-pink-600/10 border-2 border-gold-500/40 mb-6">
-          <span className="text-gold-400 text-xs font-medium uppercase tracking-widest">Your RS Code</span>
-          <div className="flex items-center gap-3">
-            <span className="text-white text-3xl sm:text-4xl font-mono font-bold tracking-[0.4em]">
-              {rsCode || '------'}
+        {/* RS Code badge */}
+        <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-2xl bg-dark-800/80 border-2 border-gold-500/50 shadow-lg shadow-gold-500/10 mb-4">
+          <span className="text-gold-400/70 text-xs font-medium uppercase tracking-[0.2em]">Your RS Code</span>
+          {rsLoading ? (
+            <div className="h-10 w-48 rounded-lg bg-white/5 animate-pulse" />
+          ) : rsCode ? (
+            <span className="text-gold-400 text-3xl sm:text-4xl font-mono font-bold tracking-[0.4em] select-all">
+              {rsCode}
             </span>
-            {rsCode && (
-              <button onClick={copyRsCode}
-                className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-all"
-                title="Copy to clipboard">
-                📋
-              </button>
-            )}
-          </div>
+          ) : (
+            <span className="text-white/30 text-sm">Generating your code...</span>
+          )}
+          {rsCode && (
+            <button onClick={copyRsCode}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold-500/10 hover:bg-gold-500/20 border border-gold-500/30 text-gold-400 text-xs font-medium transition-all min-h-[36px]">
+              {copied ? '✓ Copied!' : '📋 Copy to clipboard'}
+            </button>
+          )}
         </div>
 
-        <p className="text-white/30 text-xs max-w-xs mx-auto leading-relaxed">
-          This is your private identity code. Share it with friends so they can find you on the platform.
+        <p className="text-white/30 text-xs max-w-xs mx-auto leading-relaxed mt-4">
+          Share this code with friends so they can find you on the platform.
         </p>
       </div>
     ),
@@ -210,16 +221,11 @@ export default function Onboarding() {
       <div>
         <h2 className="font-display text-2xl font-bold text-white mb-1">Your Preferences</h2>
         <p className="text-white/40 text-sm mb-6">Who are you looking for?</p>
-        <div className="space-y-4">
-          <div>
-            <label className="label">I'm looking for</label>
-            <div className="flex flex-wrap gap-2">
-              {['Everyone', 'Women', 'Men', 'Non-binary'].map(g => (
-                <button key={g} onClick={() => setVal('looking_for', g)} type="button"
-                  className={`px-4 py-2.5 rounded-xl text-sm border transition-all min-h-[44px] ${form.looking_for === g ? 'bg-purple-600/30 border-purple-500/60 text-white' : 'bg-dark-700/40 border-white/10 text-white/40'}`}>{g}</button>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {['Everyone', 'Women', 'Men', 'Non-binary'].map(g => (
+            <button key={g} onClick={() => setVal('looking_for', g)} type="button"
+              className={`px-4 py-2.5 rounded-xl text-sm border transition-all min-h-[44px] ${form.looking_for === g ? 'bg-purple-600/30 border-purple-500/60 text-white' : 'bg-dark-700/40 border-white/10 text-white/40'}`}>{g}</button>
+          ))}
         </div>
       </div>
     ),
@@ -272,7 +278,6 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen bg-gradient-romantic flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-lg">
-        {/* Progress */}
         <div className="flex gap-1.5 mb-6">
           {STEP_TITLES.map((_, i) => (
             <div key={i} className="h-1 flex-1 rounded-full transition-all duration-500"

@@ -43,12 +43,15 @@ export default function Dashboard() {
   const handleLike = async (userId, name) => {
     try {
       const { data } = await api.post(`/likes/${userId}`)
-      setMatches(prev => prev.map(m => m.user_id === userId ? { ...m, i_liked: true, they_liked: m.they_liked || data.mutual } : m))
+      const match = matches.find(m => m.user_id === userId)
+      // Remove card from matches list after animation (card handles its own exit animation)
+      setTimeout(() => {
+        setMatches(prev => prev.filter(m => m.user_id !== userId))
+      }, 450)
       if (data.mutual) {
-        const match = matches.find(m => m.user_id === userId)
         toast((t) => (
           <div className="flex items-center gap-3">
-            {match?.profile_photo && <img src={match.profile_photo} className="w-10 h-10 rounded-full object-cover" />}
+            {(match?.profile_photo || match?.photo_url) && <img src={match.profile_photo || match.photo_url} className="w-10 h-10 rounded-full object-cover" alt="" />}
             <div>
               <p className="font-semibold text-sm">It's a match with {name}! 💜</p>
               <button onClick={() => { toast.dismiss(t.id); window.location.href = `/profile/${userId}` }}
@@ -56,11 +59,12 @@ export default function Dashboard() {
             </div>
           </div>
         ), { duration: 6000 })
-      } else {
-        toast('Liked! 💜', { icon: '💜', duration: 1500 })
       }
     } catch (err) {
-      if (err.response?.status === 400) toast('Already liked', { icon: '💜' })
+      if (err.response?.status === 400) {
+        // Already liked — still remove from list
+        setMatches(prev => prev.filter(m => m.user_id !== userId))
+      }
     }
   }
 
