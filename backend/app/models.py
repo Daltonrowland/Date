@@ -81,6 +81,7 @@ class CompatibilityScore(Base):
     top_positive_drivers = Column(JSON, nullable=True)
     top_friction_drivers = Column(JSON, nullable=True)
     scoring_version = Column(String, default="phase1.v1")
+    dynamic_score = Column(Float, nullable=True)  # calibration-adjusted score (displayed)
     created_at = Column(DateTime, default=datetime.utcnow)
     user_a = relationship("User", foreign_keys=[user_a_id], back_populates="sent_scores")
     user_b = relationship("User", foreign_keys=[user_b_id], back_populates="received_scores")
@@ -176,3 +177,85 @@ class Sanctuary(Base):
     updated_at = Column(DateTime, default=datetime.utcnow)
     user = relationship("User", foreign_keys=[user_id], back_populates="sanctuary")
     partner = relationship("User", foreign_keys=[partner_id])
+
+
+# ── Calibration System ───────────────────────────────────────────────────────
+
+class ChatCalibrationEvent(Base):
+    __tablename__ = "chat_calibration_events"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    match_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    stage = Column(Integer, nullable=False)  # 1, 2, 3
+    trigger_message_count = Column(Integer, default=0)
+    responses_json = Column(JSON, nullable=False)
+    raw_score = Column(Float, default=0)
+    adjusted_score = Column(Float, default=0)
+    adjustment_delta = Column(Float, default=0)
+    submitted_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=True)
+    confidence_level = Column(String, default="single")  # single, pair
+    safety_flagged = Column(Boolean, default=False)
+
+
+# ── Economy System ───────────────────────────────────────────────────────────
+
+class CoinAccount(Base):
+    __tablename__ = "coin_accounts"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_type = Column(String, default="user")  # user or couple
+    owner_id = Column(Integer, nullable=False)
+    current_balance = Column(Integer, default=0)
+    reserved_balance = Column(Integer, default=0)
+    lifetime_earned = Column(Integer, default=0)
+    lifetime_spent = Column(Integer, default=0)
+    last_reconciled_at = Column(DateTime, nullable=True)
+    economy_version = Column(String, default="v1")
+
+
+class CoinTransaction(Base):
+    __tablename__ = "coin_transaction_ledger"
+    id = Column(Integer, primary_key=True, index=True)
+    owner_id = Column(Integer, nullable=False)
+    owner_type = Column(String, default="user")
+    tx_type = Column(String, nullable=False)  # earn, spend
+    direction = Column(String, nullable=False)  # credit, debit
+    amount = Column(Integer, nullable=False)
+    currency_code = Column(String, default="RS_COIN")
+    source_event_type = Column(String, nullable=True)
+    source_event_id = Column(String, nullable=True)
+    status = Column(String, default="posted")
+    idempotency_key = Column(String, nullable=True, unique=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    posted_at = Column(DateTime, default=datetime.utcnow)
+
+
+class BadgeDefinition(Base):
+    __tablename__ = "badge_definitions"
+    id = Column(Integer, primary_key=True, index=True)
+    badge_key = Column(String, unique=True, nullable=False)
+    family = Column(String, default="foundation")
+    tier = Column(String, default="bronze")
+    name = Column(String, nullable=False)
+    description = Column(String, default="")
+    icon = Column(String, default="🏅")
+    unlock_logic = Column(String, default="")
+
+
+class UserBadge(Base):
+    __tablename__ = "user_badges"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    badge_key = Column(String, nullable=False)
+    awarded_at = Column(DateTime, default=datetime.utcnow)
+    source_event_id = Column(String, nullable=True)
+
+
+class ScoreboardEntry(Base):
+    __tablename__ = "scoreboard_entries"
+    id = Column(Integer, primary_key=True, index=True)
+    board_type = Column(String, default="global")
+    period_key = Column(String, default="all_time")
+    owner_id = Column(Integer, nullable=False)
+    points = Column(Integer, default=0)
+    rank = Column(Integer, nullable=True)

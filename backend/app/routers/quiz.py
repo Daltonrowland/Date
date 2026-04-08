@@ -188,6 +188,14 @@ def submit_quiz(payload: QuizSubmit, current_user: User = Depends(get_current_us
     except Exception:
         pass
 
+    # Award coins + badge for quiz completion
+    try:
+        from .economy import award_coins, award_badge
+        award_coins(db, current_user.id, "assessment_completed")
+        award_badge(db, current_user.id, "assessed")
+    except Exception:
+        pass
+
     return QuizResult(
         score=self_result["score"],
         tier=self_result["tier"],

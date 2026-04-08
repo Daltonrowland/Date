@@ -29,6 +29,15 @@ def like_user(user_id: int, current_user: User = Depends(get_current_user), db: 
     if mutual and other:
         create_notification(db, user_id, "mutual_match", f"It's a match! You and {current_user.name} liked each other 💜", current_user.id)
         create_notification(db, current_user.id, "mutual_match", f"It's a match! You and {other.name} liked each other 💜", user_id)
+        # Award coins for mutual match
+        try:
+            from .economy import award_coins, award_badge
+            award_coins(db, current_user.id, "mutual_match", f"match_{user_id}")
+            award_coins(db, user_id, "mutual_match", f"match_{current_user.id}")
+            award_badge(db, current_user.id, "connected")
+            award_badge(db, user_id, "connected")
+        except Exception:
+            pass
 
     return LikeResponse(id=like.id, liker_id=like.liker_id, liked_id=like.liked_id, mutual=mutual)
 

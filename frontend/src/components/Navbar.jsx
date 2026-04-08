@@ -9,6 +9,7 @@ export default function Navbar() {
   const location = useLocation()
   const [unread, setUnread] = useState(0)
   const [notifCount, setNotifCount] = useState(0)
+  const [coinBalance, setCoinBalance] = useState(0)
   const [notifs, setNotifs] = useState([])
   const [showNotifs, setShowNotifs] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -18,6 +19,7 @@ export default function Navbar() {
     const fetchCounts = () => {
       api.get('/messages/unread-count').then(({ data }) => setUnread(data.unread_count || 0)).catch(() => {})
       api.get('/notifications/unread-count').then(({ data }) => setNotifCount(data.count || 0)).catch(() => {})
+      api.get('/wallet/summary').then(({ data }) => setCoinBalance(data?.balance || 0)).catch(() => {})
     }
     fetchCounts()
     const interval = setInterval(fetchCounts, 15000)
@@ -65,6 +67,10 @@ export default function Navbar() {
 
         {/* Desktop right */}
         <div className="hidden md:flex items-center gap-2">
+          {/* Coin balance */}
+          <Link to="/wallet" className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gold-500/10 border border-gold-500/20 text-gold-400 text-xs font-bold hover:bg-gold-500/20 transition-colors">
+            🪙 {coinBalance}
+          </Link>
           {/* Notification bell */}
           <div className="relative" ref={notifRef}>
             <button onClick={toggleNotifs} className="w-9 h-9 flex items-center justify-center text-white/50 hover:text-white relative">
@@ -137,6 +143,7 @@ export default function Navbar() {
             ['/knocks', 'Knocks'],
             ['/sanctuary', 'Sanctuary'],
             ['/search', 'Search'],
+            ['/wallet', `Wallet (${coinBalance} 🪙)`],
           ].map(([path, label]) => (
             <Link key={path} to={path} className={`block py-3 px-3 rounded-lg text-sm font-medium min-h-[44px] flex items-center ${active(path)}`}>{label}</Link>
           ))}

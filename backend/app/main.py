@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from .config import get_settings
-from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup, notifications, safety
+from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup, notifications, safety, calibration, economy
 from .auth import decode_token
 from .database import get_db, SessionLocal
 from .models import User as UserModel
@@ -49,6 +49,8 @@ app.include_router(likes.router)
 app.include_router(lookup.router)
 app.include_router(notifications.router)
 app.include_router(safety.router)
+app.include_router(calibration.router)
+app.include_router(economy.router)
 
 
 # Middleware to update last_active on authenticated requests

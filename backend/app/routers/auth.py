@@ -107,6 +107,14 @@ def register(payload: UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
+    # Award coins + badge for account creation
+    try:
+        from .economy import award_coins, award_badge
+        award_coins(db, user.id, "account_created")
+        award_badge(db, user.id, "first_step")
+    except Exception:
+        pass
+
     # Generate and store verification code
     code = _generate_verification_code()
     vc = EmailVerificationCode(

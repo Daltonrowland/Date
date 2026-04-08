@@ -17,6 +17,7 @@ import VerifyEmail from './pages/VerifyEmail'
 import Search from './pages/Search'
 import MatchDetail from './pages/MatchDetail'
 import Likes from './pages/Likes'
+import Wallet from './pages/Wallet'
 import Navbar from './components/Navbar'
 
 /**
@@ -85,6 +86,7 @@ export default function App() {
         <Route path="/knocks" element={<ProtectedRoute><Knocks /></ProtectedRoute>} />
         <Route path="/sanctuary" element={<ProtectedRoute><Sanctuary /></ProtectedRoute>} />
         <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
+        <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
