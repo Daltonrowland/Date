@@ -43,8 +43,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     setLoading(true)
-    const params = genderFilter && genderFilter !== 'Everyone' ? `?gender_filter=${genderFilter}` : ''
-    api.get(`/matches${params}&limit=100`).then(({ data }) => setMatches(data)).catch(() => {}).finally(() => setLoading(false))
+    const params = genderFilter && genderFilter !== 'Everyone' ? `?gender_filter=${genderFilter}&limit=100` : '?limit=100'
+    api.get(`/matches${params}`).then(({ data }) => setMatches(Array.isArray(data) ? data : [])).catch(() => setMatches([])).finally(() => setLoading(false))
   }, [genderFilter])
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Dashboard() {
           try {
             const data = JSON.parse(event.data)
             if (data.type === 'new_match') {
-              api.get('/matches?limit=100').then(({ data: m }) => setMatches(m))
+              api.get('/matches?limit=100').then(({ data: m }) => setMatches(Array.isArray(m) ? m : []))
               toast.success(`New match: ${data.match_name} (${Math.round(data.score)})`)
             }
           } catch (_) {}
@@ -104,7 +104,7 @@ export default function Dashboard() {
     } catch (_) { setSearchResult(null); toast.error('No user found') }
   }
 
-  let visibleMatches = matches.filter(m => !removedIds.has(m.user_id) && !likedIds.has(m.user_id) && !m.i_liked)
+  let visibleMatches = (matches || []).filter(m => m && !removedIds.has(m.user_id) && !likedIds.has(m.user_id) && !m.i_liked)
   if (tierFilter) visibleMatches = visibleMatches.filter(m => m.tier === tierFilter)
 
   const allLiked = matches.length > 0 && visibleMatches.length === 0 && !loading
