@@ -49,3 +49,28 @@
 .tier-building_ground { color: #86EFAC; }
 .tier-friction_zone   { color: #FCD34D; }
 .tier-red_flag_zone   { color: #F87171; }
+.tier-healthy_growing { color: #86EFAC; }
+.tier-magnetic_risky  { color: #F472B6; }
+.tier-possible_unstable { color: #FCD34D; }
+
+/* Match card exit animation — pure CSS, no Framer Motion ghost nodes */
+.card-wrapper {
+  transition: transform 0.4s ease, opacity 0.4s ease, max-height 0.4s ease 0.1s, margin-bottom 0.3s ease 0.2s;
+  max-height: 500px;
+  overflow: visible;
+  cursor: default;
+}
+.card-wrapper.card-exit {
+  transform: translateX(-120%) rotate(-5deg);
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Ensure buttons always have pointer cursor */
+.like-btn {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
