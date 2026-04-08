@@ -81,6 +81,9 @@ def get_matches(
     )
     results = []
     for cs in scores:
+        # EXCLUDE users the current user has already liked
+        if cs.user_b_id in my_likes:
+            continue
         other = db.query(User).filter(User.id == cs.user_b_id).first()
         if not other:
             continue
@@ -95,7 +98,7 @@ def get_matches(
                 continue
         results.append(_build_match(
             cs, other, current_user.archetype or "Survivor",
-            other.id in my_likes, other.id in liked_me,
+            False, other.id in liked_me,  # i_liked is always False here since we filtered them out
         ))
     return results[offset:offset + limit]
 

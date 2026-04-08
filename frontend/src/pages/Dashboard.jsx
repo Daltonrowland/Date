@@ -89,7 +89,8 @@ export default function Dashboard() {
   }
 
   // Filter out removed cards
-  const visibleMatches = matches.filter(m => !removedIds.has(m.user_id))
+  // Double filter: removedIds (from this session) + likedIds (from this session) + i_liked (from backend)
+  const visibleMatches = matches.filter(m => !removedIds.has(m.user_id) && !likedIds.has(m.user_id) && !m.i_liked)
 
   const FILTERS = ['Everyone', 'Women', 'Men', 'Non-binary']
 

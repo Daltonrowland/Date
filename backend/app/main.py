@@ -95,6 +95,18 @@ def seed_demo(token: str = Query(...), db: Session = Depends(get_db)):
     return {"status": "ok", **result}
 
 
+@app.post("/admin/clear-likes")
+def clear_likes(token: str = Query(...), db: Session = Depends(get_db)):
+    """Delete ALL likes from the likes table."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from sqlalchemy import text
+    count = db.execute(text("SELECT COUNT(*) FROM likes")).scalar()
+    db.execute(text("DELETE FROM likes"))
+    db.commit()
+    return {"status": "ok", "deleted_likes": count}
+
+
 @app.post("/admin/cleanup-test-users")
 def cleanup_test(token: str = Query(...), keep_email: str = Query(""), db: Session = Depends(get_db)):
     """Delete all test/demo users. Optionally keep a specific email."""
