@@ -54,7 +54,7 @@ export default function MatchCard({ match, onLike, onPass, exiting = false, onEx
           </Link>
 
           {/* Info */}
-          <Link to={`/profile/${match.user_id}`} className="flex-1 min-w-0">
+          <Link to={`/profile/${match.user_id}`} className="flex-1 min-w-0 overflow-hidden">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h3 className="font-semibold text-white text-sm sm:text-base truncate">{match.name}</h3>
               {zodiacSymbol && <span className="text-gold-400 text-xs">{zodiacSymbol}</span>}
@@ -70,8 +70,8 @@ export default function MatchCard({ match, onLike, onPass, exiting = false, onEx
             )}
           </Link>
 
-          {/* Score + action buttons */}
-          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+          {/* Score + action buttons — z-10 to sit above the flex-1 Link's click area */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0 relative z-10">
             <div className="text-right">
               <span className="font-display font-bold text-xl sm:text-2xl text-white">{Math.round(match.score)}</span>
               <div className={`text-xs font-semibold tier-${match.tier}`}>{pct}%</div>
