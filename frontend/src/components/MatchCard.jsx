@@ -1,110 +1,133 @@
 import { Link } from 'react-router-dom'
 
-const ZODIAC_SYMBOLS = {
-  aries: '♈', taurus: '♉', gemini: '♊', cancer: '♋', leo: '♌', virgo: '♍',
-  libra: '♎', scorpio: '♏', sagittarius: '♐', capricorn: '♑', aquarius: '♒', pisces: '♓',
+const ZODIAC = {
+  aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
+  libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓',
 }
 
-const TIER_STYLES = {
-  soul_aligned:      'from-purple-600/20 to-purple-900/20 border-purple-500/30',
-  strong_potential:   'from-purple-700/20 to-dark-800/20 border-purple-600/20',
-  healthy_growing:    'from-green-900/20 to-dark-800/20 border-green-700/20',
-  magnetic_risky:     'from-pink-600/20 to-pink-900/20 border-pink-500/30',
-  possible_unstable:  'from-yellow-900/20 to-dark-800/20 border-yellow-700/20',
-  red_flag_zone:      'from-red-900/20 to-dark-800/20 border-red-800/20',
-  deep_connection:    'from-pink-600/20 to-pink-900/20 border-pink-500/30',
-  building_ground:    'from-green-900/20 to-dark-800/20 border-green-700/20',
-  friction_zone:      'from-yellow-900/20 to-dark-800/20 border-yellow-700/20',
+const TIER_PILL = {
+  soul_aligned:      { bg: 'bg-purple-500/80', text: 'text-white', label: 'Soul-Aligned' },
+  strong_potential:   { bg: 'bg-purple-600/80', text: 'text-purple-100', label: 'Strong Potential' },
+  healthy_growing:    { bg: 'bg-emerald-600/80', text: 'text-emerald-100', label: 'Healthy & Growing' },
+  magnetic_risky:     { bg: 'bg-pink-600/80', text: 'text-pink-100', label: 'Magnetic but Risky' },
+  possible_unstable:  { bg: 'bg-amber-600/80', text: 'text-amber-100', label: 'Possible but Unstable' },
+  red_flag_zone:      { bg: 'bg-red-600/80', text: 'text-red-100', label: 'Red Flag Zone' },
+  deep_connection:    { bg: 'bg-pink-500/80', text: 'text-white', label: 'Deep Connection' },
+  building_ground:    { bg: 'bg-emerald-600/80', text: 'text-emerald-100', label: 'Building Ground' },
+  friction_zone:      { bg: 'bg-amber-600/80', text: 'text-amber-100', label: 'Friction Zone' },
 }
 
-export default function MatchCard({ match, onLike, onPass, exiting = false, onExitDone }) {
-  const tierStyle = TIER_STYLES[match.tier] || TIER_STYLES.strong_potential
-  const pct = Math.round(match.percentage)
-  const zodiacSymbol = ZODIAC_SYMBOLS[match.sun_sign?.toLowerCase()] || ''
+export default function MatchCard({ match, onLike, onPass, exiting = false, onExitDone, delay = 0 }) {
   const photo = match.profile_photo || match.photo_url || ''
+  const zodiac = ZODIAC[match.sun_sign?.toLowerCase()] || ''
+  const tier = TIER_PILL[match.tier] || TIER_PILL.strong_potential
+  const bio = (match.bio || '').slice(0, 60) + ((match.bio || '').length > 60 ? '…' : '')
 
   return (
     <div
-      className={`card-wrapper ${exiting ? 'card-exit' : ''}`}
+      className={`match-card-wrapper ${exiting ? 'card-exit' : ''}`}
+      style={{ animationDelay: `${delay}ms` }}
       onTransitionEnd={(e) => {
-        // Only fire on the wrapper's own transition, not bubbled child transitions
-        if (exiting && e.target === e.currentTarget && onExitDone) {
-          onExitDone(match.user_id)
-        }
+        if (exiting && e.target === e.currentTarget && onExitDone) onExitDone(match.user_id)
       }}
     >
-      <div className={`card bg-gradient-to-br ${tierStyle} p-4 sm:p-5 relative ${match.i_liked ? 'ring-1 ring-purple-500/40' : ''}`}>
-        <div className="flex items-start gap-3 sm:gap-4">
-          {/* Avatar with they_liked badge */}
-          <Link to={`/profile/${match.user_id}`} className="flex-shrink-0 relative">
-            {photo ? (
-              <img src={photo} alt={match.name} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover" />
-            ) : (
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-lg sm:text-xl font-bold text-white">
-                {match.name?.[0]?.toUpperCase() || '?'}
+      <div className="match-card group">
+        {/* ── Photo section (top 65%) ────────────────────────── */}
+        <Link to={`/profile/${match.user_id}`} className="match-card-photo-wrap">
+          {photo ? (
+            <img src={photo} alt={match.name} loading="lazy"
+              className="match-card-photo" />
+          ) : (
+            <div className="match-card-photo bg-gradient-to-br from-purple-700 to-pink-600 flex items-center justify-center">
+              <span className="text-5xl font-display font-bold text-white/80">{match.name?.[0]?.toUpperCase()}</span>
+            </div>
+          )}
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A0A2E] via-[#1A0A2E]/40 to-transparent pointer-events-none" />
+
+          {/* RS Code badge — top left */}
+          {match.rs_code && (
+            <div className="absolute top-3 left-3 px-2 py-1 rounded-md bg-black/40 backdrop-blur-sm border border-gold-500/30 z-10">
+              <span className="text-gold-400 text-[10px] font-mono font-bold tracking-wider">{match.rs_code}</span>
+            </div>
+          )}
+
+          {/* They liked you — top right, pulsing pink heart */}
+          {match.they_liked && (
+            <div className="absolute top-3 right-3 z-10 like-pulse">
+              <div className="w-8 h-8 rounded-full bg-pink-500/90 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-pink-500/40">
+                <span className="text-white text-sm">♥</span>
               </div>
-            )}
-            {match.they_liked && !match.i_liked && (
-              <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-white text-xs shadow-lg"
-                title="They already like you">♥</div>
-            )}
-            {match.they_liked && match.i_liked && (
-              <div className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded bg-gold-500 text-dark-900 text-xs font-bold shadow-lg">MATCH</div>
-            )}
-          </Link>
-
-          {/* Info */}
-          <Link to={`/profile/${match.user_id}`} className="flex-1 min-w-0 overflow-hidden">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-semibold text-white text-sm sm:text-base truncate">{match.name}</h3>
-              {zodiacSymbol && <span className="text-gold-400 text-xs">{zodiacSymbol}</span>}
             </div>
-            <p className="text-white/40 text-xs sm:text-sm">{match.age && `${match.age} · `}{match.gender || ''}</p>
-            {match.archetype && (
-              <span className="inline-block mt-1 px-2 py-0.5 rounded-full bg-purple-600/20 border border-purple-500/20 text-purple-300 text-xs">
-                🧬 {match.archetype}
-              </span>
-            )}
-            {match.archetype_fit_label && (
-              <p className="text-white/25 text-xs mt-1 italic line-clamp-1 hidden sm:block">{match.archetype_fit_label}</p>
-            )}
-          </Link>
+          )}
 
-          {/* Score + action buttons — z-10 to sit above the flex-1 Link's click area */}
-          <div className="flex flex-col items-end gap-2 flex-shrink-0 relative z-10">
-            <div className="text-right">
-              <span className="font-display font-bold text-xl sm:text-2xl text-white">{Math.round(match.score)}</span>
-              <div className={`text-xs font-semibold tier-${match.tier}`}>{pct}%</div>
+          {/* Score + tier over photo — bottom left */}
+          <div className="absolute bottom-3 left-3 z-10">
+            <div className="text-4xl font-display font-black text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] leading-none">
+              {Math.round(match.score)}
             </div>
-            <div className="flex gap-1.5">
-              {onPass && (
-                <button
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPass() }}
-                  style={{ pointerEvents: 'auto', cursor: 'pointer' }}
-                  className="like-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 transition-colors"
-                  title="Pass"
-                >✕</button>
-              )}
-              {onLike && !match.i_liked && (
-                <button
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike() }}
-                  style={{ pointerEvents: 'auto', cursor: 'pointer' }}
-                  className="like-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-300 hover:bg-purple-500/30 transition-colors"
-                  title="Like"
-                >♥</button>
-              )}
-              {match.i_liked && (
-                <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 text-sm">♥</span>
-              )}
+            <div className={`inline-flex mt-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${tier.bg} ${tier.text}`}>
+              {tier.label}
             </div>
           </div>
-        </div>
+        </Link>
 
-        {/* Score bar */}
-        <div className="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden">
-          <div className="h-full score-gradient rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
+        {/* ── Card body ────────────────────────────────────── */}
+        <div className="p-4">
+          <Link to={`/profile/${match.user_id}`} className="block mb-3">
+            {/* Name + age */}
+            <h3 className="font-display font-bold text-white text-base leading-tight">
+              {match.name}{match.age ? <span className="text-white/50 font-normal">, {match.age}</span> : ''}
+            </h3>
+            {/* Location */}
+            {match.location && (
+              <p className="text-white/30 text-xs mt-0.5">{match.location}</p>
+            )}
+
+            {/* Badges row */}
+            <div className="flex items-center gap-1.5 flex-wrap mt-2">
+              {match.archetype && (
+                <span className="px-2 py-0.5 rounded-full bg-purple-600/25 border border-purple-500/25 text-purple-300 text-[10px] font-medium">
+                  🧬 {match.archetype}
+                </span>
+              )}
+              {match.shadow_type && (
+                <span className="px-2 py-0.5 rounded-full bg-pink-600/15 border border-pink-500/15 text-pink-300/60 text-[10px]">
+                  {match.shadow_type}
+                </span>
+              )}
+              {zodiac && (
+                <span className="text-gold-400 text-xs" title={match.sun_sign}>
+                  {zodiac} <span className="text-gold-400/50 text-[10px] capitalize">{match.sun_sign}</span>
+                </span>
+              )}
+            </div>
+
+            {/* Bio snippet */}
+            {bio && (
+              <p className="text-white/25 text-xs mt-2 leading-relaxed line-clamp-2">{bio}</p>
+            )}
+          </Link>
+
+          {/* ── Action buttons ──────────────────────────────── */}
+          <div className="flex gap-2 relative z-10">
+            {onPass && (
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPass() }}
+                style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                className="like-btn flex-[0_0_30%] h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30 transition-colors text-sm"
+              >✕</button>
+            )}
+            {onLike && !match.i_liked && (
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike() }}
+                style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                className="like-btn flex-[1_1_70%] h-11 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold flex items-center justify-center gap-2 hover:from-purple-500 hover:to-pink-400 hover:shadow-lg hover:shadow-purple-900/50 active:scale-[0.98] transition-all text-sm"
+              >♥ Like</button>
+            )}
+          </div>
         </div>
-        <div className={`mt-1.5 text-xs font-medium tier-${match.tier}`}>{match.tier_label}</div>
       </div>
     </div>
   )
