@@ -44,6 +44,14 @@ class User(Base):
     account_state = Column(String, default="assessment_incomplete")  # assessment_incomplete, polarity_incomplete, eligible_in_pool, in_relationship, ghost_mode
     polarity_completed = Column(Boolean, default=False)
     ghost_mode = Column(Boolean, default=False)
+    # Subscription
+    subscription_tier = Column(String, default="free")
+    subscription_status = Column(String, default="none")
+    subscription_id = Column(String, nullable=True)
+    subscription_expires_at = Column(DateTime, nullable=True)
+    stripe_customer_id = Column(String, nullable=True)
+    matches_viewed_today = Column(Integer, default=0)
+    matches_viewed_reset_at = Column(DateTime, nullable=True)
     last_active = Column(DateTime, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
 

@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from .config import get_settings
-from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup, notifications, safety, calibration, economy, couples, polarity
+from .routers import auth, quiz, matches, profiles, sanctuary, messages, knocks, likes, lookup, notifications, safety, calibration, economy, couples, polarity, subscriptions
 from .auth import decode_token
 from .database import get_db, SessionLocal
 from .models import User as UserModel
@@ -53,6 +53,7 @@ app.include_router(calibration.router)
 app.include_router(economy.router)
 app.include_router(couples.router)
 app.include_router(polarity.router)
+app.include_router(subscriptions.router)
 
 
 # Middleware to update last_active on authenticated requests
@@ -97,6 +98,16 @@ def seed_demo(token: str = Query(...), db: Session = Depends(get_db)):
     from .auth import hash_password
     result = seed_demo_data(db, compute_compatibility, compute_life_path, hash_password)
     return {"status": "ok", **result}
+
+
+@app.post("/admin/run-imports")
+def run_imports(token: str = Query(...), db: Session = Depends(get_db)):
+    """Import all workbook seed CSV data into database catalog tables."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from scripts.run_all_imports import import_all
+    results = import_all(db)
+    return {"status": "ok", **results}
 
 
 @app.post("/admin/clear-likes")
