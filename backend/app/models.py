@@ -40,7 +40,10 @@ class User(Base):
     occupation = Column(String, default="")
     education = Column(String, default="")
     dating_status = Column(String, default="")
-    relationship_state = Column(String, default="")
+    relationship_state = Column(String, default="")  # single, proposed, active_couple, post_breakup
+    account_state = Column(String, default="assessment_incomplete")  # assessment_incomplete, polarity_incomplete, eligible_in_pool, in_relationship, ghost_mode
+    polarity_completed = Column(Boolean, default=False)
+    ghost_mode = Column(Boolean, default=False)
     last_active = Column(DateTime, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -259,3 +262,121 @@ class ScoreboardEntry(Base):
     owner_id = Column(Integer, nullable=False)
     points = Column(Integer, default=0)
     rank = Column(Integer, nullable=True)
+
+
+# ── Polarity System ──────────────────────────────────────────────────────────
+
+class UserPolaritySnapshot(Base):
+    __tablename__ = "user_polarity_snapshots"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    axis_scores = Column(JSON, nullable=False)  # {initiation: 0.7, pursuit_pref: 0.5, ...}
+    role_seed_distribution = Column(JSON, nullable=True)
+    scoring_version = Column(String, default="v12")
+    completed_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ── Couples Mode ─────────────────────────────────────────────────────────────
+
+class CoupleContainer(Base):
+    __tablename__ = "couple_containers"
+    id = Column(Integer, primary_key=True, index=True)
+    user_a_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_b_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    couple_handle = Column(String, nullable=True)
+    theme = Column(String, default="classic_deep")
+    status = Column(String, default="proposed")  # proposed, pending_dual_consent, theme_selection, active_couple, cooldown_repair, paused, breakup_mode, archived
+    compatibility_snapshot_id = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CoupleConsent(Base):
+    __tablename__ = "couple_consents"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    consent_type = Column(String, nullable=False)
+    granted_at = Column(DateTime, default=datetime.utcnow)
+    revoked_at = Column(DateTime, nullable=True)
+
+
+class CoupleRoom(Base):
+    __tablename__ = "couple_rooms"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    room_family = Column(String, nullable=False)  # home_room, pulse_room, repair_room, memory_room, growth_room, sanctuary_bridge, intimacy_room, cooldown_room
+    visibility = Column(String, default="both")
+    state = Column(String, default="active")
+    skin_token = Column(String, nullable=True)
+
+
+class PulseSession(Base):
+    __tablename__ = "pulse_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    prompt_set_id = Column(String, nullable=True)
+    response_a = Column(JSON, nullable=True)
+    response_b = Column(JSON, nullable=True)
+    alignment_delta = Column(Float, nullable=True)
+    repair_flag = Column(Boolean, default=False)
+    support_prompt_id = Column(String, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+
+
+class RepairSession(Base):
+    __tablename__ = "repair_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    trigger_source = Column(String, nullable=True)
+    consent_state = Column(String, default="pending")
+    issue_family = Column(String, nullable=True)
+    stage = Column(Integer, default=1)
+    perspective_a = Column(Text, nullable=True)
+    perspective_b = Column(Text, nullable=True)
+    commitments = Column(JSON, nullable=True)
+    closure_state = Column(String, default="open")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CoupleGoal(Base):
+    __tablename__ = "couple_goals"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    goal_text = Column(String, nullable=False)
+    completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CoupleArchiveItem(Base):
+    __tablename__ = "couple_archive_items"
+    id = Column(Integer, primary_key=True, index=True)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=False)
+    item_type = Column(String, nullable=False)  # milestone, memory, letter
+    scope = Column(String, default="shared")
+    source_module = Column(String, nullable=True)
+    visibility = Column(String, default="both")
+    content = Column(Text, nullable=True)
+    tags = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class PrivateReflection(Base):
+    __tablename__ = "private_reflections"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    couple_id = Column(Integer, ForeignKey("couple_containers.id"), nullable=True)
+    content = Column(Text, nullable=False)
+    convertable_flag = Column(Boolean, default=True)
+    converted_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class WorkbookImportVersion(Base):
+    __tablename__ = "workbook_import_versions"
+    id = Column(Integer, primary_key=True, index=True)
+    workbook_version = Column(String, nullable=False)
+    sheet_name = Column(String, nullable=False)
+    data_rows = Column(Integer, nullable=False)
+    source_checksum = Column(String, nullable=True)
+    imported_at = Column(DateTime, default=datetime.utcnow)
