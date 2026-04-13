@@ -110,6 +110,16 @@ def run_imports(token: str = Query(...), db: Session = Depends(get_db)):
     return {"status": "ok", **results}
 
 
+@app.post("/admin/import-v12")
+def import_v12(token: str = Query(...), db: Session = Depends(get_db)):
+    """Import v12-specific data: question weights, shadow priors, polarity axes."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from scripts.import_v12_data import import_v12 as do_import
+    results = do_import(db)
+    return {"status": "ok", **results}
+
+
 @app.post("/admin/clear-likes")
 def clear_likes(token: str = Query(...), db: Session = Depends(get_db)):
     """Delete ALL likes from the likes table."""

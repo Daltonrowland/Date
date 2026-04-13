@@ -68,20 +68,38 @@ CALIBRATION_POINTS = [
     (0.6485076903777056,  850),
 ]
 
-# ── Tier rules (evaluated in order) ──────────────────────────────────────────
+# ── v12 Tier rules — official labels from workbook ───────────────────────────
 TIER_RULES = [
-    ("Soul-aligned match",    "soul_aligned",     lambda s, st, ch: s >= 760 and st >= 0.74 and ch >= 0.58),
-    ("Strong potential",      "strong_potential",  lambda s, st, ch: s >= 700 and st >= 0.62),
-    ("Healthy but growing",   "healthy_growing",   lambda s, st, ch: s >= 650 and st >= 0.58),
-    ("Magnetic but risky",    "magnetic_risky",    lambda s, st, ch: s >= 640 and st < 0.58 and ch >= 0.72),
-    ("Possible but unstable", "possible_unstable", lambda s, st, ch: s >= 560 and st >= 0.40),
+    ("Excellent match",       "excellent_match",   lambda s, st, ch: s >= 751),
+    ("Good match",            "good_match",        lambda s, st, ch: s >= 701),
+    ("Medium / workable",     "medium_workable",   lambda s, st, ch: s >= 601),
+    ("Poor / unstable",       "poor_unstable",     lambda s, st, ch: s >= 501),
 ]
-DEFAULT_TIER_LABEL = "Red flag zone"
-DEFAULT_TIER_KEY = "red_flag_zone"
+DEFAULT_TIER_LABEL = "Bad match"
+DEFAULT_TIER_KEY = "bad_match"
 
 TIER_EMOJI = {
+    "excellent_match": "💜", "good_match": "✨", "medium_workable": "🌿",
+    "poor_unstable": "⚡", "bad_match": "🚩",
+}
+
+# Legacy tier keys for backward compat (old cards still in DB)
+LEGACY_TIER_EMOJI = {
     "soul_aligned": "💜", "strong_potential": "✨", "healthy_growing": "🌿",
     "magnetic_risky": "🔥", "possible_unstable": "⚡", "red_flag_zone": "🚩",
+}
+TIER_EMOJI.update(LEGACY_TIER_EMOJI)
+
+# ── v12 Shadow Severity Priors ───────────────────────────────────────────────
+SHADOW_PRIORS = {
+    "None/Light": 0.05,
+    "Regulated Grown-Up": 0.05,
+    "Self-Saboteur": 0.35,
+    "Scorekeeper": 0.45,
+    "Stonewaller": 0.50,
+    "Chameleon": 0.55,
+    "Love Bomber": 0.60,
+    "Manipulator": 0.70,
 }
 
 ARCHETYPES = [
@@ -443,18 +461,28 @@ def compute_compatibility(
             shadow_fit = cols.get(shadow_b.lower().replace(" ", "_").replace("-", "_"), 0.5)
             break
 
+    # v12 Shadow Stability via priors
+    shadow_severity_a = SHADOW_PRIORS.get(shadow_a, 0.3)
+    shadow_severity_b = SHADOW_PRIORS.get(shadow_b, 0.3)
+    shadow_stability = 1 - (shadow_severity_a + shadow_severity_b) / 2
+
     positive = sorted(per_question, key=lambda r: r["pair_norm_0_1"], reverse=True)[:5]
     friction = sorted(per_question, key=lambda r: r["pair_norm_0_1"])[:5]
 
+    # v12 breakdown: Scientific score components + separate Vibe Overlay
     breakdown = {
         "StabilityReadiness": round(stability_avg * 100),
         "AlignmentPatternFit": round(alignment_avg * 100),
         "ChemistryPolarity": round(chemistry_avg * 100),
-        "CosmicOverlay": round(cosmic * 100, 1),
+        "ShadowStability": round(shadow_stability * 100),
         "ArchetypeFit": round(arch_fit * 100),
-        "ShadowFit": round(shadow_fit * 100),
+    }
+
+    # Vibe Overlay — separate from scientific score, does NOT move tier label
+    vibe_overlay = {
         "ZodiacAlignment": round(zodiac_norm * 100),
         "NumerologyAlignment": round(numerology_norm * 100),
+        "CosmicOverlay": round(cosmic * 100, 1),
     }
 
     return {
@@ -463,6 +491,8 @@ def compute_compatibility(
         "tier_label": tier_label,
         "tier_emoji": tier_emoji,
         "breakdown": breakdown,
+        "vibe_overlay": vibe_overlay,
+        "shadow_stability": round(shadow_stability, 4),
         "archetype_score": round(arch_fit * 100),
         "shadow_score": round(shadow_fit * 100),
         "archetype": arch_a,
