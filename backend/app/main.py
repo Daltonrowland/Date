@@ -120,6 +120,120 @@ def import_v12(token: str = Query(...), db: Session = Depends(get_db)):
     return {"status": "ok", **results}
 
 
+@app.post("/admin/recompute-scores")
+def recompute_scores(token: str = Query(...), db: Session = Depends(get_db)):
+    """Recompute every compatibility_scores row with the current v12 engine."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from .models import CompatibilityScore, QuizResponse, User
+    from .scoring import compute_compatibility, build_archetype_vector, load_seed_context
+
+    ctx = load_seed_context()
+    # Refresh archetype_vector for all quiz-completed users
+    users = db.query(User).filter(User.quiz_completed == True).all()
+    qrs = {qr.user_id: qr for qr in db.query(QuizResponse).filter(QuizResponse.user_id.in_([u.id for u in users])).all()}
+    for u in users:
+        qr = qrs.get(u.id)
+        if not qr:
+            continue
+        try:
+            int_ans = {int(k): v for k, v in qr.answers.items()}
+            u.archetype_vector = build_archetype_vector(int_ans, ctx)
+        except Exception:
+            continue
+    db.commit()
+
+    scores = db.query(CompatibilityScore).all()
+    recomputed = 0
+    failed = 0
+    for cs in scores:
+        qa = qrs.get(cs.user_a_id)
+        qb = qrs.get(cs.user_b_id)
+        if not qa or not qb:
+            continue
+        ua = next((u for u in users if u.id == cs.user_a_id), None)
+        ub = next((u for u in users if u.id == cs.user_b_id), None)
+        if not ua or not ub:
+            continue
+        try:
+            a_ans = {int(k): v for k, v in qa.answers.items()}
+            b_ans = {int(k): v for k, v in qb.answers.items()}
+            result = compute_compatibility(
+                a_ans, b_ans,
+                gender_a=ua.gender or "other", gender_b=ub.gender or "other",
+                zodiac_a=ua.sun_sign or "aries", zodiac_b=ub.sun_sign or "aries",
+                life_path_a=ua.life_path_number or 1, life_path_b=ub.life_path_number or 1,
+            )
+            cs.score = result["score"]
+            cs.tier = result["tier"]
+            cs.tier_label = result["tier_label"]
+            cs.final_norm = result.get("final_norm")
+            cs.core_norm = result.get("core_norm")
+            cs.behavioral_avg = result.get("behavioral_avg")
+            cs.stability_avg = result.get("stability_avg")
+            cs.chemistry_avg = result.get("chemistry_avg")
+            cs.breakdown = result.get("breakdown")
+            cs.scoring_version = "v12"
+            recomputed += 1
+        except Exception:
+            failed += 1
+    db.commit()
+    return {"status": "ok", "recomputed": recomputed, "failed": failed, "archetype_vectors": len(users)}
+
+
+@app.get("/admin/score-diagnostic")
+def score_diagnostic(token: str = Query(...), db: Session = Depends(get_db)):
+    """Return score distribution across v12 tier bands for validation."""
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Invalid admin token")
+    from .models import CompatibilityScore, User
+    rows = db.query(CompatibilityScore).all()
+    scores = [r.score for r in rows]
+    if not scores:
+        return {"status": "ok", "total": 0, "buckets": {}, "note": "no scores yet"}
+
+    bands = {
+        "bad_match (350-500)": 0,
+        "poor_unstable (501-600)": 0,
+        "medium_workable (601-700)": 0,
+        "good_match (701-750)": 0,
+        "excellent_match (751-850)": 0,
+    }
+    for s in scores:
+        if s <= 500: bands["bad_match (350-500)"] += 1
+        elif s <= 600: bands["poor_unstable (501-600)"] += 1
+        elif s <= 700: bands["medium_workable (601-700)"] += 1
+        elif s <= 750: bands["good_match (701-750)"] += 1
+        else: bands["excellent_match (751-850)"] += 1
+
+    n = len(scores)
+    mean = sum(scores) / n
+    var = sum((s - mean) ** 2 for s in scores) / n
+    stdev = var ** 0.5
+    pct = {k: round(100 * v / n, 2) for k, v in bands.items()}
+
+    sorted_rows = sorted(rows, key=lambda r: r.score)
+    def _label(cs):
+        ua = db.query(User).filter(User.id == cs.user_a_id).first()
+        ub = db.query(User).filter(User.id == cs.user_b_id).first()
+        return {
+            "score": cs.score, "tier": cs.tier_label,
+            "a": f"{ua.name if ua else '?'} ({ua.archetype if ua else '?'})",
+            "b": f"{ub.name if ub else '?'} ({ub.archetype if ub else '?'})",
+        }
+    lowest = [_label(r) for r in sorted_rows[:5]]
+    highest = [_label(r) for r in sorted_rows[-5:]]
+
+    return {
+        "status": "ok",
+        "total": n,
+        "min": min(scores), "max": max(scores),
+        "mean": round(mean, 1), "stdev": round(stdev, 1),
+        "buckets": bands, "pct": pct,
+        "lowest_5": lowest, "highest_5": highest,
+    }
+
+
 @app.post("/admin/clear-likes")
 def clear_likes(token: str = Query(...), db: Session = Depends(get_db)):
     """Delete ALL likes from the likes table."""

@@ -106,6 +106,34 @@ ARCHETYPES = [
     "Analyzer", "Fixer", "Icebox", "Performer", "Phantom Seeker",
     "Quiet Exit", "Regulated Grown-Up", "Romantic Idealist", "Survivor", "Translator",
 ]
+_ARCH_KEY_VARIANTS = {
+    a: {
+        a,
+        a.lower(),
+        a.lower().replace(" ", "_"),
+        a.lower().replace(" ", "_").replace("-", "_"),
+        a.lower().replace("-", "_"),
+    }
+    for a in ARCHETYPES
+}
+
+# ── v12 Stability inner weights (sum = 0.91, normalize by 0.91) ──────────────
+STAB_READ_W = 0.25
+STAB_RISK_W = 0.21
+STAB_SHADOW_W = 0.19
+STAB_ATTACH_W = 0.16
+STAB_INTEG_W = 0.10
+STAB_NORM = STAB_READ_W + STAB_RISK_W + STAB_SHADOW_W + STAB_ATTACH_W + STAB_INTEG_W  # 0.91
+
+# ── v12 Alignment inner weights ──────────────────────────────────────────────
+ALIGN_ARCH_W = 0.45
+ALIGN_BEHAV_W = 0.30
+ALIGN_RECIP_W = 0.15
+ALIGN_PACE_W = 0.10
+
+# ── v12 Chemistry inner weights ──────────────────────────────────────────────
+CHEM_POLARITY_W = 0.53
+CHEM_ATTRACTION_W = 0.47
 SHADOWS = [
     "Manipulator", "Stonewaller", "Love Bomber",
     "Chameleon", "Scorekeeper", "Self-Saboteur",
@@ -253,6 +281,81 @@ def _compute_user_readiness(answers: Dict[int, str], ctx: WorkbookContext) -> fl
     return max(0.0, min(1.0, 0.7 * af + 0.3 * ci - penalty))
 
 
+# ── v12 Archetype distribution vector + matrix fit ──────────────────────────
+
+def build_archetype_vector(answers: Dict[int, str], ctx: WorkbookContext) -> List[float]:
+    """10-dim normalized distribution vector over ARCHETYPES from user answers."""
+    scores = {a: 0.0 for a in ARCHETYPES}
+    total_w = 0.0
+    for row in ctx.answer_bank:
+        q = int(row["question_number_int"])
+        if answers.get(q) == row["answer_letter"]:
+            arch = (row.get("archetype") or "").strip()
+            if arch in scores:
+                w = float(row.get("question_weight_v3", 1.0) or 1.0)
+                scores[arch] += w
+                total_w += w
+    if total_w > 0:
+        return [scores[a] / total_w for a in ARCHETYPES]
+    return [0.1] * len(ARCHETYPES)
+
+
+@lru_cache(maxsize=1)
+def _archetype_matrix_ordered() -> List[List[float]]:
+    """10x10 ArchetypeMatrix in canonical ARCHETYPES row/col order."""
+    ctx = load_seed_context()
+    matrix = [[0.5] * len(ARCHETYPES) for _ in range(len(ARCHETYPES))]
+    for row_label, cols in ctx.archetype_matrix.items():
+        for ri, ra in enumerate(ARCHETYPES):
+            if row_label in _ARCH_KEY_VARIANTS[ra] or row_label.lower().replace(" ", "_") in _ARCH_KEY_VARIANTS[ra]:
+                for ci, ca in enumerate(ARCHETYPES):
+                    val = None
+                    for variant in _ARCH_KEY_VARIANTS[ca]:
+                        if variant in cols:
+                            val = cols[variant]
+                            break
+                    if val is None:
+                        val = cols.get(ca.lower().replace(" ", "_"), 0.5)
+                    matrix[ri][ci] = val
+                break
+    return matrix
+
+
+def compute_archetype_profile_fit(vec_a: List[float], vec_b: List[float], matrix: List[List[float]]) -> float:
+    """Pure-Python p_a @ M @ p_b. Returns [0, 1]."""
+    n = len(vec_a)
+    mb = [sum(matrix[i][j] * vec_b[j] for j in range(n)) for i in range(n)]
+    fit = sum(vec_a[i] * mb[i] for i in range(n))
+    return max(0.0, min(1.0, fit))
+
+
+def _weighted_user_signals(answers: Dict[int, str], ctx: WorkbookContext) -> Dict[str, float]:
+    """Weighted-average per-user scalar signals from answer bank."""
+    totals = {
+        "readiness": 0.0, "attachment_risk": 0.0, "integrity_penalty": 0.0,
+        "reciprocity": 0.0, "pacing": 0.0, "cluster_penalty": 0.0,
+        "pattern_risk": 0.0, "comm_health": 0.0, "reg_health": 0.0,
+    }
+    wt = 0.0
+    for row in ctx.answer_bank:
+        q = int(row["question_number_int"])
+        if answers.get(q) == row["answer_letter"]:
+            w = float(row.get("question_weight_v3", 1.0) or 1.0)
+            totals["readiness"] += w * float(row.get("readiness_norm", 0.5) or 0.5)
+            totals["attachment_risk"] += w * float(row.get("attachment_risk_norm", 0.0) or 0.0)
+            totals["integrity_penalty"] += w * float(row.get("integrity_penalty_norm", 0.0) or 0.0)
+            totals["reciprocity"] += w * float(row.get("reciprocity_signal_norm", 0.5) or 0.5)
+            totals["pacing"] += w * float(row.get("pacing_norm", 0.5) or 0.5)
+            totals["cluster_penalty"] += w * float(row.get("cluster_penalty_norm", 0.0) or 0.0)
+            totals["pattern_risk"] += w * float(row.get("pattern_risk_norm", 0.0) or 0.0)
+            totals["comm_health"] += w * float(row.get("comm_health_norm", 0.5) or 0.5)
+            totals["reg_health"] += w * float(row.get("reg_health_norm", 0.5) or 0.5)
+            wt += w
+    if wt == 0:
+        return {k: (0.5 if k in ("readiness", "reciprocity", "pacing", "comm_health", "reg_health") else 0.0) for k in totals}
+    return {k: v / wt for k, v in totals.items()}
+
+
 # ── Archetype / Shadow inference ─────────────────────────────────────────────
 
 def get_archetype_from_answers(answers: Dict[int, str], ctx: WorkbookContext) -> Tuple[str, str]:
@@ -352,44 +455,93 @@ def compute_compatibility(
     if tw == 0:
         return _empty_result()
 
-    # ── Phase 2: Normalize to 0-1 diagnostics ────────────────────────────
-    stability_avg = _norm(ws / tw, STABILITY_WEIGHT_TOTAL)
-    alignment_avg = _norm(wb / tw, BEHAVIORAL_WEIGHT_TOTAL)  # alignment = behavioral
-    chemistry_avg = _norm(wc / tw, CHEMISTRY_WEIGHT_TOTAL)
+    # ── Phase 2: Normalize pair-quanta diagnostics ───────────────────────
+    behavioral_avg = _norm(wb / tw, BEHAVIORAL_WEIGHT_TOTAL)
+    stab_pair_avg = _norm(ws / tw, STABILITY_WEIGHT_TOTAL)
+    chem_pair_avg = _norm(wc / tw, CHEMISTRY_WEIGHT_TOTAL)
     core_norm = wpn / tw
 
-    # ── Phase 3: v12 user readiness ──────────────────────────────────────
-    read_a = _compute_user_readiness(user_a_answers, ctx)
-    read_b = _compute_user_readiness(user_b_answers, ctx)
+    # ── Phase 3: v12 per-user signals (readiness, attachment, integrity…)
+    sig_a = _weighted_user_signals(user_a_answers, ctx)
+    sig_b = _weighted_user_signals(user_b_answers, ctx)
+    read_a = max(0.0, min(1.0, 0.7 * sig_a["readiness"] + 0.3 * (1 - (sig_a["integrity_penalty"] + sig_a["cluster_penalty"]) / 2)
+                        - min(0.20, 0.12 * sig_a["cluster_penalty"] + 0.08 * sig_a["pattern_risk"])))
+    read_b = max(0.0, min(1.0, 0.7 * sig_b["readiness"] + 0.3 * (1 - (sig_b["integrity_penalty"] + sig_b["cluster_penalty"]) / 2)
+                        - min(0.20, 0.12 * sig_b["cluster_penalty"] + 0.08 * sig_b["pattern_risk"])))
     read_min = min(read_a, read_b)
     read_gap = abs(read_a - read_b)
 
-    # ── Phase 4: Risk signals from pair data ─────────────────────────────
+    # ── Phase 4: Pair risk signals ───────────────────────────────────────
     risk_avg_sum = risk_max_sum = 0.0
-    shadow_max = 0.0
     for q in answered_qs:
-        key_a = (q, user_a_answers[q])
-        key_b = (q, user_b_answers[q])
-        if key_a in ctx.answer_lookup and key_b in ctx.answer_lookup:
-            pk = _pair_key(ctx.answer_lookup[key_a], ctx.answer_lookup[key_b])
+        ka = (q, user_a_answers[q]); kb = (q, user_b_answers[q])
+        if ka in ctx.answer_lookup and kb in ctx.answer_lookup:
+            pk = _pair_key(ctx.answer_lookup[ka], ctx.answer_lookup[kb])
             if pk in ctx.pair_lookup:
                 pr = ctx.pair_lookup[pk]
                 risk_avg_sum += pr.get("risk_avg", 0)
                 risk_max_sum += pr.get("risk_max", 0)
-                shadow_max = max(shadow_max, pr.get("shadow_fit", 0))
     n_pairs = max(len(answered_qs), 1)
     risk_avg = risk_avg_sum / n_pairs
     risk_inv = 1 - min(1, risk_avg)
     drift_inv = 1 - min(1, risk_max_sum / n_pairs)
 
-    # ── Phase 5: v12 Base with outer-layer weights ───────────────────────
+    # ── Phase 5: v12 archetype profile fit (10-dim @ 10x10 @ 10-dim) ─────
+    vec_a = build_archetype_vector(user_a_answers, ctx)
+    vec_b = build_archetype_vector(user_b_answers, ctx)
+    arch_matrix = _archetype_matrix_ordered()
+    archetype_profile_fit = compute_archetype_profile_fit(vec_a, vec_b, arch_matrix)
+
+    # ── Phase 6: v12 Stability (exact inner weights, normalized by 0.91)
+    if read_a + read_b > 0:
+        read_hmean = 2 * read_a * read_b / (read_a + read_b)
+    else:
+        read_hmean = 0.0
+    shadow_a_name = get_shadow_from_answers(user_a_answers, ctx)
+    shadow_b_name = get_shadow_from_answers(user_b_answers, ctx)
+    shadow_sev_a = SHADOW_PRIORS.get(shadow_a_name, 0.30)
+    shadow_sev_b = SHADOW_PRIORS.get(shadow_b_name, 0.30)
+    shadow_stability = 1.0 - (shadow_sev_a + shadow_sev_b) / 2
+    attachment_stability = 1.0 - (sig_a["attachment_risk"] + sig_b["attachment_risk"]) / 2
+    integrity_consistency = 1.0 - (sig_a["integrity_penalty"] + sig_b["integrity_penalty"]) / 2
+    stability = max(0.0, min(1.0, (
+        STAB_READ_W * read_hmean +
+        STAB_RISK_W * risk_inv +
+        STAB_SHADOW_W * shadow_stability +
+        STAB_ATTACH_W * attachment_stability +
+        STAB_INTEG_W * integrity_consistency
+    ) / STAB_NORM))
+
+    # ── Phase 7: v12 Alignment (0.45 arch + 0.30 behav + 0.15 recip + 0.10 pace)
+    reciprocity_pair = (sig_a["reciprocity"] * sig_b["reciprocity"]) ** 0.5
+    pace_pair = (sig_a["pacing"] * sig_b["pacing"]) ** 0.5
+    alignment = max(0.0, min(1.0,
+        ALIGN_ARCH_W * archetype_profile_fit +
+        ALIGN_BEHAV_W * behavioral_avg +
+        ALIGN_RECIP_W * reciprocity_pair +
+        ALIGN_PACE_W * pace_pair
+    ))
+
+    # ── Phase 8: v12 Chemistry (polarity + attraction, pair-quanta proxy)
+    polarity_fit = chem_pair_avg  # proxy until polarity test complete
+    attraction_fit = chem_pair_avg
+    drift_mean = 0.0
+    polarity_adj = polarity_fit * (1.0 - 0.40 * drift_mean)
+    attraction_adj = attraction_fit * (1.0 - 0.55 * drift_mean)
+    chemistry = max(0.0, min(1.0, CHEM_POLARITY_W * polarity_adj + CHEM_ATTRACTION_W * attraction_adj))
+
+    stability_avg = stability
+    alignment_avg = alignment
+    chemistry_avg = chemistry
+
+    # ── Phase 9: v12 Base with outer-layer weights ───────────────────────
     v12_base = (
-        V12_STABILITY_WEIGHT * stability_avg +
-        V12_ALIGNMENT_WEIGHT * alignment_avg +
-        V12_CHEMISTRY_WEIGHT * chemistry_avg
+        V12_STABILITY_WEIGHT * stability +
+        V12_ALIGNMENT_WEIGHT * alignment +
+        V12_CHEMISTRY_WEIGHT * chemistry
     )
 
-    # ── Phase 6: v12 Gate ────────────────────────────────────────────────
+    # ── Phase 10: v12 Gate ───────────────────────────────────────────────
     gate_raw = 1 - (
         GATE_READ_MIN_COEFF * (1 - read_min) +
         GATE_RISK_INV_COEFF * (1 - risk_inv) +
@@ -398,27 +550,34 @@ def compute_compatibility(
     )
     gate = max(GATE_FLOOR, min(GATE_CEIL, gate_raw))
 
-    # ── Phase 7: v12 Explicit penalties ──────────────────────────────────
+    # ── Phase 11: v12 Explicit penalties ─────────────────────────────────
     penalty = 0.0
-    # Shadow severity
-    if shadow_max >= VOLATILE_SHADOW_HIGH:
-        penalty += PEN_SHADOW_HIGH
-    # Readiness floor
-    if read_min < 0.42:
-        penalty += PEN_READ_LOW
-    # Volatile-shadow trap
-    pattern_a = sum(float(r.get("pattern_risk_norm", 0)) for r in ctx.answer_bank
-                    if user_a_answers.get(int(r["question_number_int"])) == r["answer_letter"]) / max(1, len(answered_qs))
-    pattern_b = sum(float(r.get("pattern_risk_norm", 0)) for r in ctx.answer_bank
-                    if user_b_answers.get(int(r["question_number_int"])) == r["answer_letter"]) / max(1, len(answered_qs))
-    vol_a = shadow_max >= VOLATILE_SHADOW_MEDIUM and pattern_a >= VOLATILE_PATTERN_MEDIUM
-    vol_b = shadow_max >= VOLATILE_SHADOW_MEDIUM and pattern_b >= VOLATILE_PATTERN_MEDIUM
+    recip_a = sig_a["reciprocity"]; recip_b = sig_b["reciprocity"]
+    clus_a = sig_a["cluster_penalty"]; clus_b = sig_b["cluster_penalty"]
+    anxious_a = recip_a >= ANXIOUS_RECIPROCITY_MIN and clus_a >= ANXIOUS_CLUSTER_MIN and read_a <= ANXIOUS_READINESS_MAX
+    guarded_a = recip_a <= GUARDED_RECIPROCITY_MAX
+    anxious_b = recip_b >= ANXIOUS_RECIPROCITY_MIN and clus_b >= ANXIOUS_CLUSTER_MIN and read_b <= ANXIOUS_READINESS_MAX
+    guarded_b = recip_b <= GUARDED_RECIPROCITY_MAX
+    if (anxious_a and guarded_b) or (anxious_b and guarded_a):
+        penalty += PEN_ANXIOUS_RECIPROCITY
+
+    vol_a = (shadow_sev_a >= VOLATILE_SHADOW_HIGH) or (
+        shadow_sev_a >= VOLATILE_SHADOW_MEDIUM and read_a <= VOLATILE_READINESS_MAX and sig_a["pattern_risk"] >= VOLATILE_PATTERN_MEDIUM
+    )
+    vol_b = (shadow_sev_b >= VOLATILE_SHADOW_HIGH) or (
+        shadow_sev_b >= VOLATILE_SHADOW_MEDIUM and read_b <= VOLATILE_READINESS_MAX and sig_b["pattern_risk"] >= VOLATILE_PATTERN_MEDIUM
+    )
     if vol_a and vol_b:
         penalty += PEN_BOTH_VOLATILE
     elif vol_a or vol_b:
         penalty += PEN_ONE_VOLATILE
 
-    # ── Phase 8: Raw score ───────────────────────────────────────────────
+    if max(shadow_sev_a, shadow_sev_b) >= VOLATILE_SHADOW_HIGH:
+        penalty += PEN_SHADOW_HIGH
+    if read_min < 0.42:
+        penalty += PEN_READ_LOW
+
+    # ── Phase 12: Raw score ──────────────────────────────────────────────
     raw = max(0.0, min(1.0, v12_base * gate - penalty))
 
     # ── Phase 9: Cosmic overlay (preserved from v10) ─────────────────────
@@ -439,20 +598,13 @@ def compute_compatibility(
 
     tier_key, tier_label, tier_emoji = _get_tier(score, stability_avg, chemistry_avg)
 
-    # ── Phase 11: Archetype + shadow inference ───────────────────────────
+    # ── Phase 13: Archetype + shadow labels (for display) ────────────────
     arch_a, arch_a2 = get_archetype_from_answers(user_a_answers, ctx)
     arch_b, _ = get_archetype_from_answers(user_b_answers, ctx)
-    shadow_a = get_shadow_from_answers(user_a_answers, ctx)
-    shadow_b = get_shadow_from_answers(user_b_answers, ctx)
+    shadow_a = shadow_a_name
+    shadow_b = shadow_b_name
 
-    # Archetype fit from matrix
-    arch_fit = 0.5
-    a_lower = arch_a.lower().replace(" ", "_")
-    b_lower = arch_b.lower().replace(" ", "_")
-    for row_label, cols in ctx.archetype_matrix.items():
-        if row_label.lower().replace(" ", "_") == a_lower:
-            arch_fit = cols.get(b_lower, 0.5)
-            break
+    arch_fit = archetype_profile_fit
 
     # Shadow fit from matrix
     shadow_fit = 0.5
@@ -460,11 +612,6 @@ def compute_compatibility(
         if row_label.lower().replace(" ", "_").replace("-", "_") == shadow_a.lower().replace(" ", "_").replace("-", "_"):
             shadow_fit = cols.get(shadow_b.lower().replace(" ", "_").replace("-", "_"), 0.5)
             break
-
-    # v12 Shadow Stability via priors
-    shadow_severity_a = SHADOW_PRIORS.get(shadow_a, 0.3)
-    shadow_severity_b = SHADOW_PRIORS.get(shadow_b, 0.3)
-    shadow_stability = 1 - (shadow_severity_a + shadow_severity_b) / 2
 
     positive = sorted(per_question, key=lambda r: r["pair_norm_0_1"], reverse=True)[:5]
     friction = sorted(per_question, key=lambda r: r["pair_norm_0_1"])[:5]

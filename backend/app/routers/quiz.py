@@ -8,7 +8,7 @@ from ..auth import get_current_user
 from ..quiz_questions import get_questions, CATEGORIES
 from ..scoring import (
     compute_compatibility, compute_archetype, load_seed_context,
-    get_archetype_from_answers, get_shadow_from_answers,
+    get_archetype_from_answers, get_shadow_from_answers, build_archetype_vector,
     compute_readiness, readiness_forecast, compute_life_path,
 )
 
@@ -109,6 +109,7 @@ def submit_quiz(payload: QuizSubmit, current_user: User = Depends(get_current_us
     current_user.shadow_score = self_result["shadow_score"]
     current_user.readiness_score = readiness
     current_user.readiness_forecast = readiness_forecast(readiness)
+    current_user.archetype_vector = build_archetype_vector(int_answers, ctx)
     db.commit()
 
     # Compute compatibility with all other quiz-completed users

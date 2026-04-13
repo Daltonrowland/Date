@@ -30,6 +30,7 @@ class User(Base):
     onboarding_completed = Column(Boolean, default=False)
     archetype = Column(String, default="")
     archetype_secondary = Column(String, default="")
+    archetype_vector = Column(JSON, nullable=True)
     shadow_type = Column(String, default="")
     archetype_score = Column(Float, default=0.0)
     shadow_score = Column(Float, default=0.0)

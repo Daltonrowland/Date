@@ -37,6 +37,61 @@ SHADOWS = ["Chameleon", "Love Bomber", "Manipulator", "Scorekeeper", "Self-Sabot
 
 DEMO_EMAIL_DOMAIN = "@demo.relationshipscores.app"
 
+# v12 — each demo user gets a target archetype profile so answer patterns differ.
+# Tiers: 3 low/stuck, 4 healthy, 4 medium, 4 mixed, 3 varied, 2 manipulator
+DEMO_PROFILES = [
+    # Index 0-2: low readiness / high cluster (Icebox/Analyzer stuck patterns)
+    {"primary": "Icebox", "shadow_bias": "Stonewaller"},
+    {"primary": "Icebox", "shadow_bias": "Self-Saboteur"},
+    {"primary": "Analyzer", "shadow_bias": "Stonewaller"},
+    # Index 3-6: healthy (Regulated Grown-Up / Translator)
+    {"primary": "Regulated Grown-Up", "shadow_bias": "None"},
+    {"primary": "Translator", "shadow_bias": "None"},
+    {"primary": "Regulated Grown-Up", "shadow_bias": "None"},
+    {"primary": "Translator", "shadow_bias": "None"},
+    # Index 7-10: medium (Performer/Fixer)
+    {"primary": "Performer", "shadow_bias": "Chameleon"},
+    {"primary": "Fixer", "shadow_bias": "Love Bomber"},
+    {"primary": "Performer", "shadow_bias": "Scorekeeper"},
+    {"primary": "Fixer", "shadow_bias": "None"},
+    # Index 11-14: mixed (Phantom Seeker/Quiet Exit)
+    {"primary": "Phantom Seeker", "shadow_bias": "Chameleon"},
+    {"primary": "Quiet Exit", "shadow_bias": "Stonewaller"},
+    {"primary": "Phantom Seeker", "shadow_bias": "Self-Saboteur"},
+    {"primary": "Quiet Exit", "shadow_bias": "Scorekeeper"},
+    # Index 15-17: varied (Survivor/Romantic Idealist)
+    {"primary": "Survivor", "shadow_bias": "Self-Saboteur"},
+    {"primary": "Romantic Idealist", "shadow_bias": "Love Bomber"},
+    {"primary": "Romantic Idealist", "shadow_bias": "None"},
+    # Index 18-19: Manipulator shadow
+    {"primary": "Survivor", "shadow_bias": "Manipulator"},
+    {"primary": "Performer", "shadow_bias": "Manipulator"},
+]
+
+
+def _build_answers_for_profile(primary_arch, shadow_bias, answer_bank_rows):
+    """Generate answers biased toward a target archetype and shadow."""
+    from collections import defaultdict
+    by_q = defaultdict(list)
+    for row in answer_bank_rows:
+        q = int(row["question_number_int"])
+        by_q[q].append(row)
+
+    answers = {}
+    for q, rows in by_q.items():
+        # Prefer answers matching primary archetype first, then random
+        matches = [r for r in rows if (r.get("archetype") or "").strip() == primary_arch]
+        if shadow_bias and shadow_bias != "None":
+            shadow_matches = [r for r in rows if (r.get("shadow_type") or "").strip() == shadow_bias]
+            if shadow_matches and random.random() < 0.35:
+                answers[q] = random.choice(shadow_matches)["answer_letter"]
+                continue
+        if matches and random.random() < 0.7:
+            answers[q] = random.choice(matches)["answer_letter"]
+        else:
+            answers[q] = random.choice(rows)["answer_letter"]
+    return answers
+
 
 def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
     """
@@ -66,6 +121,11 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
     hashed_pw = hash_fn("DemoPass123!")
     demo_users = []
 
+    # Load answer bank for biased answer generation
+    from app.scoring import load_seed_context, build_archetype_vector
+    ctx = load_seed_context()
+    ab_rows = [r for r in ctx.answer_bank if int(r["question_number_int"]) in q_ids]
+
     for i, u in enumerate(DEMO_USERS):
         rs_code = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
         while db_session.query(User).filter(User.rs_code == rs_code).first():
@@ -89,9 +149,9 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
             email_verified=True,
             is_verified=True,
             quiz_completed=True,
-            archetype=ARCHETYPES[i % len(ARCHETYPES)],
+            archetype=DEMO_PROFILES[i % len(DEMO_PROFILES)]["primary"],
             archetype_secondary=ARCHETYPES[(i + 3) % len(ARCHETYPES)],
-            shadow_type=SHADOWS[i % len(SHADOWS)],
+            shadow_type=DEMO_PROFILES[i % len(DEMO_PROFILES)].get("shadow_bias") or "None/Light",
             archetype_score=round(random.uniform(30, 90), 1),
             shadow_score=round(random.uniform(30, 90), 1),
             readiness_score=round(random.uniform(35, 90), 1),
@@ -100,8 +160,11 @@ def seed_demo_data(db_session, scoring_fn, life_path_fn, hash_fn):
         db_session.add(user)
         db_session.flush()
 
-        answers = {str(q): random.choice(["A", "B", "C", "D", "E"]) for q in q_ids}
-        db_session.add(QuizResponse(user_id=user.id, answers=answers, scoring_version="phase1.v1"))
+        profile = DEMO_PROFILES[i % len(DEMO_PROFILES)]
+        int_answers = _build_answers_for_profile(profile["primary"], profile.get("shadow_bias"), ab_rows)
+        answers = {str(q): v for q, v in int_answers.items()}
+        user.archetype_vector = build_archetype_vector(int_answers, ctx)
+        db_session.add(QuizResponse(user_id=user.id, answers=answers, scoring_version="v12"))
         demo_users.append(user)
 
     db_session.commit()
