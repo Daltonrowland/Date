@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A0A2E"/>
+      <stop offset="50%" style="stop-color:#6B21A8"/>
+      <stop offset="100%" style="stop-color:#EC4899"/>
+    </linearGradient>
+    <linearGradient id="text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C084FC"/>
+      <stop offset="100%" style="stop-color:#F472B6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="500" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="150" cy="250" r="200" fill="rgba(147,51,234,0.1)"/>
+  <circle cx="900" cy="150" r="250" fill="rgba(236,72,153,0.08)"/>
+  <!-- Logo -->
+  <text x="512" y="180" text-anchor="middle" font-family="Georgia,serif" font-size="64" font-weight="bold" fill="white">Relationship Scores</text>
+  <!-- Tagline -->
+  <text x="512" y="240" text-anchor="middle" font-family="Inter,sans-serif" font-size="24" fill="rgba(255,255,255,0.6)">Know your compatibility score before you fall.</text>
+  <!-- Score preview -->
+  <rect x="387" y="280" width="250" height="100" rx="20" fill="rgba(0,0,0,0.3)"/>
+  <text x="512" y="345" text-anchor="middle" font-family="Georgia,serif" font-size="52" font-weight="bold" fill="url(#text-grad)">792</text>
+  <text x="512" y="370" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" fill="rgba(255,255,255,0.5)">Soul-Aligned 💜</text>
+  <!-- Powered by -->
+  <text x="512" y="460" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" fill="rgba(255,255,255,0.3)">Powered by Genesis OS™ · 48,205 compatibility dimensions</text>
+</svg>

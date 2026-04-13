@@ -147,7 +147,11 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/5 px-4 sm:px-6 py-6 sm:py-8 text-center">
-        <p className="text-white/20 text-xs">© 2026 Relationship Scores. Powered by Genesis OS™. Scoring is deterministic and workbook-aligned.</p>
+        <p className="text-white/20 text-xs mb-2">© 2026 Relationship Scores. Powered by Genesis OS™.</p>
+        <div className="flex items-center justify-center gap-4">
+          <Link to="/privacy" className="text-white/20 text-xs hover:text-white/40">Privacy Policy</Link>
+          <Link to="/terms" className="text-white/20 text-xs hover:text-white/40">Terms of Service</Link>
+        </div>
       </footer>
     </div>
   )

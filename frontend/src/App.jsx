@@ -18,6 +18,8 @@ import Search from './pages/Search'
 import MatchDetail from './pages/MatchDetail'
 import Likes from './pages/Likes'
 import Wallet from './pages/Wallet'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import Navbar from './components/Navbar'
 import InstallBanner from './components/InstallBanner'
 
@@ -88,6 +90,8 @@ export default function App() {
         <Route path="/sanctuary" element={<ProtectedRoute><Sanctuary /></ProtectedRoute>} />
         <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <InstallBanner />
