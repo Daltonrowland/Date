@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+from typing import Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
-from ..database import get_db
+from sqlalchemy import desc, Column, Integer, String, Text, JSON
+from ..database import get_db, Base
 from ..models import User, Notification
 from ..auth import get_current_user
 
@@ -50,4 +52,19 @@ def mark_all_read(current_user: User = Depends(get_current_user), db: Session = 
         Notification.user_id == current_user.id, Notification.read == False
     ).update({"read": True})
     db.commit()
+    return {"status": "ok"}
+
+
+# ── Push notification subscription ────────────────────────────────────────────
+_push_subscriptions: dict[int, dict] = {}
+
+
+class PushSubscription(BaseModel):
+    endpoint: str
+    keys: dict
+
+
+@router.post("/push-subscribe")
+def push_subscribe(payload: PushSubscription, current_user: User = Depends(get_current_user)):
+    _push_subscriptions[current_user.id] = {"endpoint": payload.endpoint, "keys": payload.keys}
     return {"status": "ok"}

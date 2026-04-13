@@ -19,6 +19,7 @@ import MatchDetail from './pages/MatchDetail'
 import Likes from './pages/Likes'
 import Wallet from './pages/Wallet'
 import Navbar from './components/Navbar'
+import InstallBanner from './components/InstallBanner'
 
 /**
  * Enforced user flow:
@@ -89,6 +90,7 @@ export default function App() {
         <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <InstallBanner />
     </>
   )
 }
